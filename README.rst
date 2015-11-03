@@ -46,7 +46,7 @@ Create the python virtual environment
     export DJANGO_PROJECT_STATIC_FILES=/var/www/html/doi/
 
 
-Local customisation for proxy
+Local customisation for proxy, if required
 
 .. code:: bash
 
@@ -87,7 +87,7 @@ Additionally if necessary provide values for:
 - ``HTTP_PROXY_HOST``
 - ``HTTP_PROXY_PORT``
 
-By default the DataCite test MDS is used. To use the production MDS uncomment:
+By default the DataCite ``TEST`` MDS is used. To use the ``PRODUCTION`` MDS uncomment:
 
 - ``DATACITE_URL``
 - ``DATACITE_HANDLER``
@@ -143,13 +143,16 @@ Within your ``organisation_skin.html`` you can override the following blocks:
 
 Place any css files in the directory ``static/doi_site/css/``
 
+If you have made any changes you will have to restart apache
 
-Adding DOI Domains
-==================
+Adding DOI Domains via the Admin Web Page
+=========================================
 
-In a browser go to your site then /admin/
+In a browser go to the admin pages, i.e. ``https://example.org/admin/``
 
-Click on '+Add' besides the Groups label
+You will need you credentials that you used to create the superuser to log on
+
+Click on ``+Add`` besides the ``Groups`` label
 
 Give a name to the group and a DOI suffix
 
@@ -161,15 +164,17 @@ Granting Minting Privileges to Users
 
 Get the user to log in with their LDAP username and password, this will create a local account (the password is not stored in the django database).
 
-In a browser go to your site then /admin/
+In a browser go to the admin pages, i.e. ``https://example.org/admin/``
 
-Click on 'Users'
+You will need you credentials that you used to create the superuser to log on
+
+Click on ``Users``
 
 Click on the user name you wish to edit
 
 Fill in their personal information, first name, last name, email address
 
-Within the Groups in the Permissions section, assign the user to the required groups
+Within the ``Groups`` in the ``Permissions`` section, assign the user to the required groups
 
 Save the changes
 
