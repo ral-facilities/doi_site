@@ -1,0 +1,7 @@
+dist
+doi_site.egg-info
+test
+db.sqlite3
+doi_site/local_settings.py
+*/*.pyc
+*/*/*.pyc

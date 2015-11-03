@@ -1,0 +1,93 @@
+{% extends "doi_site/organisation_wrapper.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'login' %}">
+	{% csrf_token %}
+
+	<h2 id="pageTitle">{{organisation_name}} DOI Service Membership</h2>
+
+	<!-- registration form starts -->
+	<div class="padLogin">
+		<h2>Log in to the {{organisation_name}} DOI Service</h2>
+		<p>Please enter your username and password, then click the Login
+			button.</p>
+
+		<fieldset style="padding: 1em;">
+			<legend>Login details</legend>
+			<br />
+
+			<div style="font-weight: bold; color: red;"></div>
+
+			<div id="ctl00_mainContentPlaceHolder_ctl00_ctl00_pnlLoginStuff"
+				class="vBlock">
+
+				{% if form.errors %}
+				<p>Your username and password didn't match. Please try again.</p>
+				{% endif %}
+				
+				{% if next %}
+				    {% if user.is_authenticated %}
+				    <p>Your account doesn't have access to this page. To proceed,
+				    please login with an account that has access.</p>
+				    {% else %}
+				    <p>Please login to see this page.</p>
+				    {% endif %}
+				{% endif %}
+
+				<div style="float: left; width: 50%">
+					<a name="fUid"></a><span style="color: red">* </span><label
+						for="ctl00_mainContentPlaceHolder_ctl00_ctl00_txtUserId">
+						{{  form.username.label_tag }}</label>
+				</div>
+				<div style="float: right; text-align: left;">
+					{{ form.username  }}</div>
+				<div style="clear: both">
+					<br />
+				</div>
+				<div style="float: left; width: 50%">
+					<a name="fPW1"></a><span style="color: red">* </span> <label
+						for="ctl00_mainContentPlaceHolder_ctl00_ctl00_txtPassword">
+						{{  form.password.label_tag }}</label>
+				</div>
+				<div style="float: right; text-align: left;">
+					{{ form.password  }}</div>
+				<div style="clear: both">
+					<br />
+				</div>
+				<div>
+					<br />
+					<br />
+				</div>
+				<div style="float: left; width: 50%">
+					<label for="ctl00_mainContentPlaceHolder_ctl00_ctl00_btnSubmit">Click
+						button to log in</label>
+				</div>
+				<div style="float: right">
+					<input type="submit" value="login" />
+					<input type="hidden" name="next" value="{{ next }}" />
+				</div>
+				<div style="clear: both">
+					<br />
+				</div>
+
+			</div>
+		</fieldset>
+	</div>
+
+</form>
+
+{% endblock %}
