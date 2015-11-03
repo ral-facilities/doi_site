@@ -1,4 +1,4 @@
-include LICENCE
+include LICENSE
 include README.rst
 include doi_site/local_settings.py.ini
 recursive-include doi_site/resources *
