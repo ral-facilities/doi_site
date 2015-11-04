@@ -1,10 +1,52 @@
-Introduction
-============
+Delegation of the Minting of Datacite DOIs within an Organisation
+=================================================================
 
+Introduction
+------------
 This code provides a shim layer in front of the Datacite API in order to apply
-local security settings, limiting the sub-domain for which a user can mint
-DOIs. It is designed to hook into a sites LDAP server in order to authenticate
-users.
+local security settings and limit the sub-domain for which a user can mint
+DOIs. It is designed to hook into an organisation's LDAP server in order to
+authenticate users.
+
+The Issue Addressed by this Software
+------------------------------------
+We do not have a single central repository for our data and a number of groups
+are wishing to mint DOIs for their data. DataCite only provides one username
+and password and there is no way to limit the sub-domain (name space) within
+the organisation's allocated domain, in which users mint DOIs. We wish to
+divide up the organisation's domain in a controlled manner and allow named
+individuals to manage the minting of DOIs within confines of a given
+sub-domain.
+
+The Solution
+------------
+Named individuals will have responsibility for a given sub-domain. The 
+individuals will have to agree to abide by the DataCite terms and conditions.
+This software provides the ability to define sub-domains and an authorisation
+mechanism to control minting within those sub-domains.
+
+In effect it provides a MDS service to control access to the DataCite MDS.
+Calls via the API are validated before the organisation's credentials are used
+to passed on the call to DataCite.
+
+The aim is to provide a thin a layer as possible and simply pass on authorised
+calls. Authentication is done via the organisation's LDAP server and
+authorisation via local database which maps LDAP ids to sub-domains. The MDS
+ReST API is provided and users are referred to the DataCite API documentation. 
+
+The software makes use of the django framework.
+
+In addition to the API some basic web pages are provided.
+
+Future Work
+-----------
+It is intended to extend the web site to allow users to mint DOIs for their
+sub-domains via a web form.
+
+Following on from this it is intended to link this system with a central
+repository. This system would be extended to generate landing pages for data in
+the central repository. The system could then be opened up to anyone in the
+organisation to store data sets and mint DOIs under a central sub-domain.
 
 Installation and Configuration
 ==============================
@@ -65,29 +107,36 @@ Configuration
 local_settings.py
 ^^^^^^^^^^^^^^^^^
 Create a copy of the ``local_settings.py.ini`` file as ``local_settings.py``
-Review the contents of this file and update the parameters. You MUST provide values for:
+Review the contents of this file and update the parameters. You MUST provide
+values for:
 
-- ``DOI_PREFIX``
-- ``DATACITE_USER_NAME``
-- ``DATACITE_PASSWORD``
-- ``AUTH_LDAP_SERVER_URI``
-- ``AUTH_LDAP_USER_DN_TEMPLATE``
-- ``ORGANISATION_NAME``
-- ``ORGANISATION_DOI_EMAIL``
+- ``DOI_PREFIX`` - The organisation's DataCite prefix in the form nn.nnnn
+- ``DATACITE_USER_NAME`` - The organisation's username for DataCite
+- ``DATACITE_PASSWORD`` - The organisation's password for DataCite
+- ``AUTH_LDAP_SERVER_URI`` - The URI of the organisation's LDAP server
+- ``AUTH_LDAP_USER_DN_TEMPLATE`` - The organisation's LDAP DN template
+- ``ORGANISATION_NAME`` - The name of your organisation, this will be displayed
+on the home page
+- ``ORGANISATION_DOI_EMAIL`` - An email address for people to contact you about
+the this service, this will be displayed on the home page
 - ``SECRET_KEY``
-- ``ALLOWED_HOSTS``
+- ``ALLOWED_HOSTS`` - A list of strings representing the host/domain names that
+this Django site can serve. This should include your servers hostname.
 
 You should provide values for:
 
-- ``ROLES_URL``
-- ``NOTES_URL``
+- ``ROLES_URL`` - The URL of the location of the document detailing users roles
+and responsibilities
+- ``NOTES_URL`` - The URL of the location of the document containing notes for
+issuers
 
 Additionally if necessary provide values for:
 
-- ``HTTP_PROXY_HOST``
-- ``HTTP_PROXY_PORT``
+- ``HTTP_PROXY_HOST`` - Web proxy host
+- ``HTTP_PROXY_PORT`` - Web proxy port
 
-By default the DataCite ``TEST`` MDS is used. To use the ``PRODUCTION`` MDS uncomment:
+By default the DataCite ``TEST`` MDS is used. To use the ``PRODUCTION`` MDS
+uncomment:
 
 - ``DATACITE_URL``
 - ``DATACITE_HANDLER``
@@ -124,11 +173,15 @@ Assuming apache is running as the user ``apache``
 Customisation of the Web Pages
 ==============================
 
-This code makes use of inheritance within the templates. It has been structured to make it relatively easy to customise the look and feel of the site. Everything inherits from base.html.
+This code makes use of inheritance within the templates. It has been structured
+to make it relatively easy to customise the look and feel of the site.
+Everything inherits from base.html.
 
 base.html -> organisation_wrapper.html -> everything else
 
-To customise the appearance of the site provide your own ``organisation_skin.html``, which should inherit from ``base.html``.
+To customise the appearance of the site provide your own
+``organisation_skin.html``, which should inherit from ``base.html``.
+
 Change ``organisation_wrapper.html`` to inherit from your ``organisation_skin.html``
 
 base.html -> organisation_wrapper.html -> organisation_wrapper.html -> everything else
@@ -148,9 +201,14 @@ If you have made any changes you will have to restart apache
 Adding DOI Domains via the Admin Web Page
 =========================================
 
+The software makes use of the ``Groups`` model provided by the django
+framework. ``Group`` has been extended to include sub-domain information. There
+is a one to one mapping between group and sub-domain.
+
 In a browser go to the admin pages, i.e. ``https://example.org/admin/``
 
-You will need you credentials that you used to create the superuser to log on
+In order to log in you will need you the credentials that you used to create
+the superuser
 
 Click on ``+Add`` besides the ``Groups`` label
 
@@ -162,7 +220,8 @@ Save your changes
 Granting Minting Privileges to Users
 ====================================
 
-Get the user to log in with their LDAP username and password, this will create a local account (the password is not stored in the django database).
+Get the user to log in with their LDAP username and password, this will create
+a local account (the password is not stored in the django database).
 
 In a browser go to the admin pages, i.e. ``https://example.org/admin/``
 
@@ -172,10 +231,12 @@ Click on ``Users``
 
 Click on the user name you wish to edit
 
-Fill in their personal information, first name, last name, email address
+Fill in their personal information, first name, last name, email address (yes
+we should really pull this in from LDAP)
 
-Within the ``Groups`` in the ``Permissions`` section, assign the user to the required groups
+Within the ``Groups`` in the ``Permissions`` section, assign the user to the
+required groups
 
 Save the changes
 
-They will then be able to mint DOIs for that groups DOI prefix
+The user will then be able to mint DOIs for that groups DOI prefix
