@@ -115,7 +115,6 @@ def _post(url, body, headers):
     Send a post request to DataCite.
 
     Args:
-        request_method (str): This should be 'GET' or 'HEAD'
         url (str): The URL to call
         body (str): The data
         headers (dict): A dictionary of headers to use
@@ -215,10 +214,9 @@ def _get_doi_from_xml_body(body):
 
     """
     root = ET.fromstring(body)
-    schema_tag = '{http://datacite.org/schema/kernel-3}identifier'
-    for identifier in root.iter(schema_tag):
-        if identifier.attrib == {'identifierType': 'DOI'}:
-            return identifier.text
+    for child in root.getchildren():
+        if child.attrib == {'identifierType': 'DOI'}:
+            return child.text
     return None
 
 
