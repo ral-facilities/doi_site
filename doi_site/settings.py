@@ -115,11 +115,11 @@ STATICFILES_DIRS = (
 DOI_PREFIX = ''
 
 # Datacite test URL
-DATACITE_URL = 'https://test.datacite.org/mds/'
+DATACITE_URL = 'https://mds.test.datacite.org'
 
 # Used to compare against DATACITE_URL to check if the test message should be
 # displayed
-DATACITE_TEST_URL = 'https://test.datacite.org/mds/'
+DATACITE_TEST_URL = 'https://mds.test.datacite.org'
 
 # Datacite test handler
 DATACITE_HANDLER = 'http://test.datacite.org/handle/'
