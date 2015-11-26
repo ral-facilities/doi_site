@@ -93,7 +93,11 @@ def post_metadata(request):
 
     """
     LOGGING.info('Post metadata')
-    _doi = _get_doi_from_xml_body(request.body)
+    try:
+        _doi = _get_doi_from_xml_body(request.body)
+    except ET.ParseError as ex:
+        LOGGING.info('Error parsing xml from users request: %s', ex)
+        return get_response("Bad Request - error parsing xml: %s" % ex, 400)
     if _doi == None:
         return get_response("Bad Request - doi not found in XML", 400)
     LOGGING.debug('Post metadata, doi: %s', _doi)
@@ -211,6 +215,9 @@ def _get_doi_from_xml_body(body):
 
     Return:
         a str containing the DOI
+        
+    Throws:
+        ParseError
 
     """
     root = ET.fromstring(body)
