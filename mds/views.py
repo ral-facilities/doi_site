@@ -12,6 +12,7 @@ from mds.http.delete import delete_metadata
 from mds.http.get import get as _get
 from mds.http.helper import get_accept_header
 from mds.http.post import post_doi, post_media, post_metadata
+from urlparse import urljoin
 
 
 class MetadataView(View):
@@ -38,7 +39,7 @@ class MetadataView(View):
         a given DOI.
 
         """
-        url = DATACITE_URL + request.get_full_path()
+        url = urljoin(DATACITE_URL, request.get_full_path())
         return _get(request.method, url, get_accept_header(request))
 
     def head(self, request):
@@ -46,7 +47,7 @@ class MetadataView(View):
         Request the most recent version of metadata associated with a given DOI.
 
         """
-        url = DATACITE_URL + request.get_full_path()
+        url = urljoin(DATACITE_URL, request.get_full_path())
         return _get(request.method, url, get_accept_header(request))
 
 
@@ -85,7 +86,7 @@ class DoiView(View):
         There is no guaranteed order.
 
         """
-        url = DATACITE_URL + request.get_full_path()
+        url = urljoin(DATACITE_URL, request.get_full_path())
         return _get(request.method, url, get_accept_header(request))
 
     def head(self, request):
@@ -93,7 +94,7 @@ class DoiView(View):
         Request a list of all DOIs for the requesting datacentre.
 
         """
-        url = DATACITE_URL + request.get_full_path()
+        url = urljoin(DATACITE_URL, request.get_full_path())
         return _get(request.method, url, get_accept_header(request))
 
     def post(self, request):
@@ -122,7 +123,7 @@ class DoiDetail(View):
         This request returns an URL associated with a given DOI.
 
         """
-        url = DATACITE_URL + request.get_full_path()
+        url = urljoin(DATACITE_URL, request.get_full_path())
         return _get(request.method, url, get_accept_header(request))
 
     def head(self, request):
@@ -130,7 +131,7 @@ class DoiDetail(View):
         Request an URL associated with a given DOI.
 
         """
-        url = DATACITE_URL + request.get_full_path()
+        url = urljoin(DATACITE_URL, request.get_full_path())
         return _get(request.method, url, get_accept_header(request))
 
 
@@ -151,7 +152,7 @@ class MediaView(View):
         with a given DOI.
 
         """
-        url = DATACITE_URL + request.get_full_path()
+        url = urljoin(DATACITE_URL, request.get_full_path())
         return _get(request.method, url, get_accept_header(request))
 
     def head(self, request):
@@ -160,7 +161,7 @@ class MediaView(View):
         DOI.
 
         """
-        url = DATACITE_URL + request.get_full_path()
+        url = urljoin(DATACITE_URL, request.get_full_path())
         return _get(request.method, url, get_accept_header(request))
 
     def post(self, request):

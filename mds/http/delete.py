@@ -7,6 +7,7 @@ import logging
 import socket
 from ssl import SSLError
 import urllib2
+from urlparse import urljoin
 
 from django.http import HttpResponse
 
@@ -32,7 +33,7 @@ def delete_metadata(request):
     """
     _doi = get_doi_from_request(request, 'metadata')
     LOGGING.info('Delete metadata doi: %s', _doi)
-    url = DATACITE_URL + request.get_full_path()
+    url = urljoin(DATACITE_URL, request.get_full_path())
     try:
         doi_suffix = _doi.split(DOI_PREFIX, 1)[1]
     except IndexError:

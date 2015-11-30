@@ -2,6 +2,8 @@
 
 # pylint: disable=no-self-use
 
+from urlparse import urljoin
+
 from django.contrib.auth.views import login as auth_login
 from django.contrib.auth.views import logout as auth_logout
 from django.shortcuts import render
@@ -30,7 +32,7 @@ class DoiList(View):
         Get the list of DOIs.
 
         """
-        url = DATACITE_URL + "doi"
+        url = urljoin(DATACITE_URL, "doi")
         context = {'is_testing' : _is_test_url()}
         response = _get(request.method, url, get_accept_header(request))
         if response.status_code != 200:

@@ -7,6 +7,7 @@ import logging
 import socket
 from ssl import SSLError
 import urllib2
+from urlparse import urljoin
 
 from django.http import HttpResponse
 
@@ -48,7 +49,7 @@ def post_doi(request):
     if not is_authorized(request, doi_suffix):
         return get_response("Unauthorized - insufficient privileges", 403)
 
-    url = DATACITE_URL + request.get_full_path()
+    url = urljoin(DATACITE_URL, request.get_full_path())
     return _post(url, request.body, _get_content_type_header(request))
 
 
@@ -77,7 +78,7 @@ def post_media(request):
     if not is_authorized(request, doi_suffix):
         return get_response("Unauthorized - insufficient privileges", 403)
 
-    url = DATACITE_URL + request.get_full_path()
+    url = urljoin(DATACITE_URL, request.get_full_path())
     return _post(url, request.body, _get_content_type_header(request))
 
 
@@ -110,7 +111,7 @@ def post_metadata(request):
     if not is_authorized(request, doi_suffix):
         return get_response("Unauthorized - insufficient privileges", 403)
 
-    url = DATACITE_URL + request.get_full_path()
+    url = urljoin(DATACITE_URL, request.get_full_path())
     return _post(url, request.body, _get_content_type_header(request))
 
 
