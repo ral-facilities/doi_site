@@ -132,7 +132,15 @@ def _post(url, body, headers):
     auth_string = (base64.encodestring(DATACITE_USER_NAME + ':'
                                        + DATACITE_PASSWORD)).rstrip()
     headers.update({'Authorization':'Basic ' + auth_string})
-    req = urllib2.Request(url, body, headers)
+
+    # If the request body is a string, urllib2 attempts to concatenate the url,
+    # body and headers. If the url is not UTF-8, the request body can get
+    # converted unicode. This has resulted in issues where there are characters
+    # with diacritic marks in the request body. To avoid these issues the url is
+    # UTF-8 encoded.
+    url_encode = url.encode('utf-8')
+
+    req = urllib2.Request(url_encode, data=body, headers=headers)
     try:
         response = opener.open(req)
     except (urllib2.HTTPError) as ex:
@@ -215,7 +223,7 @@ def _get_doi_from_xml_body(body):
 
     Return:
         a str containing the DOI
-        
+
     Throws:
         ParseError
 
