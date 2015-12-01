@@ -2,10 +2,40 @@
 
 <h1>DOIs</h1>
 
-<ul>
-{% for doi in dois %}
-	<li><a href="{{ handler }}{{ doi }}" target="_blank">{{ doi }}</a></li>
-{% endfor %}
-</ul>
+<p>This page does not provide any search functionality, just a simple list of 
+all the DOIs that have been minted using the {{ doi_prefix }} prefix. If you wish
+to search through the DOIs then please use the search facility provided by 
+<a href="{{ search }}">Datacite</a>.</p>
+
+{% if dois %}
+	<ul>
+	{% for doi in dois %}
+		<li><a href="{{ handler }}{{ doi }}" target="_blank">{{ doi }}</a></li>
+	{% endfor %}
+	</ul>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+	        	<a href="?page={{ page_obj.first }}">first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+        		<a href="?page={{ paginator.num_pages }}">last</a>
+            {% endif %}
+        </span>
+    </div>
+
+{% else %}
+
+	<p>No DOIs found</p>
+
+{% endif %}
 
 {% endblock %}
