@@ -1,4 +1,8 @@
-{% extends "doi_site/organisation_wrapper.html" %} {% block content %}
+{% extends "doi_site/organisation_wrapper.html" %} 
+{% load staticfiles %}
+
+
+{% block content %}
 
 <h1>DOIs</h1>
 
@@ -17,8 +21,10 @@ to search through the DOIs then please use the search facility provided by
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
-	        	<a href="?page={{ page_obj.first }}">first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+				<a href="?page=1" title="First Page">
+				<img alt="First Page" src="{% static 'doi_site/images/first.png' %}"></a>
+            	<a href="?page={{ page_obj.previous_page_number }}" title="Previous Page">
+				<img alt="Previous Page" src="{% static 'doi_site/images/previous.png' %}"></a>    
             {% endif %}
 
             <span class="current">
@@ -26,8 +32,10 @@ to search through the DOIs then please use the search facility provided by
             </span>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-        		<a href="?page={{ paginator.num_pages }}">last</a>
+            	<a href="?page={{ page_obj.next_page_number }}" title="Next Page">
+				<img alt="Next Page" src="{% static 'doi_site/images/next.png' %}"></a>
+            	<a href="?page={{ paginator.num_pages }}" title="Last Page">
+				<img alt="Last Page" src="{% static 'doi_site/images/last.png' %}"></a>            
             {% endif %}
         </span>
     </div>
