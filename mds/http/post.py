@@ -135,7 +135,7 @@ def _post(url, body, headers):
     headers.update({'Authorization':'Basic ' + auth_string})
 
     # If the request body is a string, urllib2 attempts to concatenate the url,
-    # body and headers. If the url is not UTF-8, the request body can get
+    # body and headers. If the url is unicode, the request body can get
     # converted unicode. This has resulted in issues where there are characters
     # with diacritic marks in the request body. To avoid these issues the url is
     # UTF-8 encoded.

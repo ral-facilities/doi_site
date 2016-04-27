@@ -61,7 +61,7 @@ def _delete(url):
     auth_string = (base64.encodestring(DATACITE_USER_NAME + ':'
                                        + DATACITE_PASSWORD)).rstrip()
     headers = {'Authorization':'Basic ' + auth_string}
-    req = urllib2.Request(url, None, headers)
+    req = urllib2.Request(url, data=None, headers=headers)
     req.get_method = lambda: 'DELETE'
     try:
         response = opener.open(req)

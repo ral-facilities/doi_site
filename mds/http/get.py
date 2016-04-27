@@ -36,14 +36,17 @@ def get(request_method, url, headers):
     auth_string = (base64.encodestring(DATACITE_USER_NAME + ':'
                                        + DATACITE_PASSWORD)).rstrip()
     headers.update({'Authorization':'Basic ' + auth_string})
-    req = urllib2.Request(url, None, headers)
+    req = urllib2.Request(url, data=None, headers=headers)
     if request_method == "HEAD":
         req.get_method = lambda: 'HEAD'
     try:
         response = opener.open(req)
     except (urllib2.HTTPError) as ex:
         msg = ex.readlines()
-        LOGGING.warn('HTTPError error getting %s. %s', url, msg)
+        if ex.code in [404, 410]:
+            LOGGING.info('HTTPError error getting %s. %s', url, msg)
+        else:
+            LOGGING.warn('HTTPError error getting %s. %s', url, msg)
         return get_response(msg, ex.code)
     except (socket.timeout, urllib2.URLError) as ex:
         LOGGING.warn('Timeout or URLError error getting %s. %s', url, ex.reason)
