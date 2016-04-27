@@ -10,7 +10,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='doi_site',
-    version='0.1.1',
+    version='0.2.0',
     packages=['doi_site', 'mds', 'datasets'],
     include_package_data=True,
     license='BSD License',
