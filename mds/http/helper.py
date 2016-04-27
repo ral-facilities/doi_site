@@ -22,6 +22,8 @@ def is_authorized(request, doi_suffix):
         a boolean, True if the user is authorised
 
     """
+    # decode precent encoding and remove leading '/' before checking doi
+    doi_suffix = urllib2.unquote(doi_suffix)
     if doi_suffix.startswith('/'):
         doi_suffix = doi_suffix.split('/', 1)[1]
     authorized_dois = []
