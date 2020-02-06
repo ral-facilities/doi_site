@@ -1,7 +1,7 @@
 """doi_site URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.0/topics/http/urls/
+    https://docs.djangoproject.com/en/2.2/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -15,7 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from doi_site.views import HomeView, DoiList, Domains, Notes
+from django.conf.urls import include, url
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(r'', HomeView.as_view(), name='home'),
+    path(r'index', HomeView.as_view(), name='index'),
+
+    #path(r'^admin/', include(admin.site.urls)),
+
+    path(r'doilist', DoiList.as_view(), name='doi_list'),
+    path(r'domains', Domains.as_view(), name='domains'),
+    #path(r'^mint$', Mint.as_view(), name='mint'),
+    path(r'notes', Notes.as_view(), name='notes'),
+
+
+    path(r'', HomeView.as_view())
 ]
