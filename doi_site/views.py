@@ -18,18 +18,18 @@ class DoiList(ListView):
     Display all the DOIs for this organisation.
 
     """
-    paginate_by = 25
-    template_name = 'doi_site/dois.html'
-    context_object_name = 'dois'
-
-    def dispatch(self, *args, **kwargs):
-        return super(DoiList, self).dispatch(*args, **kwargs)
+    # paginate_by = 25
+    # template_name = 'doi_site/dois.html'
+    # context_object_name = 'dois'
+    #
+    # def dispatch(self, *args, **kwargs):
+    #     return super(DoiList, self).dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        try:
-            return super(DoiList, self).get(request, *args, **kwargs)
-        except ExternalError as ex:
-            context = {'message': ex.message}
+        #try:
+            #return super(DoiList, self).get(request, *args, **kwargs)
+        #except ExternalError as ex:
+            context = {'message': "Page still in devleopment"}
             context['is_testing'] = _is_test_url()
             return render(request, 'doi_site/error.html', context)
 
@@ -48,14 +48,14 @@ class DoiList(ListView):
     #             dois.append(line.strip().decode('ISO-8859-1'))
     #     return dois
 
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(DoiList, self).get_context_data(**kwargs)
-        context['is_testing'] = _is_test_url()
-        context['handler'] = DATACITE_HANDLER
-        context['doi_prefix'] = DOI_PREFIX
-        context['search'] = DATACITE_URL
-        return context
+    # def get_context_data(self, **kwargs):
+    #     # Call the base implementation first to get a context
+    #     context = super(DoiList, self).get_context_data(**kwargs)
+    #     context['is_testing'] = _is_test_url()
+    #     context['handler'] = DATACITE_HANDLER
+    #     context['doi_prefix'] = DOI_PREFIX
+    #     context['search'] = DATACITE_URL
+    #     return context
 
 
 class HomeView(View):
@@ -90,7 +90,7 @@ class Notes(View):
 
         """
         context = {'organisation_name' : ORGANISATION_NAME}
-        context['is_testing'] = _is_test_url()
+        context['is_testing'] = True
         context['roles'] = getattr(settings, 'ROLES_URL', '')
         context['notes'] = getattr(settings, 'NOTES_URL', '')
         return render(request, 'doi_site/notes.html', context)
@@ -103,16 +103,27 @@ class Domains(ListView):
 
     """
 
+    def get(self, request):
+        """
+        Get the notes page.
+
+        """
+        context = {'organisation_name' : ORGANISATION_NAME}
+        context['is_testing'] = True
+        context['roles'] = getattr(settings, 'ROLES_URL', '')
+        context['notes'] = getattr(settings, 'NOTES_URL', '')
+        return render(request, 'doi_site/domains.html', context)
+
     #model = GroupProfile
     context_object_name = 'group_profiles'
     template_name = 'doi_site/domains.html'
 
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(Domains, self).get_context_data(**kwargs)
-        context['doi_prefix'] = DOI_PREFIX + '/'
-        context['is_testing'] = _is_test_url()
-        return context
+    # def get_context_data(self, **kwargs):
+    #     # Call the base implementation first to get a context
+    #     context = super(Domains, self).get_context_data(**kwargs)
+    #     context['doi_prefix'] = DOI_PREFIX + '/'
+    #     context['is_testing'] = _is_test_url()
+    #     return context
 
 
 # def login(request):
