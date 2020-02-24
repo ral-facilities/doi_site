@@ -1,15 +1,16 @@
-#from django.contrib.auth.views import login as auth_login
-#from django.contrib.auth.views import logout as auth_logout
+
+from django.contrib.auth.views import LoginView, auth_logout
 from django.shortcuts import render
 from django.views.generic import View
 from django.views.generic.list import ListView
 
 from doi_site import settings
-from doi_site.exception import ExternalError
-from doi_site.settings import DATACITE_HANDLER, DATACITE_TEST_URL, \
-    DATACITE_URL, DOI_PREFIX, ORGANISATION_NAME, ORGANISATION_DOI_EMAIL
-#from mds.http.get import get as _get
-#from mds.models import GroupProfile
+from doi_site.settings import DATACITE_TEST_URL, \
+    DATACITE_URL, ORGANISATION_NAME, ORGANISATION_DOI_EMAIL
+
+
+# from mds.http.get import get as _get
+# from mds.models import GroupProfile
 
 
 # pylint: disable=too-many-ancestors
@@ -18,6 +19,7 @@ class DoiList(ListView):
     Display all the DOIs for this organisation.
 
     """
+
     # paginate_by = 25
     # template_name = 'doi_site/dois.html'
     # context_object_name = 'dois'
@@ -26,12 +28,12 @@ class DoiList(ListView):
     #     return super(DoiList, self).dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        #try:
-            #return super(DoiList, self).get(request, *args, **kwargs)
-        #except ExternalError as ex:
-            context = {'message': "Page still in devleopment"}
-            context['is_testing'] = _is_test_url()
-            return render(request, 'doi_site/error.html', context)
+        # try:
+        # return super(DoiList, self).get(request, *args, **kwargs)
+        # except ExternalError as ex:
+        context = {'message': "Page still in devleopment"}
+        context['is_testing'] = _is_test_url()
+        return render(request, 'doi_site/error.html', context)
 
     # def get_queryset(self):
     #     """
@@ -69,7 +71,7 @@ class HomeView(View):
         Get the home page.
 
         """
-        context = {'organisation_name' : ORGANISATION_NAME}
+        context = {'organisation_name': ORGANISATION_NAME}
         context['organisation_email'] = ORGANISATION_DOI_EMAIL
         context['is_testing'] = _is_test_url()
         return render(request, 'doi_site/index.html', context)
@@ -89,7 +91,7 @@ class Notes(View):
         Get the notes page.
 
         """
-        context = {'organisation_name' : ORGANISATION_NAME}
+        context = {'organisation_name': ORGANISATION_NAME}
         context['is_testing'] = True
         context['roles'] = getattr(settings, 'ROLES_URL', '')
         context['notes'] = getattr(settings, 'NOTES_URL', '')
@@ -108,41 +110,19 @@ class Domains(ListView):
         Get the notes page.
 
         """
-        context = {'organisation_name' : ORGANISATION_NAME}
+        context = {'organisation_name': ORGANISATION_NAME}
         context['is_testing'] = True
         context['roles'] = getattr(settings, 'ROLES_URL', '')
         context['notes'] = getattr(settings, 'NOTES_URL', '')
         return render(request, 'doi_site/domains.html', context)
 
-    #model = GroupProfile
-    context_object_name = 'group_profiles'
-    template_name = 'doi_site/domains.html'
-
-    # def get_context_data(self, **kwargs):
-    #     # Call the base implementation first to get a context
-    #     context = super(Domains, self).get_context_data(**kwargs)
-    #     context['doi_prefix'] = DOI_PREFIX + '/'
-    #     context['is_testing'] = _is_test_url()
-    #     return context
 
 
-# def login(request):
-#     """
-#     Display the login page.
-#
-#     """
-#     context = {'is_testing' : _is_test_url()}
-#     context['organisation_name'] = ORGANISATION_NAME
-#     return auth_login(request, extra_context=context)
 
+class Login_view(LoginView):
 
-# def logout(request):
-#     """
-#     Respond to a logout request.
-#
-#     """
-#     context = {'is_testing' : _is_test_url()}
-#     return auth_logout(request, extra_context=context)
+    template_name = 'registration/login.html'
+
 
 
 def _is_test_url():
@@ -156,4 +136,3 @@ def _is_test_url():
     if DATACITE_URL == DATACITE_TEST_URL:
         return True
     return False
-

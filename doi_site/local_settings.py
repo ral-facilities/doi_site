@@ -48,7 +48,8 @@ SECRET_KEY = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 # can serve
 ALLOWED_HOSTS = [
 	'127.0.0.1',
-	'example.org'
+	'example.org',
+    'localhost'
 ]
 
 # The URL of the location of the document detailing users roles and

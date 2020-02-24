@@ -29,8 +29,15 @@
 				<li><a href="/">Home</a></li>
 				<li><a href="{% url 'domains' %}">DOI Sub-Domains</a></li>
 				<li><a href="{% url 'doi_list' %}">DOIs</a></li>
+                <li><a href="{% url 'mint' %}">Mint a DOI</a></li>
 				<li><a href="{% url 'notes' %}">Notes for Users</a></li>			
 				<li><a href="https://mds.datacite.org/static/apidoc" target="_blank">API Docs</a> (external page)</li>
+				{% if user.is_authenticated %}
+					<li>Hello {{ user.first_name }}
+					[<a href="{% url 'logout' %}">Logout</a>]</li>
+				{% else %}
+					<li><a href="{% url 'login' %}">Login</a></li>
+				{% endif %}
 			</ul>
 		</div>
 		{% endblock %}

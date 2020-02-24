@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from doi_site.views import HomeView, DoiList, Domains, Notes
+from doi_site.views import HomeView, DoiList, Domains, Notes, Login_view
 from django.conf.urls import include, url
+
+from datasets.views import Mint
 
 urlpatterns = [
     path(r'', HomeView.as_view(), name='home'),
@@ -26,8 +28,10 @@ urlpatterns = [
 
     path(r'doilist', DoiList.as_view(), name='doi_list'),
     path(r'domains', Domains.as_view(), name='domains'),
-    #path(r'^mint$', Mint.as_view(), name='mint'),
+    path(r'mint', Mint.as_view(), name='mint'),
     path(r'notes', Notes.as_view(), name='notes'),
+
+    path(r'accounts/login/', Login_view.as_view(), name="login"),
 
 
     path(r'', HomeView.as_view())
