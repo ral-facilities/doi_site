@@ -1,5 +1,7 @@
-
-from django.contrib.auth.views import LoginView, auth_logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import logout
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import View
 from django.views.generic.list import ListView
@@ -117,6 +119,10 @@ class Domains(ListView):
         return render(request, 'doi_site/domains.html', context)
 
 
+@login_required
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('')
 
 
 class Login_view(LoginView):
