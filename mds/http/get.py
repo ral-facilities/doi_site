@@ -13,7 +13,6 @@ from django.http import HttpResponse
 from doi_site.settings import DATACITE_USER_NAME, DATACITE_PASSWORD, TIME_OUT
 from mds.http.helper import get_response, get_opener
 
-
 LOGGING = logging.getLogger(__name__)
 
 
@@ -33,9 +32,8 @@ def get(request_method, url, headers):
     LOGGING.info('get(%s,%s,%s)', request_method, url, headers)
     _set_timeout()
     opener = get_opener()
-    auth_string = (base64.encodestring(DATACITE_USER_NAME + ':'
-                                       + DATACITE_PASSWORD)).rstrip()
-    headers.update({'Authorization':'Basic ' + auth_string})
+    auth_string = (base64.encodebytes((DATACITE_USER_NAME + ':' + DATACITE_PASSWORD).encode())).rstrip()
+    headers.update({'Authorization': 'Basic ' + str(auth_string)})
     req = urllib.request.Request(url, data=None, headers=headers)
     if request_method == "HEAD":
         req.get_method = lambda: 'HEAD'

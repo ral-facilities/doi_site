@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from doi_site.views import HomeView, DoiList, Domains, Notes, Login_view, logout_view
-from mds.views import MediaView, MetadataPost
+from mds.views import MediaView, MetadataPost, DoiView, DoiDetail, MetadataView
 from django.conf.urls import include, url
 
 from datasets.views import Mint
@@ -33,6 +33,10 @@ urlpatterns = [
     path(r'notes', Notes.as_view(), name='notes'),
 
     path(r'metadata', MetadataPost.as_view(), name='metadata_post'),
+    path(r'doi', DoiView.as_view(), name='doi_view'),
+    path(r'doi/', DoiDetail.as_view(), name='doi_detail'),
+    path(r'metadata/', MetadataView.as_view(), name='metadata_view'),
+    path(r'media/', MediaView.as_view(), name='media_view'),
 
     path(r'accounts/login/', Login_view.as_view(), name="login"),
     path(r'logout/', logout_view, name='logout'),
