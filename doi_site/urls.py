@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from doi_site.views import HomeView, DoiList, Domains, Notes, Login_view, logout_view
 from mds.views import MediaView, MetadataPost, DoiView, DoiDetail, MetadataView
 from django.conf.urls import include, url
@@ -22,24 +22,27 @@ from django.conf.urls import include, url
 from datasets.views import Mint
 
 urlpatterns = [
-    path(r'', HomeView.as_view(), name='home'),
-    path(r'index', HomeView.as_view(), name='index'),
+    re_path(r'^$', HomeView.as_view(), name='home'),
+    re_path(r'^index$', HomeView.as_view(), name='index'),
 
-    path(r'admin/', admin.site.urls, name='admin'),
+    re_path(r'^admin/', admin.site.urls),
 
-    path(r'doilist', DoiList.as_view(), name='doi_list'),
-    path(r'domains', Domains.as_view(), name='domains'),
-    path(r'mint', Mint.as_view(), name='mint'),
-    path(r'notes', Notes.as_view(), name='notes'),
+    # web
+    re_path(r'^doilist$', DoiList.as_view(), name='doi_list'),
+    re_path(r'^domains$', Domains.as_view(), name='domains'),
+    re_path(r'^mint$', Mint.as_view(), name='mint'),
+    re_path(r'^notes$', Notes.as_view(), name='notes'),
 
-    path(r'metadata', MetadataPost.as_view(), name='metadata_post'),
-    path(r'doi', DoiView.as_view(), name='doi_view'),
-    path(r'doi/', DoiDetail.as_view(), name='doi_detail'),
-    path(r'metadata/', MetadataView.as_view(), name='metadata_view'),
-    path(r'media/', MediaView.as_view(), name='media_view'),
+    # MDS
+    re_path(r'^doi$', DoiView.as_view(), name='doi_view'),
+    re_path(r'^doi/', DoiDetail.as_view(), name='doi_detail'),
+    re_path(r'^metadata$', MetadataPost.as_view(), name='metadata_post'),
+    re_path(r'^metadata/', MetadataView.as_view(), name='metadata_view'),
+    re_path(r'^media/', MediaView.as_view(), name='media_view'),
 
-    path(r'accounts/login/', Login_view.as_view(), name="login"),
-    path(r'logout/', logout_view, name='logout'),
+    re_path(r'^accounts/login/$', Login_view.as_view(), name='login'),
+    re_path(r'^logout/$', logout_view, name='logout'),
 
-    path(r'', HomeView.as_view())
+    re_path(r'', HomeView.as_view()),
+
 ]

@@ -17,7 +17,6 @@ from mds.http.helper import get_doi_from_request, get_opener, get_response, \
     is_authorized
 import xml.etree.ElementTree as ET
 
-
 LOGGING = logging.getLogger(__name__)
 
 
@@ -99,7 +98,7 @@ def post_metadata(request):
     except ET.ParseError as ex:
         LOGGING.info('Error parsing xml from users request: %s', ex)
         return get_response("Bad Request - error parsing xml: %s" % ex, 400)
-    if _doi == None:
+    if _doi is None:
         return get_response("Bad Request - doi not found in XML", 400)
     LOGGING.debug('Post metadata, doi: %s', _doi)
     try:
@@ -130,29 +129,30 @@ def _post(url, body, headers):
     """
     _set_timeout()
     opener = get_opener()
-    auth_string = (base64.encodestring(DATACITE_USER_NAME + ':'
-                                       + DATACITE_PASSWORD)).rstrip()
-    headers.update({'Authorization':'Basic ' + auth_string})
+    # ((base64.b64decode(auth[1])).decode('utf-8'))
+    auth_string = (DATACITE_USER_NAME + ':' + DATACITE_PASSWORD).rstrip()
+    headers.update({'Authorization': 'Basic ' + auth_string})
 
     # If the request body is a string, urllib2 attempts to concatenate the url,
     # body and headers. If the url is unicode, the request body can get
     # converted unicode. This has resulted in issues where there are characters
     # with diacritic marks in the request body. To avoid these issues the url is
     # UTF-8 encoded.
-    url_encode = url.encode('utf-8')
+    url_encode = url  # .encode('utf-8')
+    print(url_encode)
 
     req = urllib.request.Request(url_encode, data=body, headers=headers)
     try:
         response = opener.open(req)
-    except (urllib.error.HTTPError) as ex:
+    except urllib.error.HTTPError as ex:
         msg = ex.readlines()
-        LOGGING.warn('HTTPError error getting %s. %s', url, msg)
+        LOGGING.warning('HTTPError error getting %s. %s', url, msg)
         return get_response(msg, ex.code)
     except (socket.timeout, urllib.error.URLError) as ex:
-        LOGGING.warn('Timeout or URLError error getting %s. %s', url, ex.reason)
+        LOGGING.warning('Timeout or URLError error getting %s. %s', url, ex.reason)
         return get_response(ex.reason, 500)
-    except (SSLError) as ex:
-        LOGGING.warn('SSLError error getting %s. %s', url, ex)
+    except SSLError as ex:
+        LOGGING.warning('SSLError error getting %s. %s', url, ex)
         return get_response(ex, 500)
     except UnicodeDecodeError as ex:
         LOGGING.info('UnicodeDecodeError error getting %s. %s', url, ex)
@@ -248,6 +248,6 @@ def _get_content_type_header(request):
 
     """
     try:
-        return {'Content-Type':request.META['CONTENT_TYPE']}
+        return {'Content-Type': request.META['CONTENT_TYPE']}
     except KeyError:
         return {}

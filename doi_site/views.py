@@ -61,41 +61,6 @@ class DoiList(ListView):
         return context
 
 
-def get(self, request, *args, **kwargs):
-    # try:
-    # return super(DoiList, self).get(request, *args, **kwargs)
-    # except ExternalError as ex:
-    context = {'message': "Page still in devleopment"}
-    context['is_testing'] = _is_test_url()
-    return render(request, 'doi_site/error.html', context)
-
-
-def get_queryset(self):
-    """
-    Get the list of DOIs.
-
-    """
-    url = urljoin(DATACITE_URL, "doi")
-    response = _get('GET', url, {})
-    if response.status_code != 200:
-        raise ExternalError(response.content)
-    dois = []
-    for line in response:
-        if line != '':
-            dois.append(line.strip().decode('ISO-8859-1'))
-    return dois
-
-
-def get_context_data(self, **kwargs):
-    # Call the base implementation first to get a context
-    context = super(DoiList, self).get_context_data(**kwargs)
-    context['is_testing'] = _is_test_url()
-    context['handler'] = DATACITE_HANDLER
-    context['doi_prefix'] = DOI_PREFIX
-    context['search'] = DATACITE_URL
-    return context
-
-
 class HomeView(View):
     """
     Display the home page.
@@ -153,10 +118,10 @@ class Domains(ListView):
         return context
 
 
-@login_required
+@login_required()
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect('')
+    return HttpResponseRedirect('/')
 
 
 class Login_view(LoginView):
