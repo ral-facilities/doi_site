@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '_cc@5+nowqy&#ig!u0y4p@ku50cpd6b_y-&0)f!bre+q9to+#4'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -70,6 +71,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'doi_site.wsgi.application'
 
@@ -139,15 +141,14 @@ DATACITE_HANDLER = 'http://test.datacite.org/handle/'
 # The connection timeout in seconds
 TIME_OUT = 10
 
+AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = True
+
 # Populate the Django user from the LDAP directory.
-AUTH_LDAP_USER_ATTR_MAP = {
-    "first_name": "givenName",
-    "last_name": "sn",
-    "email": "mail"
-}
+AUTH_LDAP_USER_ATTR_MAP = {"first_name": "givenName", "last_name": "sn", "email":"mail"}
 
 # This is the default, but I like to be explicit.
 AUTH_LDAP_ALWAYS_UPDATE_USER = True
+
 
 # Keep ModelBackend around for per-user permissions and maybe a local
 # superuser.

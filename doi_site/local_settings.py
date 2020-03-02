@@ -14,8 +14,11 @@ the deployment.
 # DATACITE_HANDLER = 'http://dx.doi.org/'
 
 # Web proxy
-#HTTP_PROXY_HOST = 'example.org'
-#HTTP_PROXY_PORT = '8080'
+# HTTP_PROXY_HOST = 'example.org'
+# HTTP_PROXY_PORT = '8080'
+import ldap
+from django_auth_ldap.config import LDAPSearch, LDAPSearchUnion
+AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = True
 
 # The organisation's DataCite prefix in the form nn.nnnn
 DOI_PREFIX = 'nn.nnnn'
@@ -27,10 +30,12 @@ DATACITE_USER_NAME = 'BL.XXXX'
 DATACITE_PASSWORD = 'xxxxxxxxxxxxxxxxx'
 
 # The URI of the organisation's LDAP server
-AUTH_LDAP_SERVER_URI = "ldap://example.org:389"
+AUTH_LDAP_SERVER_URI = "ldap://fed.cclrc.ac.uk:389"
+
+AUTH_LDAP_USER_SEARCH = LDAPSearch("DC=fed,DC=cclrc,DC=ac,DC=uk", ldap.SCOPE_SUBTREE, "(cn=%(user)s)")
 
 # The organisation's LDAP DN template
-AUTH_LDAP_USER_DN_TEMPLATE = "%(user)s@example.org"
+# AUTH_LDAP_USER_DN_TEMPLATE = "CN=%(user)s,objectClass=*,DC=fed,DC=cclrc,DC=ac,DC=uk"
 
 # The name of your organisation, this will be displayed on the home page
 ORGANISATION_NAME = 'My Organisation'
@@ -47,8 +52,8 @@ SECRET_KEY = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 # A list of strings representing the host/domain names that this Django site
 # can serve
 ALLOWED_HOSTS = [
-	'127.0.0.1',
-	'example.org',
+    '127.0.0.1',
+    'example.org',
     'localhost'
 ]
 
@@ -64,7 +69,7 @@ DEBUG = True
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-#DATABASES = { 'default': { 'ENGINE': 'django.db.backends.sqlite3', 'NAME': '/var/doi/doi.db' } }
+# DATABASES = { 'default': { 'ENGINE': 'django.db.backends.sqlite3', 'NAME': '/var/doi/doi.db' } }
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -77,16 +82,16 @@ LOGGING = {
     'formatters': {
         'verbose': {
             'format':
-            '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+                '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
         },
     },
     'handlers': {
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         }
     },
@@ -95,7 +100,12 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
-        }
+        },
+        'django_auth_ldap': {
+            'level': 'DEBUG',
+            'handlers': ['console']}
+        
+
     }
 }
 

@@ -130,7 +130,9 @@ def _post(url, body, headers):
     _set_timeout()
     opener = get_opener()
     # ((base64.b64decode(auth[1])).decode('utf-8'))
-    auth_string = (DATACITE_USER_NAME + ':' + DATACITE_PASSWORD).rstrip()
+    auth_string = base64.b64encode((DATACITE_USER_NAME + ':' + DATACITE_PASSWORD).rstrip().encode('utf-8')).decode(
+        'utf-8')
+
     headers.update({'Authorization': 'Basic ' + auth_string})
 
     # If the request body is a string, urllib2 attempts to concatenate the url,
@@ -138,8 +140,7 @@ def _post(url, body, headers):
     # converted unicode. This has resulted in issues where there are characters
     # with diacritic marks in the request body. To avoid these issues the url is
     # UTF-8 encoded.
-    url_encode = url  # .encode('utf-8')
-    print(url_encode)
+    url_encode = url
 
     req = urllib.request.Request(url_encode, data=body, headers=headers)
     try:
