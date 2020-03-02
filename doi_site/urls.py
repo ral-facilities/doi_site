@@ -40,7 +40,7 @@ urlpatterns = [
     re_path(r'^metadata/', MetadataView.as_view(), name='metadata_view'),
     re_path(r'^media/', MediaView.as_view(), name='media_view'),
 
-    re_path(r'^accounts/login/$', Login_view.as_view(), name='login'),
+    re_path(r'^accounts/login/$', login_user, name='login'),
     re_path(r'^logout/$', logout_view, name='logout'),
 
     re_path(r'', HomeView.as_view()),

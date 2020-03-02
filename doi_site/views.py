@@ -1,6 +1,6 @@
 from urllib.parse import urljoin
 
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
@@ -121,11 +121,32 @@ class Domains(ListView):
 @login_required()
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect('/')
+    context = {'organisation_name': ORGANISATION_NAME}
+    context['organisation_email'] = ORGANISATION_DOI_EMAIL
+    context['is_testing'] = _is_test_url()
+    return render(request, 'registration/logged_out.html', context=context)
 
 
-class Login_view(LoginView):
-    template_name = 'registration/login.html'
+#
+# class Login_view(LoginView):
+#
+#     template_name = 'registration/login.html'
+
+def login_user(request):
+    username = password = ''
+    context = {'organisation_name': ORGANISATION_NAME}
+    context['organisation_email'] = ORGANISATION_DOI_EMAIL
+    context['is_testing'] = _is_test_url()
+    if request.POST:
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect('/index/')
+    return render(request, 'registration/login.html', context=context)
 
 
 def _is_test_url():
