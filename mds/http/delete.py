@@ -5,8 +5,10 @@ This module is used to make HTTP DELETE calls.
 import base64
 import logging
 import socket
+import urllib.error
+import urllib.parse
+import urllib.request
 from ssl import SSLError
-import urllib.request, urllib.error, urllib.parse
 from urllib.parse import urljoin
 
 from django.http import HttpResponse
@@ -15,7 +17,6 @@ from doi_site.settings import DATACITE_URL, DOI_PREFIX, DATACITE_USER_NAME, \
     DATACITE_PASSWORD, TIME_OUT
 from mds.http.helper import get_doi_from_request, get_opener, get_response, \
     is_authorized
-
 
 LOGGING = logging.getLogger(__name__)
 
@@ -58,9 +59,8 @@ def _delete(url):
     """
     _set_timeout()
     opener = get_opener()
-    auth_string = (base64.encodestring(DATACITE_USER_NAME + ':'
-                                       + DATACITE_PASSWORD)).rstrip()
-    headers = {'Authorization':'Basic ' + auth_string}
+    auth_string = (base64.encodebytes((DATACITE_USER_NAME + ':' + DATACITE_PASSWORD).encode())).rstrip()
+    headers = {'Authorization': 'Basic ' + str(auth_string)}
     req = urllib.request.Request(url, data=None, headers=headers)
     req.get_method = lambda: 'DELETE'
     try:

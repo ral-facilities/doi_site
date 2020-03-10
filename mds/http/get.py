@@ -5,8 +5,10 @@ This module is used to make HTTP HEAD and GET calls.
 import base64
 import logging
 import socket
+import urllib.error
+import urllib.parse
+import urllib.request
 from ssl import SSLError
-import urllib.request, urllib.error, urllib.parse
 
 from django.http import HttpResponse
 

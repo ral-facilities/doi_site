@@ -5,8 +5,11 @@ This module is used to make HTTP POST calls.
 import base64
 import logging
 import socket
+import urllib.error
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
 from ssl import SSLError
-import urllib.request, urllib.error, urllib.parse
 from urllib.parse import urljoin
 
 from django.http import HttpResponse
@@ -15,7 +18,6 @@ from doi_site.settings import DATACITE_URL, DOI_PREFIX, DATACITE_USER_NAME, \
     DATACITE_PASSWORD, TIME_OUT
 from mds.http.helper import get_doi_from_request, get_opener, get_response, \
     is_authorized
-import xml.etree.ElementTree as ET
 
 LOGGING = logging.getLogger(__name__)
 

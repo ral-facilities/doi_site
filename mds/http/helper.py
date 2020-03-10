@@ -2,7 +2,9 @@
 Helper methods/ common functionality.
 '''
 
-import urllib.request, urllib.error, urllib.parse
+import urllib.error
+import urllib.parse
+import urllib.request
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
@@ -52,7 +54,7 @@ def get_accept_header(request):
 
     """
     try:
-        return {'Accept':request.META['HTTP_ACCEPT']}
+        return {'Accept': request.META['HTTP_ACCEPT']}
     except KeyError:
         return {}
 
@@ -104,8 +106,9 @@ def get_opener():
 
     """
     if _is_use_proxy():
-        proxy_handler = urllib.request.ProxyHandler({'https': getattr(settings, 
-            'HTTP_PROXY_HOST') + ":" + getattr(settings, 'HTTP_PROXY_PORT')})
+        proxy_handler = urllib.request.ProxyHandler({'https': getattr(settings,
+                                                                      'HTTP_PROXY_HOST') + ":" + getattr(settings,
+                                                                                                         'HTTP_PROXY_PORT')})
         return urllib.request.build_opener(proxy_handler)
     else:
         return urllib.request.build_opener()
@@ -120,6 +123,6 @@ def _is_use_proxy():
 
     """
     if (getattr(settings, 'HTTP_PROXY_HOST', False) and
-        getattr(settings, 'HTTP_PROXY_PORT', False)):
+            getattr(settings, 'HTTP_PROXY_PORT', False)):
         return True
     return False
