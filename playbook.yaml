@@ -1,0 +1,54 @@
+- name: Playbook to install the doi_site software
+  hosts: 127.0.0.1
+  become: yes
+  connection: local
+  tasks:
+  - name: Install python-virtualenv is installed
+    yum:
+      name: virtualenv
+      state: latest
+
+  - name: Install the correct verison of gcc
+    yum:
+      name: gcc
+      state: latest
+
+  - name: Install the correct verison of mod_ssl.x86_64
+    yum:
+      name: mod_ssl.x86_64
+      state: latest
+      
+  - name: Ensure we have the correct verison of Apache
+    yum:
+      name: httpd
+      state: latest
+      
+  - name:  Install the correct verison of mod_wsgi.x86_64
+    yum:
+      name: python3-mod_wsgi.x86_64
+      state: latest
+      
+  - name: Install the correct verison of openldap-devel
+    yum:
+      name: openldap-devel
+      state: latest
+      
+  - name: Create the directory for static files
+    file:
+      path: /var/www/html/doi
+      state: directory
+      mode: '0755'
+      
+  - name: Create the directory for sqlite database
+    file:
+      path: /var/doi
+      state: directory
+      mode: '0755'
+      
+  - name: Create the python virtual environment
+    command:
+      cmd: virtualenv /opt/doi
+      creates: "/opt/doi"
+      
+  - name: Finish creating the virual environment
+    shell: "source /opt/doi/bin/activate; export DJANGO_PROJECT_STATIC_FILES=/var/www/html/doi/; pip install doi_site"
