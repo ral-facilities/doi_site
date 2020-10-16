@@ -108,6 +108,16 @@ def post_metadata(request):
         return get_response("Bad Request - wrong prefix, doi should start " \
                             "with %s" % DOI_PREFIX, 400)
 
+    try:
+        # The URL can contain the DOI - check that it matches the metadata
+        url_doi = request.get_full_path().split("metadata/", 1)[1]
+        if len(url_doi) > 0 and url_doi != _doi:
+            return get_response("Bad Request - DOI in URL does not match " \
+                                "DOI in metadata\n", 400)
+    except IndexError:
+        # There is no DOI in the URL, which is fine
+        pass
+
     if not is_authorized(request, doi_suffix):
         return get_response("Unauthorized - insufficient privileges", 403)
 
