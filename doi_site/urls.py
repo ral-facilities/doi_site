@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from datasets.views import Mint
 from doi_site.views import DoiList, Domains, HomeView, Notes
-from mds.views import DoiView, DoiDetail, MetadataPost, MetadataView, MediaView
+from mds.views import DoiView, DoiDetail, MetadataView, MediaView
 
 
 # pylint: disable=invalid-name
@@ -24,7 +24,7 @@ urlpatterns = [
     # MDS
     url(r'^doi$', DoiView.as_view(), name='doi_view'),
     url(r'^doi/', DoiDetail.as_view(), name='doi_detail'),
-    url(r'^metadata$', MetadataPost.as_view(), name='metadata_post'),
+    url(r'^metadata$', MetadataView.as_view(), name='metadata_view'),
     url(r'^metadata/', MetadataView.as_view(), name='metadata_view'),
     url(r'^media/', MediaView.as_view(), name='media_view'),
 

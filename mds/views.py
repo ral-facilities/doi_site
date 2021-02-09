@@ -17,7 +17,7 @@ from urlparse import urljoin
 
 class MetadataView(View):
     """
-    Handle delete, head and get requests for metadata.
+    Handle delete, head, get, post and put requests for metadata.
 
     """
     @method_decorator(csrf_exempt)
@@ -50,22 +50,17 @@ class MetadataView(View):
         url = urljoin(DATACITE_URL, request.get_full_path())
         return _get(request.method, url, get_accept_header(request))
 
-
-class MetadataPost(View):
-    """
-    Handle post requests for metadata.
-
-    """
-    @method_decorator(csrf_exempt)
-    @method_decorator(logged_in_or_basicauth())
-    def dispatch(self, *args, **kwargs):
-        return super(MetadataPost, self).dispatch(*args, **kwargs)
-
     def post(self, request):
         """
         This request stores new version of metadata. The request body must
         contain valid XML.
 
+        """
+        return post_metadata(request)
+
+    def put(self, request):
+        """
+        PUT does the same as POST.
         """
         return post_metadata(request)
 
