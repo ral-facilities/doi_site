@@ -1,8 +1,9 @@
-'''
+"""
 Helper methods/ common functionality.
-'''
+"""
 
-import urllib2
+import urllib.parse
+import urllib.request
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
@@ -23,9 +24,9 @@ def is_authorized(request, doi_suffix):
 
     """
     # decode precent encoding and remove leading '/' before checking doi
-    doi_suffix = urllib2.unquote(doi_suffix)
-    if doi_suffix.startswith('/'):
-        doi_suffix = doi_suffix.split('/', 1)[1]
+    doi_suffix = urllib.parse.unquote(doi_suffix)
+    if doi_suffix.startswith("/"):
+        doi_suffix = doi_suffix.split("/", 1)[1]
     authorized_dois = []
     groups = request.user.groups.iterator()
     for group in groups:
@@ -52,7 +53,7 @@ def get_accept_header(request):
 
     """
     try:
-        return {'Accept':request.META['HTTP_ACCEPT']}
+        return {"Accept": request.META["HTTP_ACCEPT"]}
     except KeyError:
         return {}
 
@@ -69,7 +70,7 @@ def get_doi_from_request(request, method):
 
     """
     full_path = request.get_full_path()
-    bits = full_path.split(method + '/')
+    bits = full_path.split(method + "/")
     try:
         return bits[1]
     except IndexError:
@@ -98,17 +99,22 @@ def get_opener():
     """
     Get a http opener.
     A check is made to see if a proxy should be used.
-    
+
     Return:
         an opener object
 
     """
     if _is_use_proxy():
-        proxy_handler = urllib2.ProxyHandler({'https': getattr(settings, 
-            'HTTP_PROXY_HOST') + ":" + getattr(settings, 'HTTP_PROXY_PORT')})
-        return urllib2.build_opener(proxy_handler)
-    else:
-        return urllib2.build_opener()
+        proxy_handler = urllib.request.ProxyHandler(
+            {
+                "https": getattr(settings, "HTTP_PROXY_HOST")
+                + ":"
+                + getattr(settings, "HTTP_PROXY_PORT")
+            }
+        )
+        return urllib.request.build_opener(proxy_handler)
+
+    return urllib.request.build_opener()
 
 
 def _is_use_proxy():
@@ -119,7 +125,8 @@ def _is_use_proxy():
         boolean, True to use proxy
 
     """
-    if (getattr(settings, 'HTTP_PROXY_HOST', False) and
-        getattr(settings, 'HTTP_PROXY_PORT', False)):
+    if getattr(settings, "HTTP_PROXY_HOST", False) and getattr(
+        settings, "HTTP_PROXY_PORT", False
+    ):
         return True
     return False

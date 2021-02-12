@@ -1,20 +1,30 @@
-'''
+"""
 This module is used to make HTTP POST calls.
-'''
+"""
 
 import base64
 import logging
 import socket
 from ssl import SSLError
-import urllib2
-from urlparse import urljoin
+import urllib.error
+from urllib.parse import urljoin
+import urllib.request
 
 from django.http import HttpResponse
 
-from doi_site.settings import DATACITE_URL, DOI_PREFIX, DATACITE_USER_NAME, \
-    DATACITE_PASSWORD, TIME_OUT
-from mds.http.helper import get_doi_from_request, get_opener, get_response, \
-    is_authorized
+from doi_site.settings import (
+    DATACITE_URL,
+    DOI_PREFIX,
+    DATACITE_USER_NAME,
+    DATACITE_PASSWORD,
+    TIME_OUT,
+)
+from mds.http.helper import (
+    get_doi_from_request,
+    get_opener,
+    get_response,
+    is_authorized,
+)
 import xml.etree.ElementTree as ET
 
 
@@ -32,19 +42,21 @@ def post_doi(request):
         a HTTPResponse
 
     """
-    LOGGING.info('Post doi')
+    LOGGING.info("Post doi")
     try:
-        _doi = _get_doi_from_text_body(request.body)
+        _doi = _get_doi_from_text_body(request.body.decode("utf-8"))
     except IndexError:
-        return get_response("Bad Request - request body must be exactly two " \
-                            "lines: DOI and URL", 400)
-    LOGGING.debug('Post doi, doi: %s', _doi)
+        return get_response(
+            "Bad Request - request body must be exactly two " "lines: DOI and URL", 400
+        )
+    LOGGING.debug("Post doi, doi: %s", _doi)
 
     try:
         doi_suffix = _doi.split(DOI_PREFIX, 1)[1]
     except IndexError:
-        return get_response("Bad Request - wrong prefix, doi should start " \
-                            "with %s" % DOI_PREFIX, 400)
+        return get_response(
+            "Bad Request - wrong prefix, doi should start " "with %s" % DOI_PREFIX, 400
+        )
 
     if not is_authorized(request, doi_suffix):
         return get_response("Unauthorized - insufficient privileges", 403)
@@ -64,16 +76,17 @@ def post_media(request):
         a HTTPResponse
 
     """
-    LOGGING.info('Post media')
-    _doi = get_doi_from_request(request, 'media')
-    if _doi == None:
+    LOGGING.info("Post media")
+    _doi = get_doi_from_request(request, "media")
+    if _doi is None:
         return get_response("Bad Request - doi not found in URL", 400)
-    LOGGING.debug('Post media, doi: %s', _doi)
+    LOGGING.debug("Post media, doi: %s", _doi)
     try:
         doi_suffix = _doi.split(DOI_PREFIX, 1)[1]
     except IndexError:
-        return get_response("Bad Request - wrong prefix, doi should start " \
-                            "with %s" % DOI_PREFIX, 400)
+        return get_response(
+            "Bad Request - wrong prefix, doi should start " "with %s" % DOI_PREFIX, 400
+        )
 
     if not is_authorized(request, doi_suffix):
         return get_response("Unauthorized - insufficient privileges", 403)
@@ -93,27 +106,29 @@ def post_metadata(request):
         a HTTPResponse
 
     """
-    LOGGING.info('Post metadata')
+    LOGGING.info("Post metadata")
     try:
         _doi = _get_doi_from_xml_body(request.body)
     except ET.ParseError as ex:
-        LOGGING.info('Error parsing xml from users request: %s', ex)
+        LOGGING.info("Error parsing xml from users request: %s", ex)
         return get_response("Bad Request - error parsing xml: %s" % ex, 400)
-    if _doi == None:
+    if _doi is None:
         return get_response("Bad Request - doi not found in XML", 400)
-    LOGGING.debug('Post metadata, doi: %s', _doi)
+    LOGGING.debug("Post metadata, doi: %s", _doi)
     try:
         doi_suffix = _doi.split(DOI_PREFIX, 1)[1]
     except IndexError:
-        return get_response("Bad Request - wrong prefix, doi should start " \
-                            "with %s" % DOI_PREFIX, 400)
+        return get_response(
+            "Bad Request - wrong prefix, doi should start " "with %s" % DOI_PREFIX, 400
+        )
 
     try:
         # The URL can contain the DOI - check that it matches the metadata
         url_doi = request.get_full_path().split("metadata/", 1)[1]
         if len(url_doi) > 0 and url_doi != _doi:
-            return get_response("Bad Request - DOI in URL does not match " \
-                                "DOI in metadata\n", 400)
+            return get_response(
+                "Bad Request - DOI in URL does not match " "DOI in metadata\n", 400
+            )
     except IndexError:
         # There is no DOI in the URL, which is fine
         pass
@@ -140,46 +155,48 @@ def _post(url, body, headers):
     """
     _set_timeout()
     opener = get_opener()
-    auth_string = (base64.encodestring(DATACITE_USER_NAME + ':'
-                                       + DATACITE_PASSWORD)).rstrip()
-    headers.update({'Authorization':'Basic ' + auth_string})
+    auth_string = (
+        (base64.encodebytes((DATACITE_USER_NAME + ":" + DATACITE_PASSWORD).encode()))
+        .decode("utf-8")
+        .rstrip()
+    )
+    headers.update({"Authorization": "Basic " + auth_string})
 
     # If the request body is a string, urllib2 attempts to concatenate the url,
     # body and headers. If the url is unicode, the request body can get
     # converted unicode. This has resulted in issues where there are characters
     # with diacritic marks in the request body. To avoid these issues the url is
     # UTF-8 encoded.
-    url_encode = url.encode('utf-8')
+    url_encode = url.encode("utf-8").decode()
 
-    req = urllib2.Request(url_encode, data=body, headers=headers)
+    req = urllib.request.Request(url_encode, data=body, headers=headers)
     try:
         response = opener.open(req)
-    except (urllib2.HTTPError) as ex:
+    except urllib.error.HTTPError as ex:
         msg = ex.readlines()
-        LOGGING.warn('HTTPError error getting %s. %s', url, msg)
+        LOGGING.warning("HTTPError error getting %s. %s", url, msg)
         return get_response(msg, ex.code)
-    except (socket.timeout, urllib2.URLError) as ex:
-        LOGGING.warn('Timeout or URLError error getting %s. %s', url, ex.reason)
+    except (socket.timeout, urllib.error.URLError) as ex:
+        LOGGING.warning("Timeout or URLError error getting %s. %s", url, ex.reason)
         return get_response(ex.reason, 500)
-    except (SSLError) as ex:
-        LOGGING.warn('SSLError error getting %s. %s', url, ex)
+    except SSLError as ex:
+        LOGGING.warning("SSLError error getting %s. %s", url, ex)
         return get_response(ex, 500)
     except UnicodeDecodeError as ex:
-        LOGGING.info('UnicodeDecodeError error getting %s. %s', url, ex)
+        LOGGING.info("UnicodeDecodeError error getting %s. %s", url, ex)
         return get_response(ex, 500)
     finally:
         _close(opener)
-    if response.headers.has_key('Content-Type'):
-        ret_response = HttpResponse(content_type=
-                                    response.headers.get('Content-Type'))
+    if "Content-Type" in response.headers:
+        ret_response = HttpResponse(content_type=response.headers.get("Content-Type"))
     else:
         ret_response = HttpResponse()
     ret_response.status_code = response.code
     ret_response.reason_phrase = response.msg
     # pylint: disable=maybe-no-member
     ret_response.writelines(response.readlines())
-    if response.headers.has_key('location'):
-        ret_response.setdefault('Location', response.headers.get('location'))
+    if "location" in response.headers:
+        ret_response.setdefault("Location", response.headers.get("location"))
     return ret_response
 
 
@@ -214,11 +231,11 @@ def _get_doi_from_text_body(body):
         a str containing the DOI
 
     """
-    bits = body.split('url=', 1)
-    if bits[0] != '':
-        _doi = (bits[0].split('doi=')[1]).strip()
+    bits = body.split("url=", 1)
+    if bits[0] != "":
+        _doi = (bits[0].split("doi=")[1]).strip()
     else:
-        bits = bits[1].split('doi=')
+        bits = bits[1].split("doi=")
         _doi = bits[1].strip()
 
     return _doi
@@ -240,8 +257,8 @@ def _get_doi_from_xml_body(body):
 
     """
     root = ET.fromstring(body)
-    for child in root.getchildren():
-        if child.attrib == {'identifierType': 'DOI'}:
+    for child in root:
+        if child.attrib == {"identifierType": "DOI"}:
             return child.text
     return None
 
@@ -258,6 +275,6 @@ def _get_content_type_header(request):
 
     """
     try:
-        return {'Content-Type':request.META['CONTENT_TYPE']}
+        return {"Content-Type": request.META["CONTENT_TYPE"]}
     except KeyError:
         return {}

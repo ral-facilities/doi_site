@@ -24,13 +24,15 @@ def view_or_basicauth(view, request, test_func, realm="", *args, **kwargs):
         return view(request, *args, **kwargs)
 
     # They are not logged in. See if they provided login credentials
-    if 'HTTP_AUTHORIZATION' in request.META:
-        auth = request.META['HTTP_AUTHORIZATION'].split()
+    if "HTTP_AUTHORIZATION" in request.META:
+        auth = request.META["HTTP_AUTHORIZATION"].split()
         if len(auth) == 2:
             # NOTE: We are only support basic authentication for now.
             #
             if auth[0].lower() == "basic":
-                uname, passwd = base64.b64decode(auth[1]).split(':', 1)
+                uname, passwd = ((base64.b64decode(auth[1])).decode("utf-8")).split(
+                    ":", 1
+                )
                 user = authenticate(username=uname, password=passwd)
                 if user is not None:
                     if user.is_active:
@@ -45,7 +47,7 @@ def view_or_basicauth(view, request, test_func, realm="", *args, **kwargs):
     #
     response = HttpResponse()
     response.status_code = 401
-    response['WWW-Authenticate'] = 'Basic realm="%s"' % realm
+    response["WWW-Authenticate"] = 'Basic realm="%s"' % realm
     return response
 
 
@@ -78,10 +80,13 @@ def logged_in_or_basicauth(realm=""):
 
     You can provide the name of the realm to ask for authentication within.
     """
+
     def view_decorator(func):
         def wrapper(request, *args, **kwargs):
-            return view_or_basicauth(func, request,
-                                     lambda u: u.is_authenticated(),
-                                     realm, *args, **kwargs)
+            return view_or_basicauth(
+                func, request, lambda u: u.is_authenticated, realm, *args, **kwargs
+            )
+
         return wrapper
+
     return view_decorator

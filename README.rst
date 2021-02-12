@@ -54,8 +54,7 @@ Installation and Configuration
 Prerequisites
 -------------
 
-- Python => 2.7
-- python-virtualenv
+- Python => 3.7
 - gcc
 - mod_ssl.x86_64
 - mod_wsgi.x86_64
@@ -82,7 +81,7 @@ Create the python virtual environment
 .. code:: bash
 
     cd /opt
-    virtualenv doi
+    venv doi
     cd doi
     source bin/activate
     export DJANGO_PROJECT_STATIC_FILES=/var/www/html/doi/
@@ -143,19 +142,19 @@ Initialisation and Admin User Creation
 
 .. code:: bash
 
-    python lib/python2.7/site-packages/doi_site/manage.py collectstatic --clear --noinput
-    python lib/python2.7/site-packages/doi_site/manage.py syncdb --noinput
-    python lib/python2.7/site-packages/doi_site/manage.py createsuperuser
+    python lib/python3.7/site-packages/doi_site/manage.py collectstatic --clear --noinput
+    python3 lib/python3.7/site-packages/doi_site/manage.py syncdb --noinput
+    python3 lib/python3.7/site-packages/doi_site/manage.py createsuperuser
     deactivate
 
-Stuff for apache
+Stuff for httpd
 ^^^^^^^^^^^^^^^^
 
 .. code:: bash
 
-    cp -p  /opt/doi/lib/python2.7/site-packages/doi_site/resources/doi_wsgi.conf /etc/httpd/conf.d/
+    cp -p  /opt/doi/lib/python3.7/site-packages/doi_site/resources/doi_wsgi.conf /etc/httpd/conf.d/
 
-Assuming apache is running as the user ``apache``
+Assuming httpd is running as the user ``apache``
 
 .. code:: bash
 
@@ -191,7 +190,7 @@ Within your ``organisation_skin.html`` you can override the following blocks:
 
 Place any css files in the directory ``static/doi_site/css/``
 
-If you have made any changes you will have to restart apache
+If you have made any changes you will have to restart httpd
 
 Adding DOI Domains via the Admin Web Page
 =========================================
