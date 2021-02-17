@@ -54,7 +54,7 @@ Installation and Configuration
 Prerequisites
 -------------
 
-- Python => 3.7
+- Python => 3.6
 - gcc
 - mod_ssl.x86_64
 - mod_wsgi.x86_64
@@ -142,9 +142,9 @@ Initialisation and Admin User Creation
 
 .. code:: bash
 
-    python lib/python3.7/site-packages/doi_site/manage.py collectstatic --clear --noinput
-    python3 lib/python3.7/site-packages/doi_site/manage.py syncdb --noinput
-    python3 lib/python3.7/site-packages/doi_site/manage.py createsuperuser
+    python lib/python3.6/site-packages/doi_site/manage.py collectstatic --clear --noinput
+    python3 lib/python3.6/site-packages/doi_site/manage.py syncdb --noinput
+    python3 lib/python3.6/site-packages/doi_site/manage.py createsuperuser
     deactivate
 
 Stuff for httpd
@@ -152,7 +152,7 @@ Stuff for httpd
 
 .. code:: bash
 
-    cp -p  /opt/doi/lib/python3.7/site-packages/doi_site/resources/doi_wsgi.conf /etc/httpd/conf.d/
+    cp -p  /opt/doi/lib/python3.6/site-packages/doi_site/resources/doi_wsgi.conf /etc/httpd/conf.d/
 
 Assuming httpd is running as the user ``apache``
 

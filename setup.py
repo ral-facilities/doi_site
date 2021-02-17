@@ -32,8 +32,9 @@ setup(
     ],
     # Adds dependencies
     install_requires=[
-        "Django==3",
+        "Django==2",
         "django-auth-ldap",
         "python-ldap",
+        "psycopg2-binary",
     ],
 )
