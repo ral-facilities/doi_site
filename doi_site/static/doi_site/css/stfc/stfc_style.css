@@ -11,7 +11,6 @@ img{
 
 /* body */
 body {
-    background: #efc643 url('../../images/stfc/bgUr.png') top left repeat-x;
     font-family:  verdana, arial, sans-serif;
     color: #404040;
     font-size: 0.8em;
@@ -144,7 +143,7 @@ body {
 /* footer  */
 #footer {
     clear: both;
-    background-color: #0e2b52;
+    background: linear-gradient(0deg, #002d61, #022e67);
     color: #fff;
     height: 25px;
     padding-left: 15px;
@@ -257,14 +256,14 @@ a.exLk:link {
 #headerStart{
     float: left;
     overflow: hidden;
-    background: url("../../images/stfc/headerBgStart.png") no-repeat scroll left top transparent;
-    border-radius: 45px 0 0 0;
+    background: linear-gradient(0deg, #022e67, #114a8d);
     padding: 0;
+    height: 118px
 }
 
 #headerMiddle{
     float: left;
-    background: url("../../images/stfc/headerBgRepeat.png") repeat-x scroll left top transparent;
+    background: linear-gradient(0deg, #022e67, #114a8d);
     position: absolute;
     top:0;
     height: 118px;
@@ -274,7 +273,7 @@ a.exLk:link {
 
 #headerEnd{
     float: right;
-    background: url("../../images/stfc/headerBgEnd.png") no-repeat scroll right top transparent;
+    background: linear-gradient(0deg, #022e67, #114a8d);
     width: 3px;
     height: 118px;
 }
@@ -283,6 +282,11 @@ a.exLk:link {
     margin: 15px 20px 33px 25px;
 }
 
+
+#siteLogo {
+    float: right;
+    margin: 25px 60px 0 25px;
+}
 
 #siteName {
     float: right;
@@ -1241,6 +1245,16 @@ table.cookieInfo {
     list-style-type: none;
 }
 
+#ukri {
+    background: linear-gradient(0deg, #022e67, #114a8d);
+}
 
+.light {
+    color:#fff;
+}
 
-    
+.center-block {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}

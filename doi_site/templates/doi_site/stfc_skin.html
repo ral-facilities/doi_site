@@ -1,16 +1,17 @@
-{% extends "doi_site/base.html" %}
-{% load static %}
-
-{% block head %}
+{% extends "doi_site/base.html" %} {% load static %} {% block head %}
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-<link href="{% static 'doi_site/css/stfc/stfc_normalize.css' %}" rel="styleSheet"
-    type="text/css" />
-<link href="{% static 'doi_site/css/stfc/stfc_style.css' %}" rel="styleSheet" type="text/css"
-    media="screen" />
-<link rel="stylesheet" href="{% static 'doi_site/css/stfc/stfc_print.css' %}" type="text/css"
-    media="print" />
-<link rel="shortcut icon" href="{% static 'doi_site/images/stfc/favicon.ico.png' %}"
+<link href="{% static 'doi_site/css/stfc/font_awesome.css' %}"
+    rel="styleSheet" type="text/css" />
+<link href="{% static 'doi_site/css/stfc/stfc_normalize.css' %}"
+    rel="styleSheet" type="text/css" />
+<link href="{% static 'doi_site/css/stfc/stfc_style.css' %}"
+    rel="styleSheet" type="text/css" media="screen" />
+<link rel="stylesheet"
+    href="{% static 'doi_site/css/stfc/stfc_print.css' %}"
+    type="text/css" media="print" />
+<link rel="shortcut icon"
+    href="{% static 'doi_site/images/stfc/index.ico' %}"
     type="image/x-icon" />
 
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -25,9 +26,7 @@
 <meta name="dcterms.description" lang="en" content="STFC home" />
 <meta name="viewport" lang="en"
     content="width=device-width, initial-scale=1, maximum-scale=1" />
-{% endblock %}
-
-{% block page_header %}
+{% endblock %} {% block page_header %}
 <div id="containerWrapper">
     <script type="text/javascript"
         src="{% static 'doi_site/scripts/stfc/cookieWarning.js' %}"></script>
@@ -35,10 +34,10 @@
     <div id="headerWrapper">
         <div id="headerStart">
             <div id="siteLogo">
-                <a href="http://www.stfc.ac.uk"> <img alt="STFC logo"
-                    src="{% static 'doi_site/images/stfc/stfcLogo.png' %}" id="mainLogo" /></a> <img
-                    alt="STFC logo" src="{% static 'doi_site/images/stfc/logoPrint.png' %}"
-                    id="printLogo" />
+                <a href="https://stfc.ukri.org/"> <img
+                    src="{% static 'doi_site/images/stfc/STFC-UKRI-Locked-Down-Whiteout.png' %}"
+                    class="stfcLogo" alt="STFC logo">
+                </a>
             </div>
         </div>
         <div id="headerMiddle">
@@ -46,63 +45,57 @@
                 <h1 class="siteName">
                     <a href="" id="j_idt15">DOI Minting Service</a>
                 </h1>
-                <p class="siteStrapline">The DOI service for STFC research data</p>
+                <p class="siteStrapline">The DOI service for STFC
+                    research data</p>
             </div>
         </div>
         <div id="headerEnd"></div>
     </div>
-{% endblock %}
+    {% endblock %} {% block content %}{% endblock %} {% block footer %}
 
-{% block content %}{% endblock %}
+    <div id="ukri" style="padding: 10px;">
+        <div style="padding: 10px">
+            <a href="https://www.ukri.org/" target="_blank"><img
+                alt="UKRI" class="center-block img"
+                src="static/doi_site/images/stfc/ukri.png" width="150px" /></a>
+        </div>
+        <p class="light" style="text-align: center">
+            Science and Technology Facilities Council<br />
+            Switchboard: +44 (0)1793 442000
+        </p>
+    </div>
 
-{% block footer %}
     <div id="footer">
-
         <div id="footerLeft">
             <ul class="footerLinks">
-                <li><a href="http://www.stfc.ac.uk/contacts.aspx">Contact
-                        Us</a></li>
-                <li><a href="http://www.stfc.ac.uk/privacy.aspx">Cookies/Privacy</a></li>
-                <li><a href="http://www.stfc.ac.uk/disclaimer.aspx">Terms
-                        &amp; conditions</a></li>
-                <li><a href="http://www.stfc.ac.uk/cymraeg.aspx">Cymraeg</a></li>
-                <li><a href="http://www.stfc.ac.uk/foi.aspx">FOI</a></li>
-                <li><a href="http://www.stfc.ac.uk/copyright.aspx">Copyright</a></li>
-                <li><a href="http://www.stfc.ac.uk/glossary.aspx">Glossary</a></li>
-                <li><a href="http://www.stfc.ac.uk/sitemap.aspx">Sitemap</a></li>
-                <li><a href="http://www.stfc.ac.uk/accessibility.aspx">Accessibility</a></li>
+                <li><a
+                    href="https://stfc.ukri.org//about-us/contact-us/"><i
+                        class="fa fa-phone"></i> Contact us</a></li>
+                <li><a
+                    href="https://stfc.ukri.org//about-us/privacy-statement/"><i
+                        class="fa fa-lock"></i> Cookies/Privacy</a></li>
+                <li><a
+                    href="https://stfc.ukri.org//about-us/terms-of-website-use-disclaimer/"><i
+                        class="fa fa-file-text"></i> Terms of use</a></li>
+                <li><a
+                    href="https://stfc.ukri.org//about-us/ynglc5b7n-a-stfc/"><i
+                        class="fa fa-flag"></i> Cymraeg</a></li>
+                <li><a
+                    href="https://stfc.ukri.org//about-us/freedom-of-information/"><i
+                        class="fa fa-info"></i> FOI</a></li>
+                <li><a
+                    href="https://stfc.ukri.org//about-us/copyright/">&#169
+                        Copyright</a></li>
+                <li><a
+                    href="https://stfc.ukri.org//about-us/site-map/"><i
+                        class="fa fa-sitemap"></i> Sitemap</a></li>
+                <li><a
+                    href="https://stfc.ukri.org//about-us/accessibility/"><i
+                        class="fa fa-keyboard-o"></i> Accessibility</a></li>
             </ul>
-        </div>
-        <div id="footerRight">
-            <a href="http://www.stfc.ac.uk/rss/stfcNewsRSS.xml"><img
-                title="STFC RSS feeds" alt="STFC RSS Feeds"
-                src="{% static 'doi_site/images/stfc/rss.png' %}" id="imgRS" /></a> <a
-                href="http://twitter.com/STFC_Matters"><img
-                title="Follow us on Twitter" alt="STFC on Twitter"
-                src="{% static 'doi_site/images/stfc/twitter.png' %}" id="imgTW" /></a> <a
-                href="http://www.youtube.com/user/SciTechUK"><img
-                title="STFC on YouTube" alt="STFC on YouTube"
-                src="{% static 'doi_site/images/stfc/youTube.png' %}" id="imgYT" /></a> <a
-                href="http://www.thenakedscientists.com/rss/naked_scientists_stfc_podcast.xml"><img
-                title="Podcasts from Naked Scientists supported by the STFC"
-                alt="Naked Scientists podcasts" src="{% static 'doi_site/images/stfc/nsci20.png' %}"
-                id="imgNS" /></a> <a id="printLink" href="javascript:window.print()"><img
-                title="Printer-friendly" alt="Printer-friendly"
-                src="{% static 'doi_site/images/stfc/pf.png' %}" id="imgPF" /></a>
         </div>
     </div>
 </div>
 
-<div id="footerBase">
-    <div>
-        <a href="http://www.rcuk.ac.uk/Pages/Home.aspx"><img id="imgRCUK"
-            src="https://www.stfc.ac.uk/stfc/includes/themes/MuraSTFC/images/logos/RCUK-logo.jpg"
-            alt="RCUK" /></a>
-    </div>
-    <div>
-        <strong>Science and Technology Facilities Council</strong>
-        Switchboard: 01793 442000
-    </div>
-</div>
 {% endblock %}
 
