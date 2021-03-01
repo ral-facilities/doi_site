@@ -344,6 +344,10 @@ a.exLk:link {
     border-top: 0px;
 }
 
+#mainNavUL li {
+    color: #fff;
+}
+
 #mainNavUL li a {
     font-weight: normal;
     text-decoration: none;
