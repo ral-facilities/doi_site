@@ -51,6 +51,13 @@ organisation to store data sets and mint DOIs under a central sub-domain.
 Installation and Configuration
 ==============================
 
+At STFC
+-------
+
+These services are now installed at STFC via ansible playbooks.
+
+The manual install instructions are contained below.
+
 Prerequisites
 -------------
 
