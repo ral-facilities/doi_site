@@ -150,24 +150,13 @@ body {
     padding-top: 10px;
 }
 
-#footerLeft {
-    float: left;
-}
-
-#footerRight {
-    margin-top: -4px;
-    font-size: 90%;
-    width: 200px;
-    padding-right: 15px;
-    float: right;
-    text-align: right;
-}
-
 .footerLinks {
     list-style-type: none;
     padding: 0;
-    margin: 0;
+    margin: auto;
     width: 100%;
+    justify-content: center;
+    display: flex;
 }
 
 .footerLinks li  {
@@ -183,7 +172,7 @@ body {
     text-decoration: none;
 }
 
-#footerBase {   
+#footerBase {
     margin: 0 30px;
     padding-bottom: 30px;
     color: #666666;
@@ -192,7 +181,7 @@ body {
 
 
 .printOnly {
-    display:none;    
+    display:none;
 }
 
 /* custom */
@@ -330,14 +319,14 @@ a.exLk:link {
 #mainNavigation { 
     overflow: hidden;
     border-bottom: 1px solid #000;
-    background-color: #fff;
     width: 100%;
-    /* override doi.css */    
+    background: linear-gradient(0deg, #245793, #3771b5);
+    /* override doi.css */
     border-left: 0px;
     margin-top: 0em;
 }
 
-#mainNavUL {    
+#mainNavUL {
     margin: 0;
     padding: 0;
     text-align: center;
@@ -345,20 +334,20 @@ a.exLk:link {
 
 #mainNavUL li {
     float: left;
-    border-right: 1px solid #999;
+    border-right: 1px solid #333;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     padding-left: 2.75em;
     padding-right: 2.75em;
-    list-style-type: none;  
-    /* override doi.css */    
+    list-style-type: none;
+    /* override doi.css */
     border-top: 0px;
 }
 
-#mainNavUL li a {    
+#mainNavUL li a {
+    font-weight: normal;
     text-decoration: none;
-    font-weight: bold;
-    color: #333;
+    color: #fff;
 }
 
 .subMenu ul li {
@@ -375,12 +364,12 @@ a.exLk:link {
 
 .subMenuSeparator {
     background-color: #ccc;
-    font-weight: bold;      
+    font-weight: bold;
 }
 
 
 .subMenu ul li a{
-    color: #333333;    
+    color: #333333;
     font-size: 1em;
     padding-bottom: 0.5em;
     padding-top: 0.5em;
