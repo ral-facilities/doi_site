@@ -58,10 +58,21 @@ def post_doi(request):
             "Bad Request - wrong prefix, doi should start " "with %s" % DOI_PREFIX, 400
         )
 
+    try:
+        # The URL can contain the DOI - check that it matches
+        url_doi = request.get_full_path().split("doi/", 1)[1]
+        if len(url_doi) > 0 and url_doi != _doi:
+            return get_response(
+                "Bad Request - DOI in URL does not match DOI in request body\n", 400
+            )
+    except IndexError:
+        # There is no DOI in the URL, which is fine
+        pass
+
     if not is_authorized(request, doi_suffix):
         return get_response("Unauthorized - insufficient privileges", 403)
 
-    url = urljoin(DATACITE_URL, request.get_full_path())
+    url = urljoin(DATACITE_URL, "/doi")
     return _post(url, request.body, _get_content_type_header(request))
 
 
