@@ -64,7 +64,7 @@ class MetadataView(View):
         """
         PUT does the same as POST.
         """
-        return post_metadata(request)
+        return post_metadata(request, method="PUT")
 
 
 class DoiView(View):
@@ -111,7 +111,7 @@ class DoiView(View):
         PUT does the same as POST.
 
         """
-        return post_doi(request)
+        return post_doi(request, method="PUT")
 
 
 

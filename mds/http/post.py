@@ -31,7 +31,7 @@ import xml.etree.ElementTree as ET
 LOGGING = logging.getLogger(__name__)
 
 
-def post_doi(request):
+def post_doi(request, method="POST"):
     """
     Post the DOI.
 
@@ -72,8 +72,8 @@ def post_doi(request):
     if not is_authorized(request, doi_suffix):
         return get_response("Unauthorized - insufficient privileges", 403)
 
-    url = urljoin(DATACITE_URL, "/doi")
-    return _post(url, request.body, _get_content_type_header(request))
+    url = urljoin(DATACITE_URL, request.get_full_path())
+    return _post(url, request.body, _get_content_type_header(request), method=method)
 
 
 def post_media(request):
@@ -106,7 +106,7 @@ def post_media(request):
     return _post(url, request.body, _get_content_type_header(request))
 
 
-def post_metadata(request):
+def post_metadata(request, method="POST"):
     """
     Post the metadata.
 
@@ -148,10 +148,10 @@ def post_metadata(request):
         return get_response("Unauthorized - insufficient privileges", 403)
 
     url = urljoin(DATACITE_URL, request.get_full_path())
-    return _post(url, request.body, _get_content_type_header(request))
+    return _post(url, request.body, _get_content_type_header(request), method=method)
 
 
-def _post(url, body, headers):
+def _post(url, body, headers, method="POST"):
     """
     Send a post request to DataCite.
 
@@ -180,7 +180,7 @@ def _post(url, body, headers):
     # UTF-8 encoded.
     url_encode = url.encode("utf-8").decode()
 
-    req = urllib.request.Request(url_encode, data=body, headers=headers)
+    req = urllib.request.Request(url_encode, data=body, headers=headers, method=method)
     try:
         response = opener.open(req)
     except urllib.error.HTTPError as ex:
