@@ -64,12 +64,12 @@ class MetadataView(View):
         """
         PUT does the same as POST.
         """
-        return post_metadata(request)
+        return post_metadata(request, method="PUT")
 
 
 class DoiView(View):
     """
-    Handle post requests for DOIs and get and head requests for all DOIs.
+    Handle head, get, post and put requests for DOIs.
 
     """
 
@@ -80,8 +80,9 @@ class DoiView(View):
 
     def get(self, request):
         """
-        This request returns a list of all DOIs for the requesting datacentre.
-        There is no guaranteed order.
+        This request returns a URL associated with a given DOI, or a list of
+        all DOIs for the requesting datacentre if no DOI is given (there is no
+        guaranteed order).
 
         """
         url = urljoin(DATACITE_URL, request.get_full_path())
@@ -89,7 +90,7 @@ class DoiView(View):
 
     def head(self, request):
         """
-        Request a list of all DOIs for the requesting datacentre.
+        HEAD does the same as GET.
 
         """
         url = urljoin(DATACITE_URL, request.get_full_path())
@@ -105,32 +106,13 @@ class DoiView(View):
         """
         return post_doi(request)
 
-
-class DoiDetail(View):
-    """
-    Handle get and head requests for an individual DOIs.
-
-    """
-
-    @method_decorator(logged_in_or_basicauth())
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    def get(self, request):
+    def put(self, request):
         """
-        This request returns an URL associated with a given DOI.
+        PUT does the same as POST.
 
         """
-        url = urljoin(DATACITE_URL, request.get_full_path())
-        return _get(request.method, url, get_accept_header(request))
+        return post_doi(request, method="PUT")
 
-    def head(self, request):
-        """
-        Request an URL associated with a given DOI.
-
-        """
-        url = urljoin(DATACITE_URL, request.get_full_path())
-        return _get(request.method, url, get_accept_header(request))
 
 
 class MediaView(View):

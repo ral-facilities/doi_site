@@ -31,7 +31,7 @@ import xml.etree.ElementTree as ET
 LOGGING = logging.getLogger(__name__)
 
 
-def post_doi(request):
+def post_doi(request, method="POST"):
     """
     Post the DOI.
 
@@ -58,11 +58,22 @@ def post_doi(request):
             "Bad Request - wrong prefix, doi should start " "with %s" % DOI_PREFIX, 400
         )
 
+    try:
+        # The URL can contain the DOI - check that it matches
+        url_doi = request.get_full_path().split("doi/", 1)[1]
+        if len(url_doi) > 0 and url_doi != _doi:
+            return get_response(
+                "Bad Request - DOI in URL does not match DOI in request body\n", 400
+            )
+    except IndexError:
+        # There is no DOI in the URL, which is fine
+        pass
+
     if not is_authorized(request, doi_suffix):
         return get_response("Unauthorized - insufficient privileges", 403)
 
     url = urljoin(DATACITE_URL, request.get_full_path())
-    return _post(url, request.body, _get_content_type_header(request))
+    return _post(url, request.body, _get_content_type_header(request), method=method)
 
 
 def post_media(request):
@@ -95,7 +106,7 @@ def post_media(request):
     return _post(url, request.body, _get_content_type_header(request))
 
 
-def post_metadata(request):
+def post_metadata(request, method="POST"):
     """
     Post the metadata.
 
@@ -137,10 +148,10 @@ def post_metadata(request):
         return get_response("Unauthorized - insufficient privileges", 403)
 
     url = urljoin(DATACITE_URL, request.get_full_path())
-    return _post(url, request.body, _get_content_type_header(request))
+    return _post(url, request.body, _get_content_type_header(request), method=method)
 
 
-def _post(url, body, headers):
+def _post(url, body, headers, method="POST"):
     """
     Send a post request to DataCite.
 
@@ -169,7 +180,7 @@ def _post(url, body, headers):
     # UTF-8 encoded.
     url_encode = url.encode("utf-8").decode()
 
-    req = urllib.request.Request(url_encode, data=body, headers=headers)
+    req = urllib.request.Request(url_encode, data=body, headers=headers, method=method)
     try:
         response = opener.open(req)
     except urllib.error.HTTPError as ex:

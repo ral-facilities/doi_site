@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from datasets.views import Mint
 from doi_site.views import DoiList, Domains, HomeView, Notes, Login, Logout
-from mds.views import DoiView, DoiDetail, MetadataView, MediaView
+from mds.views import DoiView, MetadataView, MediaView
 
 
 # pylint: disable=invalid-name
@@ -22,7 +22,7 @@ urlpatterns = [
 
     # MDS
     re_path(r"^doi$", DoiView.as_view(), name="doi_view"),
-    re_path(r"^doi/", DoiDetail.as_view(), name="doi_detail"),
+    re_path(r"^doi/", DoiView.as_view(), name="doi_view"),
     re_path(r"^metadata$", MetadataView.as_view(), name="metadata_view"),
     re_path(r"^metadata/", MetadataView.as_view(), name="metadata_view"),
     re_path(r"^media/", MediaView.as_view(), name="media_view"),
