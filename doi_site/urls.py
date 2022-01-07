@@ -2,7 +2,6 @@
 
 from django.urls import re_path
 from django.contrib import admin
-from django.urls import path, include
 from datasets.views import Mint
 from doi_site.views import DoiList, Domains, HomeView, Notes, Login, Logout
 from mds.views import DoiView, MetadataView, MediaView
