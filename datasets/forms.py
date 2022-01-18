@@ -9,14 +9,10 @@ RT_CHOICES= [
     ]
 class DoiForm(forms.Form):
     identifier = forms.CharField(label='Identifier', max_length=100)
-    creator_given_name = forms.CharField(label='Given Name', max_length=100, widget=forms.TextInput(attrs={'class' : 'creator'}))
-    creator_family_name = forms.CharField(label='Family Name', max_length=100, widget=forms.TextInput(attrs={'class' : 'creator'}))
-    creator_affiliation = forms.CharField(label='Affiliation', max_length=100)
     title = forms.CharField(max_length=100)
     publisher = forms.CharField(max_length=100)
     publication_year = forms.CharField(max_length=100)
     resource_type= forms.CharField(label='Pick the resource type:', widget=forms.Select(choices=RT_CHOICES))
-    subject = forms.CharField(max_length=100)
 class SubjectForm(forms.Form):
      subject = forms.CharField(label='Subject')
 SubjectFormset = formset_factory(SubjectForm, extra=1)
