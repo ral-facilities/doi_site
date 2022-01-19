@@ -2,10 +2,34 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.forms import formset_factory, MultiWidget, TextInput
 RT_CHOICES= [
-    ('type 1', 'Type A'),
-    ('type 2', 'Type B'),
-    ('type 3', 'Type C'),
-    ('type 4', 'Type D'),
+    ('Audiovisual', 'Audiovisual'),
+    ('Book', 'Book'),
+    ('BookChapter', 'BookChapter'),
+    ('Collection', 'Collection'),
+    ('ComputationalNotebook', 'ComputationalNotebook'),
+    ('ConferencePaper', 'ConferencePaper'),
+    ('ConferenceProceeding', 'ConferenceProceeding'),
+    ('DataPaper', 'DataPaper'),
+    ('Dataset', 'Dataset'),
+    ('Dissertation', 'Dissertation'),
+    ('Event', 'Event'),
+    ('Image', 'Image'),
+    ('InteractiveResource', 'InteractiveResource'),
+    ('Journal', 'Journal'),
+    ('JournalArticle', 'JournalArticle'),
+    ('Model', 'Model'),
+    ('OutputManagementPlan', 'OutputManagementPlan'),
+    ('PeerReview', 'PeerReview'),
+    ('PhysicalObject', 'PhysicalObject'),
+    ('Preprint', 'Preprint'),
+    ('Report', 'Report'),
+    ('Service', 'Service'),
+    ('Software', 'Software'),
+    ('Sound', 'Sound'),
+    ('Standard', 'Standard'),
+    ('Text', 'Text'),
+    ('Workflow', 'Workflow'),
+    ('Other', 'Other')
     ]
 class DoiForm(forms.Form):
     identifier = forms.CharField(label='Identifier', max_length=100)
