@@ -2,3 +2,4 @@ Django==4
 django-auth-ldap
 python-ldap
 psycopg2-binary==2.8.6
+requests

@@ -36,5 +36,6 @@ setup(
         "django-auth-ldap",
         "python-ldap",
         "psycopg2-binary",
+        "requests"
     ],
 )
