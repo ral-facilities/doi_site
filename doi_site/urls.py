@@ -1,8 +1,8 @@
 """ The URL mappings. """
 
-from django.urls import re_path
+from django.urls import re_path, path
 from django.contrib import admin
-from datasets.views import Mint
+from datasets.views import Mint, Url
 from doi_site.views import DoiList, Domains, HomeView, Notes, Login, Logout
 from mds.views import DoiView, MetadataView, MediaView
 
@@ -17,6 +17,7 @@ urlpatterns = [
     re_path(r"^doilist$", DoiList.as_view(), name="doi_list"),
     re_path(r"^domains$", Domains.as_view(), name="domains"),
     re_path(r"^mint$", Mint.as_view(), name="mint"),
+    path('mint/<path:doi>', Url.as_view(), name="minturl"),
     re_path(r"^notes$", Notes.as_view(), name="notes"),
 
     # MDS

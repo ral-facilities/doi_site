@@ -42,14 +42,23 @@ def dict_to_xml(d):
     except KeyError:
         raise MetadataError('Missing mandatory metadata identifier')
 
-    xml_subjects = ET.SubElement(xml_resource, 'subjects')
-    for subject in d['subjects']:
-        xml_subject = ET.SubElement(xml_subjects, 'subject')
-        xml_subject.text = subject
+    try:
+        subjects = d["subjects"]
+    except KeyError:
+        subjects = []
+    if subjects:
+        xml_subjects = ET.SubElement(xml_resource, 'subjects')
+        for subject in subjects:
+            xml_subject = ET.SubElement(xml_subjects, 'subject')
+            xml_subject.text = subject
 
     xml_creators = ET.SubElement(xml_resource, 'creators')
     try:
-        for creator in d['creators']:
+        creators = d['creators']
+    except KeyError:
+            raise MetadataError('Missing mandatory metadata creators')
+    if creators:
+        for creator in creators:
             xml_creator = ET.SubElement(xml_creators, 'creator')
             xml_creator_name = ET.SubElement(xml_creator, 'creatorName')
             xml_creator_name.text = creator['familyname'] + ', ' + creator['givenname']
@@ -58,9 +67,12 @@ def dict_to_xml(d):
             xml_creator_given_name.text = creator['givenname']
             xml_creator_family_name = ET.SubElement(xml_creator, 'familyName')
             xml_creator_family_name.text = creator['familyname']
-            xml_creator_affiliation = ET.SubElement(xml_creator, 'affiliation')
-            xml_creator_affiliation.text = creator['affiliation']
-    except KeyError:
-                raise MetadataError('Missing mandatory metadata identifier')
+            try: 
+                affiliation = creator['affiliation']
+            except KeyError:
+                affiliation = None
+            if affiliation:
+                xml_creator_affiliation = ET.SubElement(xml_creator, 'affiliation')
+                xml_creator_affiliation.text = creator['affiliation']
 
     return '<?xml version="1.0" encoding="UTF-8"?>' + "\n" + ET.tostring(xml_resource, encoding='unicode')

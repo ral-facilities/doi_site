@@ -1,10 +1,12 @@
-{% extends "doi_site/organisation_wrapper.html" %} {% block content %}
+{% extends "doi_site/organisation_wrapper.html" %} 
+
+{% block content %}
 
 <h2>DOI form</h2>
 
 <form class="form-horizontal" method="POST" action="">
   {% csrf_token %} {{ form.as_p }}
-  
+
   {{ formset1.management_form }} {% for form in formset1 %}
   <div class="row form-row spacer formset1-row">
     <div class="col-2">

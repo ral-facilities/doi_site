@@ -12,6 +12,25 @@ dict = {
     'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName', 'affiliation': 'AFFILIATION'}]
 }
 
+subjectdict = {
+    'identifier': 'IDENTIFIER', 
+    'title': 'TITLE', 
+    'publisher': 'PUBLISHER', 
+    'publication_year': '2022', 
+    'resource_type': 'Text', 
+    'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName', 'affiliation': 'AFFILIATION'}]
+}
+
+affiliationdict = {
+    'identifier': 'IDENTIFIER', 
+    'title': 'TITLE', 
+    'publisher': 'PUBLISHER', 
+    'publication_year': '2022', 
+    'resource_type': 'Text',
+    'subjects': ['SUBJECT'], 
+    'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName'}]
+}
+
 class TestDictToXml(unittest.TestCase):
     def test_mandatory(self):
         res = dict_to_xml(dict)
@@ -58,6 +77,19 @@ class TestDictToXml(unittest.TestCase):
         del dictcopy['creators']
         with self.assertRaises(MetadataError):
             res = dict_to_xml(dictcopy)
+    
+    def test_missing_subject(self):
+        dictcopy= copy.deepcopy(subjectdict)
+        dictcopy['subjects'] = ["SUBJECT"]
+        res = dict_to_xml(dictcopy)
+        self.assertIn('<subject>SUBJECT</subject>', res)
+    
+    def test_missing_affiliation(self):
+        dictcopy = copy.deepcopy(affiliationdict)
+        dictcopy['creators'][0]['affiliation'] = "AFFILIATION"
+        res = dict_to_xml(dictcopy)
+        self.assertIn('<affiliation>AFFILIATION</affiliation>', res)
+        
 
 if __name__ == '__main__':
     unittest.main()

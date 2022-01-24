@@ -38,7 +38,7 @@ class DoiForm(forms.Form):
     publication_year = forms.CharField(max_length=100)
     resource_type= forms.CharField(label='Pick the resource type:', widget=forms.Select(choices=RT_CHOICES))
 class SubjectForm(forms.Form):
-     subject = forms.CharField(label='Subject')
+     subject = forms.CharField(label='Subject', required=False)
 SubjectFormset = formset_factory(SubjectForm, extra=1)
 class CreatorForm(forms.Form):
     givenname = forms.CharField(label='Given Name')
@@ -47,6 +47,8 @@ class CreatorForm(forms.Form):
    
 CreatorFormset = formset_factory(CreatorForm, extra=1)
 
+class UrlForm(forms.Form):
+    url = forms.CharField(label='Url')
 
 
 

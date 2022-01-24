@@ -1,0 +1,9 @@
+{% extends "doi_site/organisation_wrapper.html" %} {% block content %}
+<h3>{{doi}}</h3>
+<p>Current url: {{url}}</p>
+<form class="form-horizontal" method="POST" action="">
+    {% csrf_token %} {{form.as_p}}
+    <button type="submit" class="btn btn-block btn-primary">Send</button>
+</form>
+
+{% endblock %}

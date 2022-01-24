@@ -93,6 +93,6 @@ class MdsApi:
         return self._do_request('put', url, data=data, **kwargs)
 
 
-    def delete(url, **kwargs):
+    def delete(self, url, **kwargs):
         self._authorise(url)
         return self._do_request('delete', url, **kwargs)
