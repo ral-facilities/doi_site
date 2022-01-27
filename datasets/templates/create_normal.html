@@ -1,22 +1,137 @@
 {% extends "doi_site/organisation_wrapper.html" %} 
-
+{% block head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+{% endblock %}
 {% block content %}
 
-<h2>DOI form</h2>
+<h2 class="offset-5 bold--text">DOI Form</h2>
 
 <form class="form-horizontal" method="POST" action="">
-  {% csrf_token %} {{ form.as_p }}
+  {% csrf_token %} 
+  <div class="pb-1">
+    <label>Identifier</label>
+  </div>
+  <div class="col-5 pb-1">
+    <div class="input-group">
+    {{ form.identifier }}
+    </div>
+  </div>
+  <div id="identifierHelpBlock" class="form-text pb-2">
+    The Identifier is a unique
+string that identifies a
+resource. For software,
+determine whether the
+identifier is for a specific
+version of a piece of software,
+(per the Force11 Software
+Citation Principles11), or for all
+versions.DOI (Digital Object Identifier)
+registered by a DataCite member.
+Format should be “10.1234/foo”
 
+  </div>
+  <div class="pb-1">
+    <label>Title</label>
+  </div>
+  <div class="col-5 pb-1">
+    <div class="input-group">
+    {{ form.title }}
+    </div>
+  </div>
+  <div id="titleHelpBlock" class="form-text pb-2">
+    A name or title by which a
+resource is known. May be
+the title of a dataset or the
+name of a piece of software.
+  </div>
+  <div class="pb-1">
+    <label>Publisher</label>
+  </div>
+  <div class="col-5 pb-1">
+    <div class="input-group">
+    {{ form.publisher }}
+    </div>
+  </div>
+  <div id="publisherHelpBlock" class="form-text pb-2">
+    The name of the entity that
+holds, archives, publishes
+prints, distributes, releases,
+issues, or produces the
+resource. This property will be
+used to formulate the citation,
+so consider the prominence of
+the role. For software, use
+Publisher for the code
+repository. If there is an entity
+other than a code repository,
+that "holds, archives,
+publishes, prints, distributes,
+releases, issues, or produces"
+the code, use the property
+Contributor/contributorType/
+hostingInstitution for the code
+repository.Examples: World Data Center for
+Climate (WDCC);
+GeoForschungsZentrum Potsdam
+(GFZ); Geological Institute,
+University of Tokyo, GitHub 
+  </div>
+  <div class="pb-1">
+    <label>Publication Year</label>
+  </div>
+  <div class="col-4 pb-1">
+    <div class="input-group">
+    {{ form.publication_year }}
+    </div>
+  </div>
+  <div id="publicationYearHelpBlock" class="form-text pb-2">
+    The year when the data was
+    or will be made publicly
+    available. In the case of
+    resources such as software or
+    dynamic data where there
+    may be multiple releases in
+    one year, include the
+    Date/dateType/
+    dateInformation property and
+    sub-properties to provide
+    more information about the
+    publication or release date
+    details.YYYY
+    ***
+    If an embargo period has been in
+    effect, use the date when the
+    embargo period ends.
+    In the case of datasets, "publish"
+    is understood to mean making the
+    data available on a specific date to
+    the community of researchers.
+    If there is no standard publication
+    year value, use the date that
+    would be preferred from a
+    citation perspective.
+  </div>
+  <div class="pb-1">
+    <label>Resource Type</label>
+  </div>
+    <div class="col-4 pb-1">
+      <div class="input-group">
+    {{ form.resource_type }}
+      </div>
+    </div>
+    <div id="resourceTypeHelpBlock" class="form-text pb-2">
+      The resource that is being identified can be of any kind, but it is typically a dataset.
+    </div>
   {{ formset1.management_form }} {% for form in formset1 %}
   <div class="row form-row spacer formset1-row">
-    <div class="col-2">
+    <div class="pb-1">
       <label>Subject</label>
     </div>
-    <div class="col-4">
+    <div class="col-5 pb-1">
       <div class="input-group">
         {{form.subject}}
-        <div class="input-group-append">
-          <button type="button" class="btn btn-success add-form-row">+</button>
+        <div class="col-8 input-group-append">
+          <button type="button" class="btn btn-success add-form-row btn-sm" style="margin-left:10px">+</button>
         </div>
       </div>
     </div>
@@ -25,24 +140,24 @@
 
  {{ formset2.management_form }} {% for form in formset2 %}
   <div class="row form-row spacer formset2-row">
-    <div class="col-2">
+    <div class="pb-1">
       <label>Creator</label>
     </div>
-    <div class="col-4">
-      <div class="input-group">
-        {{form.givenname}}
-        {{form.familyname}}
-        {{form.affiliation}}
-        <div class="input-group-append">
-          <button type="button" class="btn btn-success add-form-row">+</button>
+    <div>
+      <div class="input-group pb-1">
+            {{form.givenname}}
+            {{form.familyname}}
+            {{form.affiliation}}
+            <div class="input-group-append">
+          <button type="button" class="btn btn-success btn-sm add-form-row" style="margin-left:10px">+</button>
         </div>
       </div>
     </div>
   </div>
   {% endfor %}
 
-  <div class="row spacer">
-    <div class="col-4 offset-2">
+  <div class="row offset-5  spacer">
+    <div class="col-4 mt-4 d-grid gap-2">
       <button type="submit" class="btn btn-block btn-primary">Create</button>
     </div>
   </div>
@@ -88,7 +203,7 @@
     .removeClass("add-form-row")
     .addClass("remove-form-row")
     .html(
-        '<span class="glyphicon glyphicon-minus" aria-hidden="true"> Minus </span>'
+        '<span class="glyphicon glyphicon-minus" aria-hidden="true"> - </span>'
         );
     $(selector).after(newElement);
     return false;
@@ -139,4 +254,21 @@
     return false;
   });
 </script>
+<style>
+  #id_identifier {
+      width: 800px;
+  }
+  #id_title {
+      width: 800px;
+  }
+  #id_publisher {
+      width: 800px;
+  }
+  #id_publication_year {
+      width: 175px;
+  }
+  #id_resource_type {
+      width: 172px;
+  }
+  </style> 
 {% endblock %}

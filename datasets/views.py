@@ -24,6 +24,8 @@ class Mint(View):
         doiform = DoiForm(request.GET or None)
         formset1 = SubjectFormset(request.GET or None, prefix='form1')
         formset2 = CreatorFormset(request.GET or None, prefix='form2')
+        for form in formset2:
+            form.use_required_attribute = True
         return render(request, template_name, {
         'form': doiform,
         'formset1': formset1,
@@ -35,17 +37,28 @@ class Mint(View):
         doiform = DoiForm(request.POST or None)
         formset1 = SubjectFormset(request.POST or None, prefix='form1')
         formset2 = CreatorFormset(request.POST or None, prefix='form2')
+        for form in formset2:
+                        form.use_required_attribute = True
         template_name = 'create_normal.html'
         heading_message = 'Formset Demo'
         if formset1.is_valid() and formset2.is_valid() and doiform.is_valid():
+            mds_api = MdsApi(request) 
             metadata = doiform.cleaned_data
-            metadata["subjects"] = [ x["subject"] for x in formset1.cleaned_data ]
-            metadata["creators"] = formset2.cleaned_data
+            metadata["subjects"] = [x.get("subject") for x in formset1.cleaned_data if x.get('subject')]
+            metadata["creators"] = [x for x in formset2.cleaned_data if x]
             doi = metadata['identifier']
             print(metadata)
             e = dict_to_xml(metadata)
             print (e)
-        response = postdoi._post(DATACITE_URL + "/metadata/", e.encode(), { "Content-Type": "application/xml;charset=UTF-8" }, method="POST")
+            response = mds_api.put("/metadata/" + doi, e.encode(), headers={ "Content-Type": "application/xml;charset=UTF-8" })
+            response.raise_for_status()
+        else:
+            return render(request, template_name, {
+            'form': doiform,
+            'formset1': formset1,
+            'formset2': formset2,
+            'heading': heading_message,
+        })
         if(response.status_code == 201):
             print("DOI site was called successfully!")
             return redirect('minturl', doi) 
@@ -82,6 +95,7 @@ class Url(View):
         r = mds_api.put('/doi/' + doi, data=body.encode(), headers={ "Content-Type": "text/plain;charset=UTF-8" })
         r.raise_for_status()
         return self.get(request, doi)
+
 
 def _is_test_url():
     if DATACITE_URL == DATACITE_TEST_URL:
