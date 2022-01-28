@@ -40,7 +40,7 @@ class DoiForm(forms.Form):
     title = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Title'}))
     publisher = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Publisher'}))
     # publication_year = forms.CharField(max_length=4, widget=forms.TextInput(attrs={'placeholder': 'Publication Year'}))
-    publication_year = forms.CharField(label='Pick the year:', widget=forms.SelectDateWidget(years=YR_CHOICES))
+    publication_year = forms.IntegerField(label='Pick the year:', min_value=1975, max_value=2100,)
 
     resource_type= forms.CharField(label='Pick the resource type:', widget=forms.Select(choices=RT_CHOICES))
 class SubjectForm(forms.Form):
