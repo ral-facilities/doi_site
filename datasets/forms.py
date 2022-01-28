@@ -32,15 +32,11 @@ RT_CHOICES= [
     ('Other', 'Other')
     ]
 
-YR_CHOICES=[]
-for x in range (1975, 2100, 1):
-    YR_CHOICES.append(x)
 class DoiForm(forms.Form):
     identifier = forms.CharField(label='Identifier', max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Identifier'}))
     title = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Title'}))
     publisher = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Publisher'}))
-    # publication_year = forms.CharField(max_length=4, widget=forms.TextInput(attrs={'placeholder': 'Publication Year'}))
-    publication_year = forms.IntegerField(label='Pick the year:', min_value=1975, max_value=2100,)
+    publication_year = forms.IntegerField(label='Pick the year:', min_value=1975, max_value=2100, widget=forms.TextInput(attrs={'placeholder': 'Publication Year'}))
 
     resource_type= forms.CharField(label='Pick the resource type:', widget=forms.Select(choices=RT_CHOICES))
 class SubjectForm(forms.Form):
