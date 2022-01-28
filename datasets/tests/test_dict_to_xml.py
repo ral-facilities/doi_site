@@ -6,7 +6,7 @@ dict = {
     'identifier': 'IDENTIFIER', 
     'title': 'TITLE', 
     'publisher': 'PUBLISHER', 
-    'publication_year': '2022', 
+    'publication_year': 2022, 
     'resource_type': 'Text', 
     'subjects': ['SUBJECT'], 
     'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName', 'affiliation': 'AFFILIATION'}]
@@ -16,7 +16,7 @@ subjectdict = {
     'identifier': 'IDENTIFIER', 
     'title': 'TITLE', 
     'publisher': 'PUBLISHER', 
-    'publication_year': '2022', 
+    'publication_year': 2022, 
     'resource_type': 'Text', 
     'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName', 'affiliation': 'AFFILIATION'}]
 }
@@ -25,7 +25,7 @@ affiliationdict = {
     'identifier': 'IDENTIFIER', 
     'title': 'TITLE', 
     'publisher': 'PUBLISHER', 
-    'publication_year': '2022', 
+    'publication_year': 2022, 
     'resource_type': 'Text',
     'subjects': ['SUBJECT'], 
     'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName'}]

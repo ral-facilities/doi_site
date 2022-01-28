@@ -31,7 +31,7 @@ def dict_to_xml(d):
 
     xml_publication_year = ET.SubElement(xml_resource, 'publicationYear')
     try:
-        xml_publication_year.text = d['publication_year']
+        xml_publication_year.text = str(d['publication_year'])
     except KeyError:
         raise MetadataError('Missing mandatory metadata identifier')
 
