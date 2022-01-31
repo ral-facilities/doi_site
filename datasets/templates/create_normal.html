@@ -11,13 +11,14 @@
   <div class="pb-1">
     <label>Identifier</label>
   </div>
-  <div class="col-4 pb-1">
-    <div>
-    {{ form.identifier }}
-    </div>
+  <div class="input-group col-4 pb-1">
+    <span class="input-group-text" id="prefix">{{ doi_prefix }}/</span>
+    <div>{{ form.identifier }}</div>
   </div>
   <div id="identifierHelpBlock" class="form-text pb-2">
-    The Identifier is a unique
+    Only add the name of the 
+identifier as the DOI number (10.528) will be added automatically.
+The Identifier is a unique
 string that identifies a
 resource. For software,
 determine whether the
@@ -28,7 +29,6 @@ Citation Principles11), or for all
 versions.DOI (Digital Object Identifier)
 registered by a DataCite member.
 Format should be “10.1234/foo”
-
   </div>
   <div class="pb-1">
     <label>Title</label>
@@ -262,8 +262,11 @@ University of Tokyo, GitHub
   });
 </script>
 <style>
+  #prefix {
+    height: 25px;
+  }
   #id_identifier {
-    width: 465px;
+    width: 388px;
   }
   #id_title {
       width: 465px;

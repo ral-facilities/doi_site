@@ -9,7 +9,7 @@ from .dict_to_xml import dict_to_xml
 import mds.http.post as postdoi
 import mds.http.get as getdoi
 from mds.MdsApi import MdsApi
-from doi_site.settings import DATACITE_TEST_URL, DATACITE_URL
+from doi_site.settings import DATACITE_TEST_URL, DATACITE_URL, DOI_PREFIX
 
 
 class Mint(View):
@@ -30,6 +30,7 @@ class Mint(View):
         'form': doiform,
         'formset1': formset1,
         'formset2': formset2,
+        'doi_prefix': DOI_PREFIX,
         'heading': heading_message,
     })
 
@@ -46,7 +47,8 @@ class Mint(View):
             metadata = doiform.cleaned_data
             metadata["subjects"] = [x.get("subject") for x in formset1.cleaned_data if x.get('subject')]
             metadata["creators"] = [x for x in formset2.cleaned_data if x]
-            doi = metadata['identifier']
+            metadata['identifier'] = DOI_PREFIX + '/'+ metadata['identifier']
+            doi = metadata['identifier'] 
             print(metadata)
             e = dict_to_xml(metadata)
             print (e)
@@ -57,6 +59,7 @@ class Mint(View):
             'form': doiform,
             'formset1': formset1,
             'formset2': formset2,
+            'doi_prefix': DOI_PREFIX,
             'heading': heading_message,
         })
         if(response.status_code == 201):
@@ -68,6 +71,7 @@ class Mint(View):
             'form': doiform,
             'formset1': formset1,
             'formset2': formset2,
+            'doi_prefix': DOI_PREFIX,
             'heading': heading_message,
         })
 
