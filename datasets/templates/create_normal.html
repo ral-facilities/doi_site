@@ -16,6 +16,21 @@
     <div>{{ form.identifier }}</div>
   </div>
   <div id="identifierHelpBlock" class="form-text pb-2">
+    {% if notAuthorised %}
+      <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height:15px;">
+          Please use one of the sub-domains below or create a new subdomain:
+      </div>
+    {% endif %}
+    <span>
+      DOI Sub-Domains available:
+    </span>
+    <ul>
+      {% for suffix in suffixlist %}
+          <li>{{ suffix }}</li>
+      {% empty %}
+          <li style="color:red">No DOI sub-domains available, please create one.</li>
+      {% endfor %}
+      </ul>
     Only add the name of the 
 identifier as the DOI number (10.528) will be added automatically.
 The Identifier is a unique

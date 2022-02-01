@@ -9,7 +9,9 @@ from .dict_to_xml import dict_to_xml
 import mds.http.post as postdoi
 import mds.http.get as getdoi
 from mds.MdsApi import MdsApi
+from django.core.exceptions import ObjectDoesNotExist
 from doi_site.settings import DATACITE_TEST_URL, DATACITE_URL, DOI_PREFIX
+import mds.http.helper as getsuffix
 
 
 class Mint(View):
@@ -21,6 +23,14 @@ class Mint(View):
     def get(self, request):
         template_name = 'create_normal.html'
         heading_message = 'Formset Demo'
+        authorized_dois = []
+        groups = request.user.groups.iterator()
+        for group in groups:
+            try:
+                authorized_dois.append(group.groupprofile.doi_suffix)
+            except ObjectDoesNotExist:
+                pass
+        suffixlist = authorized_dois
         doiform = DoiForm(request.GET or None)
         formset1 = SubjectFormset(request.GET or None, prefix='form1')
         formset2 = CreatorFormset(request.GET or None, prefix='form2')
@@ -31,6 +41,7 @@ class Mint(View):
         'formset1': formset1,
         'formset2': formset2,
         'doi_prefix': DOI_PREFIX,
+        'suffixlist': suffixlist,
         'heading': heading_message,
     })
 
@@ -38,6 +49,14 @@ class Mint(View):
         doiform = DoiForm(request.POST or None)
         formset1 = SubjectFormset(request.POST or None, prefix='form1')
         formset2 = CreatorFormset(request.POST or None, prefix='form2')
+        authorized_dois = []
+        groups = request.user.groups.iterator()
+        for group in groups:
+            try:
+                authorized_dois.append(group.groupprofile.doi_suffix)
+            except ObjectDoesNotExist:
+                pass
+        suffixlist = authorized_dois
         for form in formset2:
                         form.use_required_attribute = True
         template_name = 'create_normal.html'
@@ -45,6 +64,20 @@ class Mint(View):
         if formset1.is_valid() and formset2.is_valid() and doiform.is_valid():
             mds_api = MdsApi(request) 
             metadata = doiform.cleaned_data
+            canUseSuffix = getsuffix.is_authorized(request, metadata['identifier'])
+            if canUseSuffix:
+                pass
+            else:
+                notAuthorised = True,
+                return render(request, template_name, {
+                'form': doiform,
+                'formset1': formset1,
+                'formset2': formset2,
+                'doi_prefix': DOI_PREFIX,
+                'heading': heading_message,
+                'suffixlist': suffixlist,
+                'notAuthorised': notAuthorised
+            })
             metadata["subjects"] = [x.get("subject") for x in formset1.cleaned_data if x.get('subject')]
             metadata["creators"] = [x for x in formset2.cleaned_data if x]
             metadata['identifier'] = DOI_PREFIX + '/'+ metadata['identifier']
