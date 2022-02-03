@@ -133,8 +133,14 @@ class Url(View):
 
     def get(self, request, doi, err=None):
         mds_api = MdsApi(request)
-        r = mds_api.get('/doi/' + doi)
-        r.raise_for_status()
+        try:
+            r = mds_api.get('/doi/' + doi)
+            r.raise_for_status()
+        except Exception as newerr:
+                print(f'Other error occurred: {newerr}')
+                url = None
+                urlform = UrlForm(request.GET or None, initial={'url':r.text})
+                return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':newerr})
         url = r.text
         urlform = UrlForm(request.GET or None, initial={'url':r.text})
         return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':err})
