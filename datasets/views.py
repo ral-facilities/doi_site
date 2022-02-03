@@ -1,3 +1,4 @@
+from urllib.error import HTTPError
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
@@ -11,7 +12,7 @@ import mds.http.get as getdoi
 from mds.MdsApi import MdsApi
 from django.core.exceptions import ObjectDoesNotExist
 from doi_site.settings import DATACITE_TEST_URL, DATACITE_URL, DOI_PREFIX
-import mds.http.helper as getsuffix
+import mds.http.helper as helper
 
 
 class Mint(View):
@@ -50,6 +51,7 @@ class Mint(View):
         formset1 = SubjectFormset(request.POST or None, prefix='form1')
         formset2 = CreatorFormset(request.POST or None, prefix='form2')
         authorized_dois = []
+        notAuthorised = False
         groups = request.user.groups.iterator()
         for group in groups:
             try:
@@ -64,7 +66,7 @@ class Mint(View):
         if formset1.is_valid() and formset2.is_valid() and doiform.is_valid():
             mds_api = MdsApi(request) 
             metadata = doiform.cleaned_data
-            canUseSuffix = getsuffix.is_authorized(request, metadata['identifier'])
+            canUseSuffix = helper.is_authorized(request, metadata['identifier'])
             if canUseSuffix:
                 pass
             else:
@@ -77,7 +79,7 @@ class Mint(View):
                 'heading': heading_message,
                 'suffixlist': suffixlist,
                 'notAuthorised': notAuthorised
-            })
+                })
             metadata["subjects"] = [x.get("subject") for x in formset1.cleaned_data if x.get('subject')]
             metadata["creators"] = [x for x in formset2.cleaned_data if x]
             metadata['identifier'] = DOI_PREFIX + '/'+ metadata['identifier']
@@ -85,8 +87,23 @@ class Mint(View):
             print(metadata)
             e = dict_to_xml(metadata)
             print (e)
-            response = mds_api.put("/metadata/" + doi, e.encode(), headers={ "Content-Type": "application/xml;charset=UTF-8" })
-            response.raise_for_status()
+            try:
+                response = mds_api.put("/metadata/" + doi, e.encode(), headers={ "Content-Type": "application/xml;charset=UTF-8" })
+                response.raise_for_status()
+            except Exception as err:
+                print(f'Other error occurred: {err}')
+                return render(request, template_name, {
+                    'form': doiform,
+                    'formset1': formset1,
+                    'formset2': formset2,
+                    'doi_prefix': DOI_PREFIX,
+                    'heading': heading_message,
+                    'suffixlist': suffixlist,
+                    'err': err,
+                    'notAuthorised': notAuthorised
+                    })
+            else:
+                print('Data site call was successful!') 
         else:
             return render(request, template_name, {
             'form': doiform,
@@ -114,13 +131,13 @@ class Url(View):
         return super().dispatch(request, *args, **kwargs)
     template_name = 'mint_url.html'
 
-    def get(self, request, doi):
+    def get(self, request, doi, err=None):
         mds_api = MdsApi(request)
         r = mds_api.get('/doi/' + doi)
         r.raise_for_status()
         url = r.text
         urlform = UrlForm(request.GET or None, initial={'url':r.text})
-        return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url})
+        return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':err})
 
     def post(self, request, doi):
         mds_api = MdsApi(request) 
@@ -129,9 +146,13 @@ class Url(View):
             url = url_form.cleaned_data['url']
 
         body = 'doi='+doi+'\n'+'url='+url
-        r = mds_api.put('/doi/' + doi, data=body.encode(), headers={ "Content-Type": "text/plain;charset=UTF-8" })
-        r.raise_for_status()
-        return self.get(request, doi)
+        try: 
+            r = mds_api.put('/doi/' + doi, data=body.encode(), headers={ "Content-Type": "text/plain;charset=UTF-8" })
+            r.raise_for_status()
+        except Exception as err:
+                print(f'Other error occurred: {err}')
+                return self.get(request, doi, err)
+        return self.get(request, doi, err=None)
 
 
 def _is_test_url():

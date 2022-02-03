@@ -5,6 +5,12 @@
 {% endblock %}
 {% block content %}
 <h3 class="offset-5 bold--text">{{doi}}</h3>
+{% if err %}
+      <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height:15px;">
+          Error from DataCite: {{ err }}
+      </div>
+{% endif %}
+
 <p>Current url: {{url}}</p>
 <form class="form-horizontal" method="POST" action="">
     {% csrf_token %} {{form.as_p}}
