@@ -133,18 +133,27 @@ class Url(View):
 
     def get(self, request, doi, err=None):
         mds_api = MdsApi(request)
-        try:
-            r = mds_api.get('/doi/' + doi)
-            r.raise_for_status()
-        except Exception as newerr:
+        if doi.startswith(DOI_PREFIX + "/"):
+            suffix = doi.removeprefix(DOI_PREFIX + "/")
+            if not helper.is_authorized(request, suffix):
+                err = "The doi suffix is not accepted"
+        else:
+            err = "The doi prefix is not accepted"
+        if not err: 
+            try:
+                r = mds_api.get('/doi/' + doi)
+                r.raise_for_status()
+                url = r.text
+            except Exception as newerr:
                 print(f'Other error occurred: {newerr}')
                 url = None
                 urlform = UrlForm(request.GET or None, initial={'url':r.text})
                 return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':newerr})
+        r = mds_api.get('/doi/' + doi)
         url = r.text
         urlform = UrlForm(request.GET or None, initial={'url':r.text})
         return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':err})
-
+        
     def post(self, request, doi):
         mds_api = MdsApi(request) 
         url_form= UrlForm(request.POST or None)
