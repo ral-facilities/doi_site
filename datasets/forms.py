@@ -50,7 +50,7 @@ class CreatorForm(forms.Form):
 CreatorFormset = formset_factory(CreatorForm, extra=0,  min_num=1, validate_min=True)
 
 class UrlForm(forms.Form):
-    url = forms.CharField(label='Url')
+    url = forms.CharField(label='Url', widget=forms.TextInput(attrs={'class':' form-control form-control-sm'}))
 
 
 
