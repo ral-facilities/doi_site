@@ -60,7 +60,7 @@ class Mint(View):
                 pass
         suffixlist = authorized_dois
         for form in formset2:
-                        form.use_required_attribute = True
+            form.use_required_attribute = True
         template_name = 'create_normal.html'
         heading_message = 'Formset Demo'
         if formset1.is_valid() and formset2.is_valid() and doiform.is_valid():

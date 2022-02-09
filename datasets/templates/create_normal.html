@@ -162,26 +162,27 @@
   <div class="pb-1">
     <label class="form-label fs-6 mt-3">Creator</label>
   </div>
+  {% for form in formset2 %}
   <div class="row form-row spacer formset2-row">
-    {% for form in formset2 %}
-      <div>
-        <div class="row mb-2">
-          <div class="col-3">
-            {{form.givenname}}
-          </div>
-          <div class="col-3">
-            {{form.familyname}}
-          </div>
-          <div class="col-4">
-            {{form.affiliation}}
-          </div>  
-          <div class="col">
-            <button type="button" class="btn btn-danger remove-form-row btn-sm">🗙</button>
-          </div>
-        </div>
-        {% endfor %}
+    <div class="row mb-2">
+      <div class="col">
+        {{form.givenname}}
+      </div>
+      <div class="col">
+        {{form.familyname}}
+      </div>
+      <div class="col">
+        {{form.orcid}}
+      </div>
+      <div class="col">
+        {{form.affiliation}}
+      </div>  
+      <div class="col-1">
+        <button type="button" class="btn btn-danger remove-form-row btn-sm">🗙</button>
       </div>
     </div>
+  </div>
+      {% endfor %}
     <button type="button" id="formset2-add" class="btn btn-success btn-sm add-form-row" style="vertical-align:baseline">Add creator</button>
     <div id="creatorHelpBlock" class="form-text pb-2">
       The main researchers involved

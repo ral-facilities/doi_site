@@ -67,6 +67,15 @@ def dict_to_xml(d):
             xml_creator_given_name.text = creator['givenname']
             xml_creator_family_name = ET.SubElement(xml_creator, 'familyName')
             xml_creator_family_name.text = creator['familyname']
+            try:
+                orcid = creator['orcid']
+            except KeyError:
+                orcid = None
+            if orcid:
+                xml_creator_name_identifier = ET.SubElement(xml_creator, 'nameIdentifier ')
+                xml_creator_name_identifier.attrib['schemeURI'] = 'https://orcid.org/'
+                xml_creator_name_identifier.attrib['nameIdentifierScheme'] = 'ORCID'
+                xml_creator_name_identifier.text = creator['orcid']
             try: 
                 affiliation = creator['affiliation']
             except KeyError:
