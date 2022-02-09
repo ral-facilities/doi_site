@@ -72,7 +72,7 @@ def dict_to_xml(d):
             except KeyError:
                 orcid = None
             if orcid:
-                xml_creator_name_identifier = ET.SubElement(xml_creator, 'nameIdentifier ')
+                xml_creator_name_identifier = ET.SubElement(xml_creator, 'nameIdentifier')
                 xml_creator_name_identifier.attrib['schemeURI'] = 'https://orcid.org/'
                 xml_creator_name_identifier.attrib['nameIdentifierScheme'] = 'ORCID'
                 xml_creator_name_identifier.text = creator['orcid']
