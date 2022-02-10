@@ -89,6 +89,11 @@ class TestDictToXml(unittest.TestCase):
         res = dict_to_xml(dictcopy)
         self.assertIn('<resourceType resourceTypeGeneral="Text">RESOURCE TYPE TEXT</resourceType>', res)
         
+    def test_missing_version(self):
+        dictcopy = copy.deepcopy(dict)
+        dictcopy['version'] = "0.0.0"
+        res = dict_to_xml(dictcopy)
+        self.assertIn('<version>0.0.0</version>', res)
 
 if __name__ == '__main__':
     unittest.main()

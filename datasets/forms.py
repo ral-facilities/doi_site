@@ -40,6 +40,7 @@ class DoiForm(forms.Form):
     resource_type = forms.CharField(label='Pick the resource type:', widget=forms.Select(choices=RT_CHOICES, attrs={'class':'form-select form-select-sm', 'id':'resourceType'}))
     resource_type_text = forms.CharField(label='Resource type:', required=False, widget=forms.TextInput(attrs={'placeholder': 'Resource type', 'class':'form-control form-control-sm', 'id':'resourceType'}))
     abstract = forms.CharField(label='Abstract', required=False, widget=forms.Textarea(attrs={'placeholder': 'Abstract',"rows":3, 'class':'form-control form-control-sm', 'id':'abstract'}))
+    version = forms.CharField(label='Version', required=False, widget=forms.TextInput(attrs={'placeholder': 'Version', 'class':'form-control form-control-sm', 'id':'version'}))
 class SubjectForm(forms.Form):
      subject = forms.CharField(label='Subject', required=False, widget=forms.TextInput(attrs={'placeholder': 'Subject', 'class':'form-control form-control-sm', 'id':'subject'}))
 SubjectFormset = formset_factory(SubjectForm, extra=1)

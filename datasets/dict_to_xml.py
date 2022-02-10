@@ -93,6 +93,15 @@ def dict_to_xml(d):
         xml_description = ET.SubElement(xml_descriptions, 'description')
         xml_description.attrib['descriptionType'] = 'Abstract'
         xml_description.text = d['abstract']
+    
+    try:
+        version = d['version']
+    except KeyError:
+        version = None
+    if version:
+        xml_version = ET.SubElement(xml_resource, 'version')
+        xml_version.text = d['version']
+
 
     
     return '<?xml version="1.0" encoding="UTF-8"?>' + "\n" + ET.tostring(xml_resource, encoding='unicode')
