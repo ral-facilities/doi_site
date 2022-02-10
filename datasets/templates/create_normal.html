@@ -1,205 +1,190 @@
-{% extends "doi_site/organisation_wrapper.html" %} 
-{% block head %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-{% endblock %}
-{% block content %}
+{% extends "doi_site/organisation_wrapper.html" %} {% block head %}
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+  crossorigin="anonymous"
+/>
+{% endblock %} {% block content %}
 <h2 class="offset-5 bold--text">DOI Form</h2>
 <div class="row">
   <div class="col-md-2"></div>
   <div class="col-md-8">
-  <form class="form-horizontal" method="POST" action="">
-    {% csrf_token %} 
-    <div class="pb-1 mt-3">
-      <label for="identifier" class="form-label fs-6">Identifier</label>
-    </div>
-    <div class="input-group input-group-sm pb-1">
-      <span class="input-group-text" id="prefix">{{ doi_prefix }}/</span>
-      {{ form.identifier }}
-    </div>
-    {% if notAuthorised %}
-    <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height:15px;">
-      You are only authorised to use the sub-domains listed below:
-    </div>
-    {% endif %}
-    <span>
-      DOI Sub-Domains available:
-    </span>
-    <ul>
-      {% for suffix in suffixlist %}
-      <li>{{ suffix }}</li>
-      {% empty %}
-      <li style="color:red">No DOI sub-domains available, please create one.</li>
-      {% endfor %}
-    </ul>
-    <div id="identifierHelpBlock" class="pb-2 text-dark">
-      Only add the name of the 
-      identifier as the DOI number (10.528) will be added automatically.
-      The Identifier is a unique
-      string that identifies a
-      resource. For software,
-      determine whether the
-      identifier is for a specific
-      version of a piece of software,
-      (per the Force11 Software
-      Citation Principles11), or for all
-      versions.DOI (Digital Object Identifier)
-      registered by a DataCite member.
-      Format should be “10.1234/foo”
-    </div>
-    <div class="pb-1">
-      <label for="title" class="form-label fs-6 mt-3">Title</label>
-    </div>
-    <div class="pb-1">
-      {{ form.title }}
-    </div>
-    <div id="titleHelpBlock" class="form-text pb-2 text-dark">
-      A name or title by which a
-      resource is known. May be
-      the title of a dataset or the
-      name of a piece of software.
-    </div>
-    
-    {{ formset2.management_form }} 
-    <div class="pb-1">
-      <label for="creator" class="form-label fs-6 mt-3">Creator</label>
-    </div>
-    {% for form in formset2 %}
-    <div class="row form-row spacer formset2-row">
-      <div class="row mb-2">
-        <div class="col">
-          {{form.givenname}}
-        </div>
-        <div class="col">
-          {{form.familyname}}
-        </div>
-        <div class="col">
-          {{form.orcid}}
-        </div>
-        <div class="col">
-          {{form.affiliation}}
-        </div>  
-        <div class="col-1">
-          <button type="button" class="btn btn-danger remove-form-row btn-sm">🗙</button>
-        </div>
+    <form class="form-horizontal" method="POST" action="">
+      {% csrf_token %}
+      <div class="pb-1 mt-3">
+        <label for="identifier" class="form-label fs-6">Identifier</label>
       </div>
-    </div>
+      <div class="input-group input-group-sm pb-1">
+        <span class="input-group-text" id="prefix">{{ doi_prefix }}/</span>
+        {{ form.identifier }}
+      </div>
+      {% if notAuthorised %}
+      <div
+        class="alert alert-danger text-start d-flex align-items-center"
+        role="alert"
+        style="height: 15px"
+      >
+        You are only authorised to use the sub-domains listed below:
+      </div>
+      {% endif %}
+      <span> DOI Sub-Domains available: </span>
+      <ul>
+        {% for suffix in suffixlist %}
+        <li>{{ suffix }}</li>
+        {% empty %}
+        <li style="color: red">
+          No DOI sub-domains available, please create one.
+        </li>
         {% endfor %}
-      <button type="button" id="formset2-add" class="btn btn-success btn-sm add-form-row" style="vertical-align:baseline">Add creator</button>
-      <div id="creatorHelpBlock" class="form-text pb-2 text-dark">
-        The main researchers involved
-        in producing the data, or the
-        authors of the publication, in
-        priority order.
+      </ul>
+      <div id="identifierHelpBlock" class="pb-2 text-dark">
+        Only add the name of the identifier as the DOI number (10.528) will be
+        added automatically. The Identifier is a unique string that identifies a
+        resource. For software, determine whether the identifier is for a
+        specific version of a piece of software, (per the Force11 Software
+        Citation Principles11), or for all versions.DOI (Digital Object
+        Identifier) registered by a DataCite member. Format should be
+        “10.1234/foo”
+      </div>
+      <div class="pb-1">
+        <label for="title" class="form-label fs-6 mt-3">Title</label>
+      </div>
+      <div class="pb-1">{{ form.title }}</div>
+      <div id="titleHelpBlock" class="form-text pb-2 text-dark">
+        A name or title by which a resource is known. May be the title of a
+        dataset or the name of a piece of software.
       </div>
 
-    <div class="pb-1">
-      <label for="publisher" class="form-label fs-6 mt-3">Publisher</label>
-    </div>
-    <div class="pb-1">
-      {{ form.publisher }}
-    </div>
-    <div id="publisherHelpBlock" class="form-text pb-2 text-dark">
-      The name of the entity that
-      holds, archives, publishes
-      prints, distributes, releases,
-      issues, or produces the
-      resource. This property will be
-      used to formulate the citation,
-      so consider the prominence of
-      the role. For software, use
-      Publisher for the code
-      repository. If there is an entity
-      other than a code repository,
-      that "holds, archives,
-      publishes, prints, distributes,
-      releases, issues, or produces"
-      the code, use the property
-      Contributor/contributorType/
-      hostingInstitution for the code
-      repository.Examples: World Data Center for
-      Climate (WDCC);
-      GeoForschungsZentrum Potsdam
-      (GFZ); Geological Institute,
-      University of Tokyo, GitHub 
-    </div>
-    <div class="pb-1">
-      <label for="publicationYear" class="form-label fs-6 mt-3">Publication Year</label>
-    </div>
-    <div class="col-4 pb-1">
-      <div>
-      {{ form.publication_year }}
+      {{ formset2.management_form }}
+      <div class="pb-1">
+        <label for="creator" class="form-label fs-6 mt-3">Creator</label>
       </div>
-    </div>
-    <div id="publicationYearHelpBlock" class="form-text pb-2 text-dark">
-      The year when the data was
-      or will be made publicly
-      available. In the case of
-      resources such as software or
-      dynamic data where there
-      may be multiple releases in
-      one year, include the
-      Date/dateType/
-      dateInformation property and
-      sub-properties to provide
-      more information about the
-      publication or release date
-      details.YYYY
-      ***
-      If an embargo period has been in
-      effect, use the date when the
-      embargo period ends.
-      In the case of datasets, "publish"
-      is understood to mean making the
-      data available on a specific date to
-      the community of researchers.
-      If there is no standard publication
-      year value, use the date that
-      would be preferred from a
-      citation perspective.
-    </div>
-    <div class="pb-1">
-      <label for="resourceType" class="form-label fs-6 mt-3">Resource Type</label>
-    </div>
-      <div class="col-4 pb-1">
-        <div>
-      {{ form.resource_type }}
+      {% for form in formset2 %}
+      <div class="row form-row spacer formset2-row">
+        <div class="row mb-2">
+          <div class="col">{{form.givenname}}</div>
+          <div class="col">{{form.familyname}}</div>
+          <div class="col">{{form.orcid}}</div>
+          <div class="col">{{form.affiliation}}</div>
+          <div class="col-1">
+            <button type="button" class="btn btn-danger remove-form-row btn-sm">
+              🗙
+            </button>
+          </div>
         </div>
+      </div>
+      {% endfor %}
+      <button
+        type="button"
+        id="formset2-add"
+        class="btn btn-success btn-sm add-form-row"
+        style="vertical-align: baseline"
+      >
+        Add creator
+      </button>
+      <div id="creatorHelpBlock" class="form-text pb-2 text-dark">
+        The main researchers involved in producing the data, or the authors of
+        the publication, in priority order.
+      </div>
+
+      <div class="pb-1">
+        <label for="abstract" class="form-label fs-6 mt-3">Abstract</label>
+      </div>
+      <div class="pb-1">{{ form.abstract }}</div>
+      <div id="abstractHelpBlock" class="form-text pb-2 text-dark">
+        A brief description of the
+        resource and the context in
+        which the resource was
+        created.
+      </div>
+
+      <div class="pb-1">
+        <label for="publisher" class="form-label fs-6 mt-3">Publisher</label>
+      </div>
+      <div class="pb-1">{{ form.publisher }}</div>
+      <div id="publisherHelpBlock" class="form-text pb-2 text-dark">
+        The name of the entity that holds, archives, publishes prints,
+        distributes, releases, issues, or produces the resource. This property
+        will be used to formulate the citation, so consider the prominence of
+        the role. For software, use Publisher for the code repository. If there
+        is an entity other than a code repository, that "holds, archives,
+        publishes, prints, distributes, releases, issues, or produces" the code,
+        use the property Contributor/contributorType/ hostingInstitution for the
+        code repository.Examples: World Data Center for Climate (WDCC);
+        GeoForschungsZentrum Potsdam (GFZ); Geological Institute, University of
+        Tokyo, GitHub
+      </div>
+      <div class="pb-1">
+        <label for="publicationYear" class="form-label fs-6 mt-3"
+          >Publication Year</label
+        >
+      </div>
+      <div class="col-4 pb-1">
+        <div>{{ form.publication_year }}</div>
+      </div>
+      <div id="publicationYearHelpBlock" class="form-text pb-2 text-dark">
+        The year when the data was or will be made publicly available. In the
+        case of resources such as software or dynamic data where there may be
+        multiple releases in one year, include the Date/dateType/
+        dateInformation property and sub-properties to provide more information
+        about the publication or release date details.YYYY *** If an embargo
+        period has been in effect, use the date when the embargo period ends. In
+        the case of datasets, "publish" is understood to mean making the data
+        available on a specific date to the community of researchers. If there
+        is no standard publication year value, use the date that would be
+        preferred from a citation perspective.
+      </div>
+      <div class="pb-1">
+        <label for="resourceType" class="form-label fs-6 mt-3"
+          >Resource Type</label
+        >
+      </div>
+      <div class="col-4 pb-1">
+        <div>{{ form.resource_type }}</div>
       </div>
       <div id="resourceTypeHelpBlock" class="form-text pb-2 text-dark">
-        The resource that is being identified can be of any kind, but it is typically a dataset.
+        The resource that is being identified can be of any kind, but it is
+        typically a dataset.
       </div>
-    {{ formset1.management_form }} 
-    <div>
-      <div class="mt-3">
-        <label for="subject" class="form-label fs-6">Subject</label>
-      </div>
+      {{ formset1.management_form }}
+      <div>
+        <div class="mt-3">
+          <label for="subject" class="form-label fs-6">Subject</label>
+        </div>
         {% for form in formset1 %}
         <div class="row form-row formset1-row mb-2">
-          <div class="col-6">
-            {{form.subject}}
-          </div>
+          <div class="col-6">{{form.subject}}</div>
           <div class="col">
-            <button type="button" class="btn btn-danger remove-form-row btn-sm">🗙</button>
+            <button type="button" class="btn btn-danger remove-form-row btn-sm">
+              🗙
+            </button>
           </div>
         </div>
         {% endfor %}
-      <button type="button" id="formset1-add" class="btn btn-success add-form-row btn-sm">Add subject</button>
-      <div id="subjectHelpBlock" class="form-text pb-2 text-dark">
-        Subject, keyword, classification
-        code, or key phrase describing
-        the resource.
+        <button
+          type="button"
+          id="formset1-add"
+          class="btn btn-success add-form-row btn-sm"
+        >
+          Add subject
+        </button>
+        <div id="subjectHelpBlock" class="form-text pb-2 text-dark">
+          Subject, keyword, classification code, or key phrase describing the
+          resource.
+        </div>
       </div>
-    </div>
 
-
-    <div class="row offset-5  spacer">
-      <div class="col-4 mt-4 d-grid gap-2">
-        <button type="submit" class="btn btn-block btn-primary">Create</button>
+      <div class="row offset-5 spacer">
+        <div class="col-4 mt-4 d-grid gap-2">
+          <button type="submit" class="btn btn-block btn-primary">
+            Create
+          </button>
+        </div>
+        <div>{{err}}</div>
       </div>
-      <div> {{err}}</div>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -234,8 +219,7 @@
     });
     total++;
     $("#id_" + prefix + "-TOTAL_FORMS").val(total);
-    $(newElement).find(".btn.remove-form-row")
-    .prop('hidden', false);
+    $(newElement).find(".btn.remove-form-row").prop("hidden", false);
     $(selector).after(newElement);
     return false;
   }
@@ -255,7 +239,7 @@
     }
     return false;
   }
- 
+
   $(document).on("click", "#formset1-add", function (e) {
     e.preventDefault();
     cloneMore(".formset1-row:last", "form1");
@@ -266,8 +250,8 @@
     deleteForm("form1", $(this));
     return false;
   });
-  
-  $(document).on("click",  "#formset2-add", function (e) {
+
+  $(document).on("click", "#formset2-add", function (e) {
     e.preventDefault();
     cloneMore(".formset2-row:last", "form2");
     return false;
@@ -278,7 +262,7 @@
     return false;
   });
 
-  $(".formset1-row:first .remove-form-row").prop('hidden', true);
-  $(".formset2-row:first .remove-form-row").prop('hidden', true);
+  $(".formset1-row:first .remove-form-row").prop("hidden", true);
+  $(".formset2-row:first .remove-form-row").prop("hidden", true);
 </script>
 {% endblock %}

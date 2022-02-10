@@ -7,38 +7,9 @@ dict = {
     'title': 'TITLE', 
     'publisher': 'PUBLISHER', 
     'publication_year': 2022, 
-    'resource_type': 'Text', 
-    'subjects': ['SUBJECT'], 
-    'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName', 'orcid': 'CreatorOrcid', 'affiliation': 'AFFILIATION'}]
-}
-
-subjectdict = {
-    'identifier': 'IDENTIFIER', 
-    'title': 'TITLE', 
-    'publisher': 'PUBLISHER', 
-    'publication_year': 2022, 
-    'resource_type': 'Text', 
-    'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName', 'orcid': 'CreatorOrcid', 'affiliation': 'AFFILIATION'}]
-}
-
-affiliationdict = {
-    'identifier': 'IDENTIFIER', 
-    'title': 'TITLE', 
-    'publisher': 'PUBLISHER', 
-    'publication_year': 2022, 
     'resource_type': 'Text',
     'subjects': ['SUBJECT'], 
-    'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName', 'orcid': 'CreatorOrcid'}]
-}
-
-orciddict = {
-    'identifier': 'IDENTIFIER', 
-    'title': 'TITLE', 
-    'publisher': 'PUBLISHER', 
-    'publication_year': 2022, 
-    'resource_type': 'Text',
-    'subjects': ['SUBJECT'], 
-    'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName', 'affiliation': 'AFFILIATION'}]
+    'creators': [{'givenname': 'CreatorGName', 'familyname': 'CreatorFName'}]
 }
 
 class TestDictToXml(unittest.TestCase):
@@ -50,7 +21,7 @@ class TestDictToXml(unittest.TestCase):
         self.assertIn('<publisher>PUBLISHER</publisher>', res)
         self.assertIn('<publicationYear>2022</publicationYear>', res)
         self.assertIn('<resourceType resourceTypeGeneral="Text">Text</resourceType>', res)
-        self.assertIn('<creator><creatorName nameType="Personal">CreatorFName, CreatorGName</creatorName><givenName>CreatorGName</givenName><familyName>CreatorFName</familyName><nameIdentifier schemeURI="https://orcid.org/" nameIdentifierScheme="ORCID">CreatorOrcid</nameIdentifier><affiliation>AFFILIATION</affiliation></creator>', res)
+        self.assertIn('<creator><creatorName nameType="Personal">CreatorFName, CreatorGName</creatorName><givenName>CreatorGName</givenName><familyName>CreatorFName</familyName></creator>', res)
     
     def test_missing_identifier(self):
         dictcopy = copy.deepcopy(dict)
@@ -89,22 +60,28 @@ class TestDictToXml(unittest.TestCase):
             res = dict_to_xml(dictcopy)
     
     def test_missing_subject(self):
-        dictcopy= copy.deepcopy(subjectdict)
+        dictcopy= copy.deepcopy(dict)
         dictcopy['subjects'] = ["SUBJECT"]
         res = dict_to_xml(dictcopy)
         self.assertIn('<subject>SUBJECT</subject>', res)
     
     def test_missing_affiliation(self):
-        dictcopy = copy.deepcopy(affiliationdict)
+        dictcopy = copy.deepcopy(dict)
         dictcopy['creators'][0]['affiliation'] = "AFFILIATION"
         res = dict_to_xml(dictcopy)
         self.assertIn('<affiliation>AFFILIATION</affiliation>', res)
     
     def test_missing_orcid(self):
-        dictcopy = copy.deepcopy(orciddict)
+        dictcopy = copy.deepcopy(dict)
         dictcopy['creators'][0]['orcid'] = "CREATORORCID"
         res = dict_to_xml(dictcopy)
         self.assertIn('<nameIdentifier schemeURI="https://orcid.org/" nameIdentifierScheme="ORCID">CREATORORCID</nameIdentifier>', res)
+    
+    def test_missing_description(self):
+        dictcopy = copy.deepcopy(dict)
+        dictcopy['abstract'] = "ABSTRACT"
+        res = dict_to_xml(dictcopy)
+        self.assertIn('<descriptions><description descriptionType="Abstract">ABSTRACT</description></descriptions>', res)
         
 
 if __name__ == '__main__':

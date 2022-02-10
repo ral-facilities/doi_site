@@ -84,4 +84,15 @@ def dict_to_xml(d):
                 xml_creator_affiliation = ET.SubElement(xml_creator, 'affiliation')
                 xml_creator_affiliation.text = creator['affiliation']
 
+    try:
+        abstract = d['abstract']
+    except KeyError:
+        abstract = None
+    if abstract:
+        xml_descriptions = ET.SubElement(xml_resource, 'descriptions')
+        xml_description = ET.SubElement(xml_descriptions, 'description')
+        xml_description.attrib['descriptionType'] = 'Abstract'
+        xml_description.text = d['abstract']
+
+    
     return '<?xml version="1.0" encoding="UTF-8"?>' + "\n" + ET.tostring(xml_resource, encoding='unicode')
