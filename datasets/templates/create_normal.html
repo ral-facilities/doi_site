@@ -16,22 +16,22 @@
       <span class="input-group-text" id="prefix">{{ doi_prefix }}/</span>
       {{ form.identifier }}
     </div>
-    <div id="identifierHelpBlock" class="form-text pb-2 text-dark">
-      {% if notAuthorised %}
-        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height:15px;">
-            You are only authorised to use the sub-domains listed below:
-        </div>
-      {% endif %}
-      <span>
-        DOI Sub-Domains available:
-      </span>
-      <ul>
-        {% for suffix in suffixlist %}
-            <li>{{ suffix }}</li>
-        {% empty %}
-            <li style="color:red">No DOI sub-domains available, please create one.</li>
-        {% endfor %}
-        </ul>
+    {% if notAuthorised %}
+    <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height:15px;">
+      You are only authorised to use the sub-domains listed below:
+    </div>
+    {% endif %}
+    <span>
+      DOI Sub-Domains available:
+    </span>
+    <ul>
+      {% for suffix in suffixlist %}
+      <li>{{ suffix }}</li>
+      {% empty %}
+      <li style="color:red">No DOI sub-domains available, please create one.</li>
+      {% endfor %}
+    </ul>
+    <div id="identifierHelpBlock" class="pb-2 text-dark">
       Only add the name of the 
       identifier as the DOI number (10.528) will be added automatically.
       The Identifier is a unique
@@ -58,6 +58,40 @@
       the title of a dataset or the
       name of a piece of software.
     </div>
+    
+    {{ formset2.management_form }} 
+    <div class="pb-1">
+      <label for="creator" class="form-label fs-6 mt-3">Creator</label>
+    </div>
+    {% for form in formset2 %}
+    <div class="row form-row spacer formset2-row">
+      <div class="row mb-2">
+        <div class="col">
+          {{form.givenname}}
+        </div>
+        <div class="col">
+          {{form.familyname}}
+        </div>
+        <div class="col">
+          {{form.orcid}}
+        </div>
+        <div class="col">
+          {{form.affiliation}}
+        </div>  
+        <div class="col-1">
+          <button type="button" class="btn btn-danger remove-form-row btn-sm">🗙</button>
+        </div>
+      </div>
+    </div>
+        {% endfor %}
+      <button type="button" id="formset2-add" class="btn btn-success btn-sm add-form-row" style="vertical-align:baseline">Add creator</button>
+      <div id="creatorHelpBlock" class="form-text pb-2 text-dark">
+        The main researchers involved
+        in producing the data, or the
+        authors of the publication, in
+        priority order.
+      </div>
+
     <div class="pb-1">
       <label for="publisher" class="form-label fs-6 mt-3">Publisher</label>
     </div>
@@ -157,38 +191,6 @@
       </div>
     </div>
 
-  {{ formset2.management_form }} 
-  <div class="pb-1">
-    <label for="creator" class="form-label fs-6 mt-3">Creator</label>
-  </div>
-  {% for form in formset2 %}
-  <div class="row form-row spacer formset2-row">
-    <div class="row mb-2">
-      <div class="col">
-        {{form.givenname}}
-      </div>
-      <div class="col">
-        {{form.familyname}}
-      </div>
-      <div class="col">
-        {{form.orcid}}
-      </div>
-      <div class="col">
-        {{form.affiliation}}
-      </div>  
-      <div class="col-1">
-        <button type="button" class="btn btn-danger remove-form-row btn-sm">🗙</button>
-      </div>
-    </div>
-  </div>
-      {% endfor %}
-    <button type="button" id="formset2-add" class="btn btn-success btn-sm add-form-row" style="vertical-align:baseline">Add creator</button>
-    <div id="creatorHelpBlock" class="form-text pb-2 text-dark">
-      The main researchers involved
-      in producing the data, or the
-      authors of the publication, in
-      priority order.
-    </div>
 
     <div class="row offset-5  spacer">
       <div class="col-4 mt-4 d-grid gap-2">
@@ -199,8 +201,8 @@
   </form>
 </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript">
   function updateElementIndex(el, prefix, ndx) {
     var id_regex = new RegExp("(" + prefix + "-\\d+)");
