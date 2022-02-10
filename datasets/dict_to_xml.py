@@ -38,10 +38,10 @@ def dict_to_xml(d):
     xml_resource_type = ET.SubElement(xml_resource, 'resourceType')
     try:
         xml_resource_type.attrib['resourceTypeGeneral'] = d['resource_type']
-        xml_resource_type.text = d['resource_type']
     except KeyError:
-        raise MetadataError('Missing mandatory metadata identifier')
-
+        raise MetadataError('Missing mandatory metadata resource type')
+    xml_resource_type.text = d.get("resource_type_text") or d["resource_type"]
+    
     try:
         subjects = d["subjects"]
     except KeyError:

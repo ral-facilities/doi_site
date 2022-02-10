@@ -82,6 +82,12 @@ class TestDictToXml(unittest.TestCase):
         dictcopy['abstract'] = "ABSTRACT"
         res = dict_to_xml(dictcopy)
         self.assertIn('<descriptions><description descriptionType="Abstract">ABSTRACT</description></descriptions>', res)
+    
+    def test_missing_resource_type_text(self):
+        dictcopy = copy.deepcopy(dict)
+        dictcopy['resource_type_text'] = "RESOURCE TYPE TEXT"
+        res = dict_to_xml(dictcopy)
+        self.assertIn('<resourceType resourceTypeGeneral="Text">RESOURCE TYPE TEXT</resourceType>', res)
         
 
 if __name__ == '__main__':

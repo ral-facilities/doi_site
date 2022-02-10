@@ -121,7 +121,7 @@
         >
       </div>
       <div class="col-4 pb-1">
-        <div>{{ form.publication_year }}</div>
+        {{ form.publication_year }}
       </div>
       <div id="publicationYearHelpBlock" class="form-text pb-2 text-dark">
         The year when the data was or will be made publicly available. In the
@@ -140,8 +140,8 @@
           >Resource Type</label
         >
       </div>
-      <div class="col-4 pb-1">
-        <div>{{ form.resource_type }}</div>
+      <div class="row" >
+        <div class="col pb-1">{{ form.resource_type }}</div> <div class="col pb-1">{{ form.resource_type_text }}</div>
       </div>
       <div id="resourceTypeHelpBlock" class="form-text pb-2 text-dark">
         The resource that is being identified can be of any kind, but it is
