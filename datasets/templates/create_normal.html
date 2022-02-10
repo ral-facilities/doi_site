@@ -13,7 +13,7 @@
     <form class="form-horizontal" method="POST" action="">
       {% csrf_token %}
       <div class="pb-1 mt-3">
-        <label for="identifier" class="form-label fs-6">Identifier</label>
+        <label for="identifier" class="form-label fs-6 required">Identifier</label>
       </div>
       <div class="input-group input-group-sm pb-1">
         <span class="input-group-text" id="prefix">{{ doi_prefix }}/</span>
@@ -48,7 +48,7 @@
         “10.1234/foo”
       </div>
       <div class="pb-1">
-        <label for="title" class="form-label fs-6 mt-3">Title</label>
+        <label for="title" class="form-label fs-6 mt-3 required">Title</label>
       </div>
       <div class="pb-1">{{ form.title }}</div>
       <div id="titleHelpBlock" class="form-text pb-2 text-dark">
@@ -58,7 +58,7 @@
 
       {{ formset2.management_form }}
       <div class="pb-1">
-        <label for="creator" class="form-label fs-6 mt-3">Creator</label>
+        <label for="creator" class="form-label fs-6 mt-3 required">Creator</label>
       </div>
       {% for form in formset2 %}
       <div class="row form-row spacer formset2-row">
@@ -100,7 +100,7 @@
       </div>
 
       <div class="pb-1">
-        <label for="publisher" class="form-label fs-6 mt-3">Publisher</label>
+        <label for="publisher" class="form-label fs-6 mt-3 required">Publisher</label>
       </div>
       <div class="pb-1">{{ form.publisher }}</div>
       <div id="publisherHelpBlock" class="form-text pb-2 text-dark">
@@ -116,7 +116,7 @@
         Tokyo, GitHub
       </div>
       <div class="pb-1">
-        <label for="publicationYear" class="form-label fs-6 mt-3"
+        <label for="publicationYear" class="form-label fs-6 mt-3 required"
           >Publication Year</label
         >
       </div>
@@ -136,7 +136,7 @@
         preferred from a citation perspective.
       </div>
       <div class="pb-1">
-        <label for="resourceType" class="form-label fs-6 mt-3"
+        <label for="resourceType" class="form-label fs-6 mt-3 required"
           >Resource Type</label
         >
       </div>
@@ -274,4 +274,11 @@
   $(".formset1-row:first .remove-form-row").prop("hidden", true);
   $(".formset2-row:first .remove-form-row").prop("hidden", true);
 </script>
+
+<style>
+label.required::after {
+  content: ' *';
+  color: red;
+}
+</style>
 {% endblock %}
