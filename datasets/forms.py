@@ -56,6 +56,8 @@ CreatorFormset = formset_factory(CreatorForm, extra=0,  min_num=1, validate_min=
 class UrlForm(forms.Form):
     url = forms.CharField(label='Url', widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'id':'url'}))
 
+class AddUrlForm(forms.Form):
+    add_url = forms.CharField(label='Add Url', widget=forms.TextInput(attrs={'placeholder': 'Assign url to doi', 'class':'form-control form-control-sm', 'id':'addUrl'}))
 
 
 

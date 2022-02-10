@@ -1,0 +1,35 @@
+{% extends "doi_site/organisation_wrapper.html" %} {% block head %}
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+  crossorigin="anonymous"
+/>
+{% endblock %} {% block content %}
+<h3 class="offset-5 bold--text">Assign url to DOI</h3>
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8">
+    <form class="form-horizontal mt-3" method="POST" action="">
+        {% csrf_token %}
+        <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            <label for="url" class="col-form-label fs-6">Url:</label>
+            </div>
+            <div class="col">
+            {{form.add_url}}
+        </div>
+        </div>
+        <div class="row offset-5 spacer">
+            <div class="col-4 mt-4 d-grid gap-2">
+            <button type="submit" class="btn btn-block btn-sm btn-primary">
+                Assign
+            </button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>
+
+  {% endblock %}
+</div>

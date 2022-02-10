@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-from .forms import SubjectFormset, CreatorFormset, DoiForm, UrlForm
+from .forms import SubjectFormset, CreatorFormset, DoiForm, AddUrlForm, UrlForm
 from django.shortcuts import render, redirect
 import xml.etree.ElementTree as ET
 from .dict_to_xml import dict_to_xml
@@ -125,6 +125,15 @@ class Mint(View):
             'heading': heading_message,
         })
 
+
+class AddUrl(View):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    template_name = 'add_url.html'
+    def get(self, request, err=None):
+        addurlform = AddUrlForm(request.GET or None)
+        return render(request, self.template_name, {'form': addurlform})
 class Url(View):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
