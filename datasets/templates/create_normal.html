@@ -5,6 +5,10 @@
   integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
   crossorigin="anonymous"
 />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
 {% endblock %} {% block content %}
 <h2 class="offset-5 bold--text">DOI Form</h2>
 <div class="row">
@@ -13,7 +17,9 @@
     <form class="form-horizontal" method="POST" action="">
       {% csrf_token %}
       <div class="pb-1 mt-3">
-        <label for="identifier" class="form-label fs-6 required">Identifier</label>
+        <label for="identifier" class="form-label fs-6 required"
+          >Identifier</label
+        >
       </div>
       <div class="input-group input-group-sm pb-1">
         <span class="input-group-text" id="prefix">{{ doi_prefix }}/</span>
@@ -38,27 +44,58 @@
         </li>
         {% endfor %}
       </ul>
-      <div id="identifierHelpBlock" class="pb-2 text-dark">
-        Only add the name of the identifier as the DOI number (10.528) will be
-        added automatically. The Identifier is a unique string that identifies a
-        resource. For software, determine whether the identifier is for a
-        specific version of a piece of software, (per the Force11 Software
-        Citation Principles11), or for all versions.DOI (Digital Object
-        Identifier) registered by a DataCite member. Format should be
-        “10.1234/foo”
+
+      <div class="row">
+        <div class="col-1">
+          <a href="#identifierHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ></a>
+        </div>
+        <div class="col-11">
+          <div id="identifierHelpBlock" class="collapse show pb-2 text-dark">
+            Only add the name of the identifier as the DOI number (10.528) will
+            be added automatically. The Identifier is a unique string that
+            identifies a resource. For software, determine whether the
+            identifier is for a specific version of a piece of software, (per
+            the Force11 Software Citation Principles11), or for all versions.DOI
+            (Digital Object Identifier) registered by a DataCite member. Format
+            should be “10.1234/foo”
+          </div>
+        </div>
       </div>
+
       <div class="pb-1">
         <label for="title" class="form-label fs-6 mt-3 required">Title</label>
       </div>
       <div class="pb-1">{{ form.title }}</div>
-      <div id="titleHelpBlock" class="form-text pb-2 text-dark">
-        A name or title by which a resource is known. May be the title of a
-        dataset or the name of a piece of software.
+      <div class="row">
+        <div class="col-1">
+          <a href="#titleHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ></a>
+        </div>
+        <div class="col-11">
+          <div
+            id="titleHelpBlock"
+            class="collapse show form-text pb-2 text-dark"
+          >
+            A name or title by which a resource is known. May be the title of a
+            dataset or the name of a piece of software.
+          </div>
+        </div>
       </div>
 
       {{ formset2.management_form }}
       <div class="pb-1">
-        <label for="creator" class="form-label fs-6 mt-3 required">Creator</label>
+        <label for="creator" class="form-label fs-6 mt-3 required"
+          >Creator</label
+        >
       </div>
       {% for form in formset2 %}
       <div class="row form-row spacer formset2-row">
@@ -83,69 +120,135 @@
       >
         Add creator
       </button>
-      <div id="creatorHelpBlock" class="form-text pb-2 text-dark">
-        The main researchers involved in producing the data, or the authors of
-        the publication, in priority order.
+      <div class="row">
+        <div class="col-1">
+          <a href="#creatorHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ></a>
+        </div>
+        <div class="col-11">
+          <div
+            id="creatorHelpBlock"
+            class="collapse show form-text pb-2 text-dark"
+          >
+            The main researchers involved in producing the data, or the authors
+            of the publication, in priority order.
+          </div>
+        </div>
       </div>
 
       <div class="pb-1">
         <label for="abstract" class="form-label fs-6 mt-3">Abstract</label>
       </div>
       <div class="pb-1">{{ form.abstract }}</div>
-      <div id="abstractHelpBlock" class="form-text pb-2 text-dark">
-        A brief description of the
-        resource and the context in
-        which the resource was
-        created.
+      <div class="row">
+        <div class="col-1">
+          <a href="#abstractHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ></a>
+        </div>
+        <div class="col-11">
+          <div
+            id="abstractHelpBlock"
+            class="collapse show form-text pb-2 text-dark"
+          >
+            A brief description of the resource and the context in which the
+            resource was created.
+          </div>
+        </div>
       </div>
 
       <div class="pb-1">
-        <label for="publisher" class="form-label fs-6 mt-3 required">Publisher</label>
+        <label for="publisher" class="form-label fs-6 mt-3 required"
+          >Publisher</label
+        >
       </div>
       <div class="pb-1">{{ form.publisher }}</div>
-      <div id="publisherHelpBlock" class="form-text pb-2 text-dark">
-        The name of the entity that holds, archives, publishes prints,
-        distributes, releases, issues, or produces the resource. This property
-        will be used to formulate the citation, so consider the prominence of
-        the role. For software, use Publisher for the code repository. If there
-        is an entity other than a code repository, that "holds, archives,
-        publishes, prints, distributes, releases, issues, or produces" the code,
-        use the property Contributor/contributorType/ hostingInstitution for the
-        code repository.Examples: World Data Center for Climate (WDCC);
-        GeoForschungsZentrum Potsdam (GFZ); Geological Institute, University of
-        Tokyo, GitHub
+      <div class="row">
+        <div class="col-1">
+          <a href="#publisherHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ></a>
+        </div>
+        <div class="col-11">
+          <div id="publisherHelpBlock" class="collapse show form-text pb-2 text-dark">
+            The name of the entity that holds, archives, publishes prints,
+            distributes, releases, issues, or produces the resource. This
+            property will be used to formulate the citation, so consider the
+            prominence of the role. For software, use Publisher for the code
+            repository. If there is an entity other than a code repository, that
+            "holds, archives, publishes, prints, distributes, releases, issues,
+            or produces" the code, use the property Contributor/contributorType/
+            hostingInstitution for the code repository.Examples: World Data
+            Center for Climate (WDCC); GeoForschungsZentrum Potsdam (GFZ);
+            Geological Institute, University of Tokyo, GitHub
+          </div>
+        </div>
       </div>
       <div class="pb-1">
         <label for="publicationYear" class="form-label fs-6 mt-3 required"
           >Publication Year</label
         >
       </div>
-      <div class="col-4 pb-1">
-        {{ form.publication_year }}
-      </div>
-      <div id="publicationYearHelpBlock" class="form-text pb-2 text-dark">
-        The year when the data was or will be made publicly available. In the
-        case of resources such as software or dynamic data where there may be
-        multiple releases in one year, include the Date/dateType/
-        dateInformation property and sub-properties to provide more information
-        about the publication or release date details.YYYY *** If an embargo
-        period has been in effect, use the date when the embargo period ends. In
-        the case of datasets, "publish" is understood to mean making the data
-        available on a specific date to the community of researchers. If there
-        is no standard publication year value, use the date that would be
-        preferred from a citation perspective.
+      <div class="col-4 pb-1">{{ form.publication_year }}</div>
+      <div class="row">
+        <div class="col-1">
+          <a href="#publicationYearHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ></a>
+        </div>
+        <div class="col-11">
+          <div id="publicationYearHelpBlock" class="collapse show form-text pb-2 text-dark">
+            The year when the data was or will be made publicly available. In
+            the case of resources such as software or dynamic data where there
+            may be multiple releases in one year, include the Date/dateType/
+            dateInformation property and sub-properties to provide more
+            information about the publication or release date details.YYYY ***
+            If an embargo period has been in effect, use the date when the
+            embargo period ends. In the case of datasets, "publish" is
+            understood to mean making the data available on a specific date to
+            the community of researchers. If there is no standard publication
+            year value, use the date that would be preferred from a citation
+            perspective.
+          </div>
+        </div>
       </div>
       <div class="pb-1">
         <label for="resourceType" class="form-label fs-6 mt-3 required"
           >Resource Type</label
         >
       </div>
-      <div class="row" >
-        <div class="col pb-1">{{ form.resource_type }}</div> <div class="col pb-1">{{ form.resource_type_text }}</div>
+      <div class="row">
+        <div class="col pb-1">{{ form.resource_type }}</div>
+        <div class="col pb-1">{{ form.resource_type_text }}</div>
       </div>
-      <div id="resourceTypeHelpBlock" class="form-text pb-2 text-dark">
+      <div class="row">
+        <div class="col-1">
+          <a href="#resourceTypeHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ></a>
+        </div>
+        <div class="col-11">
+      <div id="resourceTypeHelpBlock" class="collapse show form-text pb-2 text-dark">
         The resource that is being identified can be of any kind, but it is
         typically a dataset.
+      </div>
+        </div>
       </div>
       {{ formset1.management_form }}
       <div>
@@ -169,19 +272,41 @@
         >
           Add subject
         </button>
-        <div id="subjectHelpBlock" class="form-text pb-2 text-dark">
-          Subject, keyword, classification code, or key phrase describing the
-          resource.
-        </div>
+        <div class="row">
+          <div class="col-1">
+            <a href="#subjectHelpBlock" data-bs-toggle="collapse"
+              ><i
+                onclick="toggleArrow(this)"
+                class="fa fa-caret-down fa-2x fa-fw"
+              ></i
+            ></a>
+          </div>
+          <div class="col-11">
+          <div id="subjectHelpBlock" class="collapse show form-text pb-2 text-dark">
+            Subject, keyword, classification code, or key phrase describing the
+            resource.
+          </div>
       </div>
+        </div>
 
       <div class="pb-1">
         <label for="version" class="form-label fs-6 mt-3">Version</label>
       </div>
       <div class="pb-1 col-6">{{ form.version }}</div>
-      <div id="versionHelpBlock" class="form-text pb-2 text-dark">
-        The version number of the
-        resource.
+      <div class="row">
+        <div class="col-1">
+          <a href="#versionHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ></a>
+        </div>
+        <div class="col-11">
+          <div id="versionHelpBlock" class="collapse show form-text pb-2 text-dark">
+            The version number of the resource.
+          </div>
+        </div>
       </div>
 
       <div class="row offset-5 spacer">
@@ -196,7 +321,11 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+  crossorigin="anonymous"
+></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript">
   function updateElementIndex(el, prefix, ndx) {
@@ -274,12 +403,16 @@
 
   $(".formset1-row:first .remove-form-row").prop("hidden", true);
   $(".formset2-row:first .remove-form-row").prop("hidden", true);
+
+  function toggleArrow(arrow) {
+    arrow.classList.toggle("fa-caret-up");
+  }
 </script>
 
 <style>
-label.required::after {
-  content: ' *';
-  color: red;
-}
+  label.required::after {
+    content: " *";
+    color: red;
+  }
 </style>
 {% endblock %}
