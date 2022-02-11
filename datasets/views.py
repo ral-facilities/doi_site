@@ -134,6 +134,14 @@ class AddUrl(View):
     def get(self, request, err=None):
         addurlform = AddUrlForm(request.GET or None)
         return render(request, self.template_name, {'form': addurlform})
+    def post(self, request, err=None):
+        addurlform = AddUrlForm(request.POST or None)
+        if addurlform.is_valid():
+            url = addurlform.cleaned_data
+            path = 'mint/' + url['add_url']
+            return redirect(path)
+        else:
+          return render(request, self.template_name, {'form': addurlform})  
 class Url(View):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
