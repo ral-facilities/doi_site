@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-from .forms import SubjectFormset, CreatorFormset, DoiForm, AddUrlForm, UrlForm
+from .forms import SubjectFormset, CreatorFormset, FunderFormset, DoiForm, AddUrlForm, UrlForm
 from django.shortcuts import render, redirect
 import xml.etree.ElementTree as ET
 from .dict_to_xml import dict_to_xml
@@ -33,14 +33,16 @@ class Mint(View):
                 pass
         suffixlist = authorized_dois
         doiform = DoiForm(request.GET or None)
-        formset1 = SubjectFormset(request.GET or None, prefix='form1')
-        formset2 = CreatorFormset(request.GET or None, prefix='form2')
-        for form in formset2:
+        subjectformset = SubjectFormset(request.GET or None, prefix='subjectform')
+        creatorformset = CreatorFormset(request.GET or None, prefix='creatorform')
+        funderformset = FunderFormset(request.GET or None, prefix='funderform')
+        for form in creatorformset:
             form.use_required_attribute = True
         return render(request, template_name, {
         'form': doiform,
-        'formset1': formset1,
-        'formset2': formset2,
+        'subjectformset': subjectformset,
+        'creatorformset': creatorformset,
+        'funderformset' : funderformset,
         'doi_prefix': DOI_PREFIX,
         'suffixlist': suffixlist,
         'heading': heading_message,
@@ -48,8 +50,8 @@ class Mint(View):
 
     def post(self, request):
         doiform = DoiForm(request.POST or None)
-        formset1 = SubjectFormset(request.POST or None, prefix='form1')
-        formset2 = CreatorFormset(request.POST or None, prefix='form2')
+        subjectformset = SubjectFormset(request.POST or None, prefix='subjectform')
+        creatorformset = CreatorFormset(request.POST or None, prefix='creatorform')
         authorized_dois = []
         notAuthorised = False
         groups = request.user.groups.iterator()
@@ -59,11 +61,11 @@ class Mint(View):
             except ObjectDoesNotExist:
                 pass
         suffixlist = authorized_dois
-        for form in formset2:
+        for form in creatorformset:
             form.use_required_attribute = True
         template_name = 'create_normal.html'
         heading_message = 'Formset Demo'
-        if formset1.is_valid() and formset2.is_valid() and doiform.is_valid():
+        if subjectformset.is_valid() and creatorformset.is_valid() and doiform.is_valid():
             mds_api = MdsApi(request) 
             metadata = doiform.cleaned_data
             canUseSuffix = helper.is_authorized(request, metadata['identifier'])
@@ -73,15 +75,15 @@ class Mint(View):
                 notAuthorised = True,
                 return render(request, template_name, {
                 'form': doiform,
-                'formset1': formset1,
-                'formset2': formset2,
+                'subjectformset': subjectformset,
+                'creatorformset': creatorformset,
                 'doi_prefix': DOI_PREFIX,
                 'heading': heading_message,
                 'suffixlist': suffixlist,
                 'notAuthorised': notAuthorised
                 })
-            metadata["subjects"] = [x.get("subject") for x in formset1.cleaned_data if x.get('subject')]
-            metadata["creators"] = [x for x in formset2.cleaned_data if x]
+            metadata["subjects"] = [x.get("subject") for x in subjectformset.cleaned_data if x.get('subject')]
+            metadata["creators"] = [x for x in creatorformset.cleaned_data if x]
             metadata['identifier'] = DOI_PREFIX + '/'+ metadata['identifier']
             doi = metadata['identifier'] 
             print(metadata)
@@ -94,8 +96,8 @@ class Mint(View):
                 print(f'Other error occurred: {err}')
                 return render(request, template_name, {
                     'form': doiform,
-                    'formset1': formset1,
-                    'formset2': formset2,
+                    'subjectformset': subjectformset,
+                    'creatorformset': creatorformset,
                     'doi_prefix': DOI_PREFIX,
                     'heading': heading_message,
                     'suffixlist': suffixlist,
@@ -107,8 +109,8 @@ class Mint(View):
         else:
             return render(request, template_name, {
             'form': doiform,
-            'formset1': formset1,
-            'formset2': formset2,
+            'subjectformset': subjectformset,
+            'creatorformset': creatorformset,
             'doi_prefix': DOI_PREFIX,
             'heading': heading_message,
         })
@@ -119,8 +121,8 @@ class Mint(View):
             print("DOI site was not called successfully!")
             return render(request, template_name, {
             'form': doiform,
-            'formset1': formset1,
-            'formset2': formset2,
+            'subjectformset': subjectformset,
+            'creatorformset': creatorformset,
             'doi_prefix': DOI_PREFIX,
             'heading': heading_message,
         })

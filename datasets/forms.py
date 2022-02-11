@@ -45,6 +45,7 @@ class DoiForm(forms.Form):
 class SubjectForm(forms.Form):
      subject = forms.CharField(label='Subject', required=False, widget=forms.TextInput(attrs={'placeholder': 'Subject', 'class':'form-control form-control-sm', 'id':'subject'}))
 SubjectFormset = formset_factory(SubjectForm, extra=1)
+
 class CreatorForm(forms.Form):
     givenname = forms.CharField(label='Given Name', widget=forms.TextInput(attrs={'placeholder': 'Given Name', 'class':'form-control form-control-sm', 'id':'creator'}))
     familyname = forms.CharField(label='Family Name', widget=forms.TextInput(attrs={'placeholder': 'Family Name', 'class':'form-control form-control-sm', 'id':'creator'}))
@@ -52,6 +53,13 @@ class CreatorForm(forms.Form):
     affiliation = forms.CharField(label='Affiliation',  required=False, widget=forms.TextInput(attrs={'placeholder': 'Affiliation', 'class':'form-control form-control-sm', 'id':'creator'}))
    
 CreatorFormset = formset_factory(CreatorForm, extra=0,  min_num=1, validate_min=True)
+class FunderForm(forms.Form):
+    funder_name = forms.CharField(label='Funder Name', widget=forms.TextInput(attrs={'placeholder': 'Funder Name', 'class':'form-control form-control-sm', 'id':'creator'}))
+    funder_identifier = forms.CharField(label='Funder Identifier', widget=forms.TextInput(attrs={'placeholder': 'Funder Identifier', 'class':'form-control form-control-sm', 'id':'creator'}))
+    award_number = forms.CharField(label='Award Number',  required=False, widget=forms.TextInput(attrs={'placeholder': 'Award Number', 'class':'form-control form-control-sm', 'id':'creator'}))
+    award_title = forms.CharField(label='Award Title',  required=False, widget=forms.TextInput(attrs={'placeholder': 'Award Title', 'class':'form-control form-control-sm', 'id':'creator'}))
+   
+FunderFormset = formset_factory(FunderForm, extra=0,  min_num=1, validate_min=True)
 
 class UrlForm(forms.Form):
     url = forms.CharField(label='Url', widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'id':'url'}))
