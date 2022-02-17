@@ -6,9 +6,18 @@
   crossorigin="anonymous"
 />
 <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 />
+<link href='https://search.crossref.org/typeahead.css' media='screen' rel='stylesheet' type='text/css'>
+<script src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js' type='text/javascript'></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+  crossorigin="anonymous"
+></script>
+<script src='https://twitter.github.io/typeahead.js/releases/0.10.5/typeahead.bundle.js' type='text/javascript'></script>
+<script src="https://twitter.github.io/hogan.js/builds/3.0.1/hogan-3.0.1.js" type='text/javascript'></script>
 {% endblock %} {% block content %}
 <h2 class="offset-5 bold--text">DOI Form</h2>
 <div class="row">
@@ -52,7 +61,8 @@
               onclick="toggleArrow(this)"
               class="fa fa-caret-down fa-2x fa-fw"
             ></i
-          ></a>
+          >
+          <span class="sr-only">Identifier helper text toggle</span></a>
         </div>
         <div class="col-11">
           <div id="identifierHelpBlock" class="collapse show pb-2 text-dark">
@@ -60,7 +70,7 @@
             be added automatically. The Identifier is a unique string that
             identifies a resource. For software, determine whether the
             identifier is for a specific version of a piece of software, (per
-            the Force11 Software Citation Principles11), or for all versions.DOI
+            the Force11 Software Citation Principles11), or for all versions. DOI
             (Digital Object Identifier) registered by a DataCite member. Format
             should be “10.1234/foo”
           </div>
@@ -78,7 +88,7 @@
               onclick="toggleArrow(this)"
               class="fa fa-caret-down fa-2x fa-fw"
             ></i
-          ></a>
+          ><span class="sr-only">Title helper text toggle</span></a></a>
         </div>
         <div class="col-11">
           <div
@@ -116,16 +126,13 @@
         type="button"
         id="creatorformset-add"
         class="btn btn-success btn-sm add-form-row"
-        style="vertical-align: baseline"
       >
         Add creator
       </button>
       
       {{ funderformset.management_form }}
       <div class="pb-1">
-        <label for="funder" class="form-label fs-6 mt-3 required"
-          >Funder</label
-        >
+        <label for="funder" class="form-label fs-6 mt-3 required">Funder</label>
       </div>
       {% for form in funderformset %}
       <div class="row form-row spacer funderformset-row">
@@ -146,11 +153,11 @@
         type="button"
         id="funderformset-add"
         class="btn btn-success btn-sm add-form-row"
-        style="vertical-align: baseline"
       >
         Add funder
       </button>
 
+       
 
       <div class="row">
         <div class="col-1">
@@ -159,7 +166,7 @@
               onclick="toggleArrow(this)"
               class="fa fa-caret-down fa-2x fa-fw"
             ></i
-          ></a>
+          ><span class="sr-only">Funder helper text toggle</span></a></a>
         </div>
         <div class="col-11">
           <div
@@ -183,7 +190,7 @@
               onclick="toggleArrow(this)"
               class="fa fa-caret-down fa-2x fa-fw"
             ></i
-          ></a>
+          ><span class="sr-only">Abstract helper text toggle</span></a></a>
         </div>
         <div class="col-11">
           <div
@@ -209,7 +216,7 @@
               onclick="toggleArrow(this)"
               class="fa fa-caret-down fa-2x fa-fw"
             ></i
-          ></a>
+          ><span class="sr-only">Publisher helper text toggle</span></a></a>
         </div>
         <div class="col-11">
           <div id="publisherHelpBlock" class="collapse show form-text pb-2 text-dark">
@@ -239,7 +246,7 @@
               onclick="toggleArrow(this)"
               class="fa fa-caret-down fa-2x fa-fw"
             ></i
-          ></a>
+          ><span class="sr-only">Publication year helper text toggle</span></a></a>
         </div>
         <div class="col-11">
           <div id="publicationYearHelpBlock" class="collapse show form-text pb-2 text-dark">
@@ -273,7 +280,7 @@
               onclick="toggleArrow(this)"
               class="fa fa-caret-down fa-2x fa-fw"
             ></i
-          ></a>
+          ><span class="sr-only">Resource type helper text toggle</span></a></a>
         </div>
         <div class="col-11">
       <div id="resourceTypeHelpBlock" class="collapse show form-text pb-2 text-dark">
@@ -311,7 +318,7 @@
                 onclick="toggleArrow(this)"
                 class="fa fa-caret-down fa-2x fa-fw"
               ></i
-            ></a>
+            ><span class="sr-only">Subject helper text toggle</span></a></a>
           </div>
           <div class="col-11">
           <div id="subjectHelpBlock" class="collapse show form-text pb-2 text-dark">
@@ -332,7 +339,7 @@
               onclick="toggleArrow(this)"
               class="fa fa-caret-down fa-2x fa-fw"
             ></i
-          ></a>
+          ><span class="sr-only">Version helper text toggle</span></a></a>
         </div>
         <div class="col-11">
           <div id="versionHelpBlock" class="collapse show form-text pb-2 text-dark">
@@ -353,13 +360,41 @@
   </div>
 </div>
 
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-  crossorigin="anonymous"
-></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript">
+  $(document).ready(function() {
+    window.fundersRemote = new Bloodhound({
+      name: 'funders',
+      datumTokenizer: function(d) { return d.tokens; },
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      remote: {
+        url: 'https://api.crossref.org/funders?query=%QUERY',
+        filter: function(dataResponse) { return dataResponse.message.items; }
+      },
+      limit: 16,
+      dupDetector: function(r, l) { return false; }
+    });
+  
+    fundersRemote.initialize();
+  
+    var suggestionLayout = Hogan.compile('<p>{{name}} <small>{{location}}</small></p>');
+  
+    $('.search-input').typeahead(null, {
+      name: 'funders',
+      source: fundersRemote.ttAdapter(),
+      templates: {
+        suggestion: function (data) {
+          return '<p><strong>' + data.name + '</strong> - ' + data.location + '</p>';
+        }
+        },
+      limit: 16
+    });
+  
+    $('.search-input').bind('typeahead:autocompleted typeahead:selected', function(e, datum) {
+      $(this).typeahead('val', datum.name);
+      $(this).closest('.funderformset-row').find('.funder_id').val(datum.id);
+    });
+  });
+
   function updateElementIndex(el, prefix, ndx) {
     var id_regex = new RegExp("(" + prefix + "-\\d+)");
     var replacement = prefix + "-" + ndx;
@@ -372,7 +407,8 @@
     var newElement = $(selector).clone(true);
     var total = $("#id_" + prefix + "-TOTAL_FORMS").val();
     newElement
-      .find(":input:not([type=button]):not([type=submit]):not([type=reset])")
+      // .find(":input:not([type=button]):not([type=submit]):not([type=reset])")
+      .find(":input[name]")
       .each(function () {
         console.log($(this));
         var name = $(this)
@@ -435,7 +471,22 @@
  
   $(document).on("click", "#funderformset-add", function (e) {
     e.preventDefault();
+    $('.search-input').typeahead("destroy");
     cloneMore(".funderformset-row:last", "funderform");
+    $(".search-input").typeahead(null, {
+      name: 'funders',
+      source: fundersRemote.ttAdapter(),
+      templates: {
+        suggestion: function (data) {
+          return '<p><strong>' + data.name + '</strong> - ' + data.location + '</p>';
+        }
+        },
+      limit: 16
+    });
+    $('.funderformset-row:last').find(".search-input").bind('typeahead:autocompleted typeahead:selected', function(e, datum) {
+      $(this).typeahead('val', datum.name);
+      $(this).closest('.funderformset-row').find('.funder_id').val(datum.id);
+    });
     return false;
   });
   $(document).on("click", ".funderformset-row .remove-form-row", function (e) {
