@@ -88,7 +88,7 @@ def dict_to_xml(d):
     try:
         funders = d['funders']
     except KeyError:
-            raise MetadataError('Missing mandatory metadata funders')
+        funders = None
     if funders:
         for funder in funders:
             xml_funder = ET.SubElement(xml_funders, 'fundingReference')

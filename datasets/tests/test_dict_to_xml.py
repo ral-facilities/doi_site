@@ -94,6 +94,30 @@ class TestDictToXml(unittest.TestCase):
         dictcopy['version'] = "0.0.0"
         res = dict_to_xml(dictcopy)
         self.assertIn('<version>0.0.0</version>', res)
+    
+    def test_missing_funder_name(self):
+        dictcopy = copy.deepcopy(dict)
+        dictcopy['funders']= [{'funder_name':"Stfc", 'funder_identifier':""}]
+        res = dict_to_xml(dictcopy)
+        self.assertIn('<funderName>Stfc</funderName>', res)
+    
+    def test_missing_funder_identifier(self):
+        dictcopy = copy.deepcopy(dict)
+        dictcopy['funders']= [{'funder_name':"", 'funder_identifier':"999"}]
+        res = dict_to_xml(dictcopy)
+        self.assertIn('<funderIdentifier funderIdentifierType="Crossref Funder ID">999</funderIdentifier>', res)
+    
+    def test_missing_award_number(self):
+        dictcopy = copy.deepcopy(dict)
+        dictcopy['funders']= [{'funder_name':"", 'funder_identifier':"", 'award_number':"666"}]
+        res = dict_to_xml(dictcopy)
+        self.assertIn('<awardNumber>666</awardNumber>', res)
+    
+    def test_missing_award_title(self):
+        dictcopy = copy.deepcopy(dict)
+        dictcopy['funders']= [{'funder_name':"", 'funder_identifier':"", 'award_title':"AWARD TITLE"}]
+        res = dict_to_xml(dictcopy)
+        self.assertIn('<awardTitle>AWARD TITLE</awardTitle>', res)
 
 if __name__ == '__main__':
     unittest.main()
