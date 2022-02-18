@@ -118,6 +118,12 @@ class TestDictToXml(unittest.TestCase):
         dictcopy['funders']= [{'funder_name':"", 'funder_identifier':"", 'award_title':"AWARD TITLE"}]
         res = dict_to_xml(dictcopy)
         self.assertIn('<awardTitle>AWARD TITLE</awardTitle>', res)
+    
+    def test_missing_date(self):
+        dictcopy = copy.deepcopy(dict)
+        dictcopy['date'] = "2022-02-18"
+        res = dict_to_xml(dictcopy)
+        self.assertIn('<dates><date dateType="Updated" dateInformation="Updated with 4.4 properties">2022-02-18</date></dates>', res)
 
 if __name__ == '__main__':
     unittest.main()
