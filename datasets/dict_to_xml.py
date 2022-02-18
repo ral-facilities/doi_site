@@ -83,6 +83,34 @@ def dict_to_xml(d):
             if affiliation:
                 xml_creator_affiliation = ET.SubElement(xml_creator, 'affiliation')
                 xml_creator_affiliation.text = creator['affiliation']
+    
+    xml_funders = ET.SubElement(xml_resource, 'fundingReferences')
+    try:
+        funders = d['funders']
+    except KeyError:
+            raise MetadataError('Missing mandatory metadata funders')
+    if funders:
+        for funder in funders:
+            xml_funder = ET.SubElement(xml_funders, 'fundingReference')
+            xml_funder_name = ET.SubElement(xml_funder, 'funderName')
+            xml_funder_name.text = funder['funder_name'] 
+            xml_funder_identifier = ET.SubElement(xml_funder, 'funderIdentifier')
+            xml_funder_identifier.text = funder['funder_identifier']
+            xml_funder_identifier.attrib['funderIdentifierType'] = 'Crossref Funder ID'
+            try:
+                awardNumber = funder['award_number']
+            except KeyError:
+                awardNumber = None
+            if awardNumber:
+                xml_funder_award_number = ET.SubElement(xml_funder, 'awardNumber')
+                xml_funder_award_number.text = funder['award_number']
+            try: 
+                awardTitle = funder['award_title']
+            except KeyError:
+                awardTitle = None
+            if awardTitle:
+                xml_award_title = ET.SubElement(xml_funder, 'awardTitle')
+                xml_award_title.text = funder['award_title']
 
     try:
         abstract = d['abstract']

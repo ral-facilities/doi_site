@@ -55,8 +55,8 @@ class CreatorForm(forms.Form):
 CreatorFormset = formset_factory(CreatorForm, extra=0,  min_num=1, validate_min=True)
 class FunderForm(forms.Form):
     funder_name = forms.CharField(label='Funder Name', widget=forms.TextInput(attrs={'placeholder': 'Funder Name', 'class':'form-control form-control-sm search-input', 'id':'funder'}))
-    funder_identifier = forms.CharField(label='Funder Identifier', widget=forms.TextInput(attrs={'placeholder': 'Funder Identifier', 'class':'form-control form-control-sm funder_id', 'id':'funder'}))
-    award_number = forms.CharField(label='Award Number',  required=False, widget=forms.TextInput(attrs={'placeholder': 'Award Number', 'class':'form-control form-control-sm', 'id':'funder'}))
+    funder_identifier = forms.CharField(label='Funder Identifier', widget=forms.TextInput(attrs={'readonly': 'readonly', 'placeholder': 'Funder Identifier', 'class':'form-control form-control-sm funder_id', 'id':'funder'}))
+    award_number = forms.CharField(label='Award Number',  required=False,  widget=forms.TextInput(attrs={'placeholder': 'Award Number', 'class':'form-control form-control-sm', 'id':'funder'}))
     award_title = forms.CharField(label='Award Title',  required=False, widget=forms.TextInput(attrs={'placeholder': 'Award Title', 'class':'form-control form-control-sm', 'id':'funder'}))
    
 FunderFormset = formset_factory(FunderForm, extra=0,  min_num=1, validate_min=True)

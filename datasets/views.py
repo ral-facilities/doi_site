@@ -52,6 +52,7 @@ class Mint(View):
         doiform = DoiForm(request.POST or None)
         subjectformset = SubjectFormset(request.POST or None, prefix='subjectform')
         creatorformset = CreatorFormset(request.POST or None, prefix='creatorform')
+        funderformset = FunderFormset(request.POST or None, prefix='funderform')
         authorized_dois = []
         notAuthorised = False
         groups = request.user.groups.iterator()
@@ -63,9 +64,15 @@ class Mint(View):
         suffixlist = authorized_dois
         for form in creatorformset:
             form.use_required_attribute = True
+        for form in funderformset:
+            form.use_required_attribute = True
         template_name = 'create_normal.html'
         heading_message = 'Formset Demo'
-        if subjectformset.is_valid() and creatorformset.is_valid() and doiform.is_valid():
+        print(funderformset.is_valid())
+        print(doiform.is_valid())
+        print(subjectformset.is_valid())
+        print(creatorformset.is_valid())
+        if subjectformset.is_valid() and creatorformset.is_valid() and funderformset.is_valid() and doiform.is_valid():
             mds_api = MdsApi(request) 
             metadata = doiform.cleaned_data
             canUseSuffix = helper.is_authorized(request, metadata['identifier'])
@@ -77,6 +84,7 @@ class Mint(View):
                 'form': doiform,
                 'subjectformset': subjectformset,
                 'creatorformset': creatorformset,
+                'funderformset' : funderformset,
                 'doi_prefix': DOI_PREFIX,
                 'heading': heading_message,
                 'suffixlist': suffixlist,
@@ -84,6 +92,7 @@ class Mint(View):
                 })
             metadata["subjects"] = [x.get("subject") for x in subjectformset.cleaned_data if x.get('subject')]
             metadata["creators"] = [x for x in creatorformset.cleaned_data if x]
+            metadata["funders"] = [x for x in funderformset.cleaned_data if x]
             metadata['identifier'] = DOI_PREFIX + '/'+ metadata['identifier']
             doi = metadata['identifier'] 
             print(metadata)
@@ -98,6 +107,7 @@ class Mint(View):
                     'form': doiform,
                     'subjectformset': subjectformset,
                     'creatorformset': creatorformset,
+                    'funderformset' : funderformset,
                     'doi_prefix': DOI_PREFIX,
                     'heading': heading_message,
                     'suffixlist': suffixlist,
@@ -111,7 +121,9 @@ class Mint(View):
             'form': doiform,
             'subjectformset': subjectformset,
             'creatorformset': creatorformset,
+            'funderformset' : funderformset,
             'doi_prefix': DOI_PREFIX,
+            'suffixlist': suffixlist,
             'heading': heading_message,
         })
         if(response.status_code == 201):
@@ -123,6 +135,8 @@ class Mint(View):
             'form': doiform,
             'subjectformset': subjectformset,
             'creatorformset': creatorformset,
+            'funderformset' : funderformset,
+            'suffixlist': suffixlist,
             'doi_prefix': DOI_PREFIX,
             'heading': heading_message,
         })
