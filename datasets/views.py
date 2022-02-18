@@ -32,7 +32,7 @@ class Mint(View):
             except ObjectDoesNotExist:
                 pass
         suffixlist = authorized_dois
-        doiform = DoiForm(request.GET or None)
+        doiform = DoiForm(request.GET or None) 
         subjectformset = SubjectFormset(request.GET or None, prefix='subjectform')
         creatorformset = CreatorFormset(request.GET or None, prefix='creatorform')
         funderformset = FunderFormset(request.GET or None, prefix='funderform')

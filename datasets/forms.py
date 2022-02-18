@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import RegexValidator
 from django.forms import formset_factory, MultiWidget, TextInput
-RT_CHOICES= [
+RT_CHOICES = [
     ('Audiovisual', 'Audiovisual'),
     ('Book', 'Book'),
     ('BookChapter', 'BookChapter'),
@@ -41,6 +41,12 @@ class DoiForm(forms.Form):
     resource_type_text = forms.CharField(label='Resource type:', required=False, widget=forms.TextInput(attrs={'placeholder': 'Resource type', 'class':'form-control form-control-sm', 'id':'resourceType'}))
     abstract = forms.CharField(label='Abstract', required=False, widget=forms.Textarea(attrs={'placeholder': 'Abstract',"rows":3, 'class':'form-control form-control-sm', 'id':'abstract'}))
     version = forms.CharField(label='Version', required=False, widget=forms.TextInput(attrs={'placeholder': 'Version', 'class':'form-control form-control-sm', 'id':'version'}))
+    date = forms.CharField(label='Date', required=False, validators=[
+            RegexValidator(
+                regex='^([0-9]{4}|[\-][0-9]{4})|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2]))|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2])[\-](0?[1-9]|[12]\d|3[01]))$',
+                message='Hashtag doesnt comply',
+            ),
+        ], widget=forms.TextInput(attrs={'placeholder': 'Date type', 'class':'form-control form-control-sm', 'id':'dateType'}))
 
 class SubjectForm(forms.Form):
      subject = forms.CharField(label='Subject', required=False, widget=forms.TextInput(attrs={'placeholder': 'Subject', 'class':'form-control form-control-sm', 'id':'subject'}))
@@ -54,18 +60,16 @@ class CreatorForm(forms.Form):
    
 CreatorFormset = formset_factory(CreatorForm, extra=0,  min_num=1, validate_min=True)
 class FunderForm(forms.Form):
-    funder_name = forms.CharField(label='Funder Name', widget=forms.TextInput(attrs={'placeholder': 'Funder Name', 'class':'form-control form-control-sm search-input', 'id':'funder'}))
-    funder_identifier = forms.CharField(label='Funder Identifier', widget=forms.TextInput(attrs={'readonly': 'readonly', 'placeholder': 'Funder Identifier', 'class':'form-control form-control-sm funder_id', 'id':'funder'}))
+    funder_name = forms.CharField(label='Funder Name', required=False, widget=forms.TextInput(attrs={'placeholder': 'Funder Name', 'class':'form-control form-control-sm search-input', 'id':'funder'}))
+    funder_identifier = forms.CharField(label='Funder Identifier',  required=False, widget=forms.TextInput(attrs={'readonly': 'readonly', 'placeholder': 'Funder Identifier', 'class':'form-control form-control-sm funder_id', 'id':'funder'}))
     award_number = forms.CharField(label='Award Number',  required=False,  widget=forms.TextInput(attrs={'placeholder': 'Award Number', 'class':'form-control form-control-sm', 'id':'funder'}))
     award_title = forms.CharField(label='Award Title',  required=False, widget=forms.TextInput(attrs={'placeholder': 'Award Title', 'class':'form-control form-control-sm', 'id':'funder'}))
    
-FunderFormset = formset_factory(FunderForm, extra=0,  min_num=1, validate_min=True)
+FunderFormset = formset_factory(FunderForm, extra=1,)
 
 class UrlForm(forms.Form):
     url = forms.CharField(label='Url', widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'id':'url'}))
 
 class AddUrlForm(forms.Form):
     add_url = forms.CharField(label='Add Url', widget=forms.TextInput(attrs={'placeholder': 'Assign url to doi', 'class':'form-control form-control-sm', 'id':'addUrl'}))
-
-
 

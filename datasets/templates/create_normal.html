@@ -347,6 +347,29 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
           </div>
         </div>
       </div>
+     
+      <div class="pb-1">
+        <label for="dateType" class="form-label fs-6 mt-3">Date</label>
+      </div>
+      <div class="pb-1 col-6">{{ form.date }}</div>
+      <div class="row">
+        <div class="col-1">
+          <a href="#dateHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ><span class="sr-only">Date helper text toggle</span></a></a>
+        </div>
+        <div class="col-11">
+          <div id="dateHelpBlock" class="collapse show form-text pb-2 text-dark">
+            Use the following formats YYYY, YYYY-MM, YYYY-MM-DD
+            Years before 0000 must be
+            prefixed with a -sign,
+            e.g., -0054 to indicate 55 BC.
+          </div>
+        </div>
+      </div>
 
       <div class="row offset-5 spacer">
         <div class="col-4 mt-4 d-grid gap-2">
