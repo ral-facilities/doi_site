@@ -129,6 +129,26 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
       >
         Add creator
       </button>
+
+      <div class="row">
+        <div class="col-1">
+          <a href="#creatorHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ><span class="sr-only">Funder helper text toggle</span></a></a>
+        </div>
+        <div class="col-11">
+          <div
+            id="creatorHelpBlock"
+            class="collapse show form-text pb-2 text-dark"
+          >
+            The main researchers involved in producing the data, or the authors
+            of the publication, in priority order.
+          </div>
+        </div>
+      </div>
       
       {{ funderformset.management_form }}
       <div class="pb-1">
@@ -173,8 +193,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
             id="funderHelpBlock"
             class="collapse show form-text pb-2 text-dark"
           >
-            The main researchers involved in producing the data, or the authors
-            of the publication, in priority order.
+          Uniquely identifies a funding
+          entity, according to various
+          types.
           </div>
         </div>
       </div>
