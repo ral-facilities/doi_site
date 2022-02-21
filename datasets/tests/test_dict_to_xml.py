@@ -125,5 +125,10 @@ class TestDictToXml(unittest.TestCase):
         res = dict_to_xml(dictcopy)
         self.assertIn('<dates><date dateType="Updated" dateInformation="Updated with 4.4 properties">2022-02-18</date></dates>', res)
 
+    def test_missing_related_identifier(self):
+            dictcopy= copy.deepcopy(dict)
+            dictcopy['related_identifiers'] = [{'related_identifier':"www.site-url.com", 'related_identifier_type':"URL", 'related_identifier_relation_type':"Cites" }]
+            res = dict_to_xml(dictcopy)
+            self.assertIn('<relatedIdentifier relatedIdentifierType="URL" relationType="Cites">www.site-url.com</relatedIdentifier>', res)
 if __name__ == '__main__':
     unittest.main()

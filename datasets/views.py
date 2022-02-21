@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-from .forms import SubjectFormset, CreatorFormset, FunderFormset, DoiForm, AddUrlForm, UrlForm
+from .forms import SubjectFormset, RelatedIdentifierFormset, CreatorFormset, FunderFormset, DoiForm, AddUrlForm, UrlForm
 from django.shortcuts import render, redirect
 import xml.etree.ElementTree as ET
 from .dict_to_xml import dict_to_xml
@@ -34,6 +34,7 @@ class Mint(View):
         suffixlist = authorized_dois
         doiform = DoiForm(request.GET or None) 
         subjectformset = SubjectFormset(request.GET or None, prefix='subjectform')
+        relatedidentifierformset = RelatedIdentifierFormset(request.GET or None, prefix='relatedidentifierform')
         creatorformset = CreatorFormset(request.GET or None, prefix='creatorform')
         funderformset = FunderFormset(request.GET or None, prefix='funderform')
         for form in creatorformset:
@@ -41,6 +42,7 @@ class Mint(View):
         return render(request, template_name, {
         'form': doiform,
         'subjectformset': subjectformset,
+        'relatedidentifierformset': relatedidentifierformset,
         'creatorformset': creatorformset,
         'funderformset' : funderformset,
         'doi_prefix': DOI_PREFIX,
@@ -51,6 +53,7 @@ class Mint(View):
     def post(self, request):
         doiform = DoiForm(request.POST or None)
         subjectformset = SubjectFormset(request.POST or None, prefix='subjectform')
+        relatedidentifierformset = RelatedIdentifierFormset(request.POST or None, prefix='relatedidentifierform')
         creatorformset = CreatorFormset(request.POST or None, prefix='creatorform')
         funderformset = FunderFormset(request.POST or None, prefix='funderform')
         authorized_dois = []
@@ -72,7 +75,7 @@ class Mint(View):
         print(doiform.is_valid())
         print(subjectformset.is_valid())
         print(creatorformset.is_valid())
-        if subjectformset.is_valid() and creatorformset.is_valid() and funderformset.is_valid() and doiform.is_valid():
+        if subjectformset.is_valid() and relatedidentifierformset.is_valid() and creatorformset.is_valid() and funderformset.is_valid() and doiform.is_valid():
             mds_api = MdsApi(request) 
             metadata = doiform.cleaned_data
             canUseSuffix = helper.is_authorized(request, metadata['identifier'])
@@ -83,6 +86,7 @@ class Mint(View):
                 return render(request, template_name, {
                 'form': doiform,
                 'subjectformset': subjectformset,
+                'relatedidentifierformset': relatedidentifierformset,
                 'creatorformset': creatorformset,
                 'funderformset' : funderformset,
                 'doi_prefix': DOI_PREFIX,
@@ -91,6 +95,7 @@ class Mint(View):
                 'notAuthorised': notAuthorised
                 })
             metadata["subjects"] = [x.get("subject") for x in subjectformset.cleaned_data if x.get('subject')]
+            metadata["related_identifiers"] = [x for x in relatedidentifierformset.cleaned_data if x]
             metadata["creators"] = [x for x in creatorformset.cleaned_data if x]
             metadata["funders"] = [x for x in funderformset.cleaned_data if x]
             metadata['identifier'] = DOI_PREFIX + '/'+ metadata['identifier']
@@ -106,6 +111,7 @@ class Mint(View):
                 return render(request, template_name, {
                     'form': doiform,
                     'subjectformset': subjectformset,
+                    'relatedidentifierformset': relatedidentifierformset,
                     'creatorformset': creatorformset,
                     'funderformset' : funderformset,
                     'doi_prefix': DOI_PREFIX,
@@ -120,6 +126,7 @@ class Mint(View):
             return render(request, template_name, {
             'form': doiform,
             'subjectformset': subjectformset,
+            'relatedidentifierformset': relatedidentifierformset,
             'creatorformset': creatorformset,
             'funderformset' : funderformset,
             'doi_prefix': DOI_PREFIX,
@@ -134,6 +141,7 @@ class Mint(View):
             return render(request, template_name, {
             'form': doiform,
             'subjectformset': subjectformset,
+            'relatedidentifierformset': relatedidentifierformset,
             'creatorformset': creatorformset,
             'funderformset' : funderformset,
             'suffixlist': suffixlist,

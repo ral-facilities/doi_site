@@ -31,6 +31,63 @@ RT_CHOICES = [
     ('Workflow', 'Workflow'),
     ('Other', 'Other')
     ]
+RIT_CHOICES = [
+('ARK', 'ARK'),
+('arXiv', 'arXiv'),
+('bibcode', 'bibcode'),
+('DOI', 'DOI'),
+('EAN13', 'EAN13'),
+('EISSN', 'EISSN'),
+('Handle', 'Handle'),
+('IGSN', 'IGSN'),
+('ISBN', 'ISBN'),
+('ISSN', 'ISSN'),
+('ISTC', 'ISTC'),
+('LISSN', 'LISSN'),
+('LSID', 'LSID'),
+('PMID', 'PMID'),
+('PURL', 'PURL'),
+('UPC', 'UPC'),
+('URL', 'URL'),
+('URN', 'URN'),
+('w3id', 'w3id')
+]
+RIRT_CHOICES = [
+('IsCitedBy', 'IsCitedBy'),
+('Cites', 'Cites'),
+('IsSupplementTo', 'IsSupplementTo'),
+('IsSupplementedBy', 'IsSupplementedBy'),
+('IsContinuedBy', 'IsContinuedBy'),
+('Continues', 'Continues'),
+('IsDescribedBy', 'IsDescribedBy'),
+('Describes', 'Describes'),
+('HasMetadata', 'HasMetadata'),
+('IsMetadataFor', 'IsMetadataFor'),
+('HasVersion', 'HasVersion'),
+('IsVersionOf', 'IsVersionOf'),
+('IsNewVersionOf', 'IsNewVersionOf'),
+('IsPreviousVersionOf', 'IsPreviousVersionOf'),
+('IsPartOf', 'IsPartOf'),
+('HasPart', 'HasPart'),
+('IsPublishedIn', 'IsPublishedIn'),
+('IsReferencedBy', 'IsReferencedBy'),
+('References', 'References'),
+('IsDocumentedBy', 'IsDocumentedBy'),
+('Documents', 'Documents'),
+('IsCompiledBy', 'IsCompiledBy'),
+('Compiles', 'Compiles'),
+('IsVariantFormOf', 'IsVariantFormOf'),
+('IsOriginalFormOf', 'IsOriginalFormOf'),
+('IsIdenticalTo', 'IsIdenticalTo'),
+('IsReviewedBy', 'IsReviewedBy'),
+('Reviews', 'Reviews'),
+('IsDerivedFrom', 'IsDerivedFrom'),
+('IsSourceOf', 'IsSourceOf'),
+('IsRequiredBy', 'IsRequiredBy'),
+('Requires', 'Requires'),
+('IsObsoletedBy', 'IsObsoletedBy'),
+('Obsoletes', 'Obsoletes')
+]
 
 class DoiForm(forms.Form):
     identifier = forms.CharField(label='Identifier', max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Identifier', 'class':'form-control form-control-sm', 'id':'identifier'}))
@@ -44,13 +101,18 @@ class DoiForm(forms.Form):
     date = forms.CharField(label='Date', required=False, validators=[
             RegexValidator(
                 regex='^([0-9]{4}|[\-][0-9]{4})|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2]))|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2])[\-](0?[1-9]|[12]\d|3[01]))$',
-                message='Hashtag doesnt comply',
+                message='The date format is not right!',
             ),
         ], widget=forms.TextInput(attrs={'placeholder': 'Date type', 'class':'form-control form-control-sm', 'id':'dateType'}))
 
 class SubjectForm(forms.Form):
      subject = forms.CharField(label='Subject', required=False, widget=forms.TextInput(attrs={'placeholder': 'Subject', 'class':'form-control form-control-sm', 'id':'subject'}))
 SubjectFormset = formset_factory(SubjectForm, extra=1)
+class RelatedIdentifierForm(forms.Form):
+        related_identifier = forms.CharField(label='Identifier', required=False, widget=forms.TextInput(attrs={'placeholder': 'Related identifier', 'class':'form-control form-control-sm', 'id':'relatedIdentifier'}))
+        related_identifier_type = forms.CharField(label='Pick the identifier type:', required=False, widget=forms.Select(choices=RIT_CHOICES, attrs={'class':'form-select form-select-sm', 'id':'relatedIdentifier'}))
+        related_identifier_relation_type = forms.CharField(label='Pick the relation type:', required=False, widget=forms.Select(choices=RIRT_CHOICES, attrs={'class':'form-select form-select-sm', 'id':'relatedIdentifier'}))
+RelatedIdentifierFormset = formset_factory(RelatedIdentifierForm, extra=1)
 
 class CreatorForm(forms.Form):
     givenname = forms.CharField(label='Given Name', widget=forms.TextInput(attrs={'placeholder': 'Given Name', 'class':'form-control form-control-sm', 'id':'creator'}))

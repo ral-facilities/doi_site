@@ -51,6 +51,18 @@ def dict_to_xml(d):
         for subject in subjects:
             xml_subject = ET.SubElement(xml_subjects, 'subject')
             xml_subject.text = subject
+    
+    try:
+        relatedIdentifiers = d["related_identifiers"]
+    except KeyError:
+        relatedIdentifiers = []
+    if relatedIdentifiers:
+        xml_related_identifiers = ET.SubElement(xml_resource, 'relatedIdentifiers')
+        for relatedIdentifier in relatedIdentifiers:
+            xml_related_identifier = ET.SubElement(xml_related_identifiers, 'relatedIdentifier')
+            xml_related_identifier.text = relatedIdentifier['related_identifier']
+            xml_related_identifier.attrib['relatedIdentifierType'] = relatedIdentifier['related_identifier_type']
+            xml_related_identifier.attrib['relationType'] = relatedIdentifier['related_identifier_relation_type']
 
     xml_creators = ET.SubElement(xml_resource, 'creators')
     try:
