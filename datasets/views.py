@@ -186,7 +186,7 @@ class Url(View):
         if doi.startswith(DOI_PREFIX + "/"):
             suffix = doi.removeprefix(DOI_PREFIX + "/")
             if not helper.is_authorized(request, suffix):
-                err = "The doi suffix is not accepted"
+                err = "You have no authorization for the current subdomain: " + suffix
         else:
             err = "The doi prefix is not accepted"
         if not err: 
