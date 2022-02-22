@@ -6,7 +6,7 @@
   crossorigin="anonymous"
 />
 {% endblock %} {% block content %}
-<h3 class="offset-5 bold--text">Assign url to DOI</h3>
+<h3 class="offset-5 bold--text">Update DOI url</h3>
 <div class="row">
   <div class="col-md-2"></div>
   <div class="col-md-8">
@@ -14,7 +14,7 @@
         {% csrf_token %}
         <div class="row g-3 align-items-center">
         <div class="col-auto">
-            <label for="url" class="col-form-label fs-6">Url:</label>
+            <label for="url" class="col-form-label fs-6">DOI:</label>
             </div>
             <div class="col">
             {{form.add_url}}

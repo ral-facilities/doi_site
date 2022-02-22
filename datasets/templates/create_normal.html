@@ -149,56 +149,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
           </div>
         </div>
       </div>
-      
-      {{ funderformset.management_form }}
-      <div class="pb-1">
-        <label for="funder" class="form-label fs-6 mt-3 required">Funder</label>
-      </div>
-      {% for form in funderformset %}
-      <div class="row form-row spacer funderformset-row">
-        <div class="row mb-2">
-          <div class="col">{{form.funder_name}}</div>
-          <div class="col">{{form.funder_identifier}}</div>
-          <div class="col">{{form.award_number}}</div>
-          <div class="col">{{form.award_title}}</div>
-          <div class="col-1">
-            <button type="button" class="btn btn-danger remove-form-row btn-sm">
-              🗙
-            </button>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-      <button
-        type="button"
-        id="funderformset-add"
-        class="btn btn-success btn-sm add-form-row"
-      >
-        Add funder
-      </button>
-
-       
-
-      <div class="row">
-        <div class="col-1">
-          <a href="#funderHelpBlock" data-bs-toggle="collapse"
-            ><i
-              onclick="toggleArrow(this)"
-              class="fa fa-caret-down fa-2x fa-fw"
-            ></i
-          ><span class="sr-only">Funder helper text toggle</span></a></a>
-        </div>
-        <div class="col-11">
-          <div
-            id="funderHelpBlock"
-            class="collapse show form-text pb-2 text-dark"
-          >
-          Uniquely identifies a funding
-          entity, according to various
-          types.
-          </div>
-        </div>
-      </div>
 
       <div class="pb-1">
         <label for="abstract" class="form-label fs-6 mt-3">Abstract</label>
@@ -254,6 +204,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
           </div>
         </div>
       </div>
+      
       <div class="pb-1">
         <label for="publicationYear" class="form-label fs-6 mt-3 required"
           >Publication Year</label
@@ -310,6 +261,56 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
       </div>
         </div>
       </div>
+
+
+      {{ funderformset.management_form }}
+      <div class="pb-1">
+        <label for="funder" class="form-label fs-6 mt-3">Funder</label>
+      </div>
+      {% for form in funderformset %}
+      <div class="row form-row spacer funderformset-row">
+        <div class="row mb-2">
+          <div class="col">{{form.funder_name}}</div>
+          <div class="col">{{form.funder_identifier}}</div>
+          <div class="col">{{form.award_number}}</div>
+          <div class="col">{{form.award_title}}</div>
+          <div class="col-1">
+            <button type="button" class="btn btn-danger remove-form-row btn-sm">
+              🗙
+            </button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      <button
+        type="button"
+        id="funderformset-add"
+        class="btn btn-success btn-sm add-form-row"
+      >
+        Add funder
+      </button>
+      <div class="row">
+        <div class="col-1">
+          <a href="#funderHelpBlock" data-bs-toggle="collapse"
+            ><i
+              onclick="toggleArrow(this)"
+              class="fa fa-caret-down fa-2x fa-fw"
+            ></i
+          ><span class="sr-only">Funder helper text toggle</span></a></a>
+        </div>
+        <div class="col-11">
+          <div
+            id="funderHelpBlock"
+            class="collapse show form-text pb-2 text-dark"
+          >
+          Uniquely identifies a funding
+          entity, according to various
+          types.
+          </div>
+        </div>
+      </div>
+
+
       {{ subjectformset.management_form }}
       <div>
         <div class="mt-3">
