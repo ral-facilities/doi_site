@@ -88,6 +88,19 @@ RIRT_CHOICES = [
 ('IsObsoletedBy', 'IsObsoletedBy'),
 ('Obsoletes', 'Obsoletes')
 ]
+DT_CHOICES = [
+('Accepted', 'Accepted'),
+('Available', 'Available'),
+('Copyrighted', 'Copyrighted'),
+('Collected', 'Collected'),
+('Created', 'Created'),
+('Issued', 'Issued'),
+('Submitted', 'Submitted'),
+('Updated', 'Updated'),
+('Valid', 'Valid'),
+('Withdrawn', 'Withdrawn'),
+('Other', 'Other')
+]
 
 class DoiForm(forms.Form):
     identifier = forms.CharField(label='Identifier', max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Identifier', 'class':'form-control form-control-sm', 'id':'identifier'}))
@@ -98,13 +111,7 @@ class DoiForm(forms.Form):
     resource_type_text = forms.CharField(label='Resource type:', required=False, widget=forms.TextInput(attrs={'placeholder': 'Resource type', 'class':'form-control form-control-sm', 'id':'resourceType'}))
     abstract = forms.CharField(label='Abstract', required=False, widget=forms.Textarea(attrs={'placeholder': 'Abstract',"rows":3, 'class':'form-control form-control-sm', 'id':'abstract'}))
     version = forms.CharField(label='Version', required=False, widget=forms.TextInput(attrs={'placeholder': 'Version', 'class':'form-control form-control-sm', 'id':'version'}))
-    date = forms.CharField(label='Date', required=False, validators=[
-            RegexValidator(
-                regex='^([0-9]{4}|[\-][0-9]{4})|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2]))|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2])[\-](0?[1-9]|[12]\d|3[01]))$',
-                message='The date format is not right!',
-            ),
-        ], widget=forms.TextInput(attrs={'placeholder': 'Date type', 'class':'form-control form-control-sm', 'id':'dateType'}))
-
+  
 class SubjectForm(forms.Form):
      subject = forms.CharField(label='Subject', required=False, widget=forms.TextInput(attrs={'placeholder': 'Subject', 'class':'form-control form-control-sm', 'id':'subject'}))
 SubjectFormset = formset_factory(SubjectForm, extra=1)
@@ -127,7 +134,7 @@ class FunderForm(forms.Form):
     award_number = forms.CharField(label='Award Number',  required=False,  widget=forms.TextInput(attrs={'placeholder': 'Award Number', 'class':'form-control form-control-sm', 'id':'funder'}))
     award_title = forms.CharField(label='Award Title',  required=False, widget=forms.TextInput(attrs={'placeholder': 'Award Title', 'class':'form-control form-control-sm', 'id':'funder'}))
    
-FunderFormset = formset_factory(FunderForm, extra=1,)
+FunderFormset = formset_factory(FunderForm, extra=1)
 
 class UrlForm(forms.Form):
     url = forms.CharField(label='Url', widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'id':'url'}))
@@ -135,3 +142,14 @@ class UrlForm(forms.Form):
 class AddUrlForm(forms.Form):
     add_url = forms.CharField(label='Add Url', widget=forms.TextInput(attrs={'placeholder': 'Enter DOI', 'class':'form-control form-control-sm', 'id':'addUrl'}))
 
+class DateForm(forms.Form):
+    date = forms.CharField(label='Date', required=False, validators=[
+            RegexValidator(
+                regex='^([0-9]{4}|[\-][0-9]{4})|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2]))|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2])[\-](0?[1-9]|[12]\d|3[01]))$',
+                message='The date format is not right!',
+            ),
+        ], widget=forms.TextInput(attrs={'placeholder': 'Date', 'class':'form-control form-control-sm', 'id':'date'}))
+    date_type = forms.CharField(label='Pick the date type:', required=False, widget=forms.Select(choices=DT_CHOICES, attrs={'class':'form-select form-select-sm', 'id':'date'}))
+    date_text = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Date Information', 'class':'form-control form-control-sm', 'id':'date'}))
+
+DateFormset = formset_factory(DateForm, extra=1)

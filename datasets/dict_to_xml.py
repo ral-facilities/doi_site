@@ -143,15 +143,16 @@ def dict_to_xml(d):
         xml_version.text = d['version']
     
     try:
-        date = d['date']
+        dates = d['dates']
     except KeyError:
-        date = None
-    if date:
+        dates = []
+    if dates:
         xml_dates = ET.SubElement(xml_resource, 'dates')
-        xml_date  = ET.SubElement(xml_dates, 'date')
-        xml_date.attrib['dateType'] = 'Updated'
-        xml_date.attrib['dateInformation'] = 'Updated with 4.4 properties'
-        xml_date.text = d['date']
+        for date in dates:
+            xml_date  = ET.SubElement(xml_dates, 'date')
+            xml_date.attrib['dateType'] = date['date_type']
+            xml_date.attrib['dateInformation'] = date['date_text']
+            xml_date.text = date['date']
 
     
     return '<?xml version="1.0" encoding="UTF-8"?>' + "\n" + ET.tostring(xml_resource, encoding='unicode')

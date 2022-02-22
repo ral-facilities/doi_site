@@ -121,9 +121,9 @@ class TestDictToXml(unittest.TestCase):
     
     def test_missing_date(self):
         dictcopy = copy.deepcopy(dict)
-        dictcopy['date'] = "2022-02-18"
+        dictcopy['dates'] = [{'date': '2022-02-22', 'date_type': 'Updated', 'date_text': 'Updated with 4.4 properties'}]
         res = dict_to_xml(dictcopy)
-        self.assertIn('<dates><date dateType="Updated" dateInformation="Updated with 4.4 properties">2022-02-18</date></dates>', res)
+        self.assertIn('<dates><date dateType="Updated" dateInformation="Updated with 4.4 properties">2022-02-22</date></dates>', res)
 
     def test_missing_related_identifier(self):
             dictcopy= copy.deepcopy(dict)

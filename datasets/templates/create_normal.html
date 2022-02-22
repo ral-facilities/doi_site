@@ -412,10 +412,34 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
         </div>
       </div>
      
+      {{ dateformset.management_form }}
       <div class="pb-1">
-        <label for="dateType" class="form-label fs-6 mt-3">Date</label>
+        <label for="date" class="form-label fs-6 mt-3">Date</label>
       </div>
-      <div class="pb-1 col-6">{{ form.date }}</div>
+      {% for form in dateformset %}
+      <div class="row form-row spacer dateformset-row">
+        <div class="row mb-2">
+          <div class="col">{{form.date}}</div>
+          <div class="col">{{form.date_type}}</div>
+          <div class="col">{{form.date_text}}</div>
+          <div class="col-1">
+            <button type="button" class="btn btn-danger remove-form-row btn-sm">
+              🗙
+            </button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      <button
+        type="button"
+        id="dateformset-add"
+        class="btn btn-success btn-sm add-form-row"
+      >
+        Add date
+      </button>
+
+
+
       <div class="row">
         <div class="col-1">
           <a href="#dateHelpBlock" data-bs-toggle="collapse"
@@ -567,6 +591,17 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
     return false;
   });
  
+  $(document).on("click", "#dateformset-add", function (e) {
+    e.preventDefault();
+    cloneMore(".dateformset-row:last", "dateform");
+    return false;
+  });
+  $(document).on("click", ".dateformset-row .remove-form-row", function (e) {
+    e.preventDefault();
+    deleteForm("dateform", $(this));
+    return false;
+  });
+ 
   $(document).on("click", "#funderformset-add", function (e) {
     e.preventDefault();
     $('.search-input').typeahead("destroy");
@@ -596,6 +631,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
   $(".subjectformset-row:first .remove-form-row").prop("hidden", true);
   $(".relatedidentifierformset-row:first .remove-form-row").prop("hidden", true);
   $(".creatorformset-row:first .remove-form-row").prop("hidden", true);
+  $(".dateformset-row:first .remove-form-row").prop("hidden", true);
   $(".funderformset-row:first .remove-form-row").prop("hidden", true);
 
   function toggleArrow(arrow) {
