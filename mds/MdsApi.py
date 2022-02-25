@@ -41,18 +41,18 @@ class MdsApi:
         path = parse_result.path
 
         if path.startswith("/doi/"):
-            doi = path.removeprefix("/doi/")
+            doi = path[len("/doi/"):]
         elif path.startswith("/metadata/"):
-            doi = path.removeprefix("/metadata/")
+            doi = path[len("/metadata/"):]
         elif path.startswith("/media/"):
-            doi = path.removeprefix("/media/")
+            doi = path[len("/media/"):]
         else:
             raise MdsApiError("URL path must start with one of ['/doi/', '/metadata/', '/media/']")
 
         if not doi.startswith(DOI_PREFIX + "/"):
             raise MdsApiError("DOI prefix must be " + DOI_PREFIX + "/")
 
-        doi_suffix = doi.removeprefix(DOI_PREFIX + "/")
+        doi_suffix = doi[len(DOI_PREFIX + "/"):]
 
         if not mds.http.helper.is_authorized(self._http_request, doi_suffix):
             raise MdsApiError("DOI not authorised: " + path)

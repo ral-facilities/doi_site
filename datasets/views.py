@@ -184,7 +184,7 @@ class Url(View):
     def get(self, request, doi, err=None):
         mds_api = MdsApi(request)
         if doi.startswith(DOI_PREFIX + "/"):
-            suffix = doi.removeprefix(DOI_PREFIX + "/")
+            suffix = doi[len(DOI_PREFIX + "/"):]
             if not helper.is_authorized(request, suffix):
                 err = "You have no authorization for the current subdomain: " + suffix
         else:
