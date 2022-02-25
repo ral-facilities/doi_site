@@ -50,6 +50,7 @@ class Mint(View):
         'doi_prefix': DOI_PREFIX,
         'suffixlist': suffixlist,
         'heading': heading_message,
+        'is_testing' : _is_test_url()
     })
 
     def post(self, request):
@@ -97,7 +98,8 @@ class Mint(View):
                 'doi_prefix': DOI_PREFIX,
                 'heading': heading_message,
                 'suffixlist': suffixlist,
-                'notAuthorised': notAuthorised
+                'notAuthorised': notAuthorised,
+                'is_testing' : _is_test_url()
                 })
             metadata["subjects"] = [x.get("subject") for x in subjectformset.cleaned_data if x.get('subject')]
             metadata["related_identifiers"] = [x for x in relatedidentifierformset.cleaned_data if x]
@@ -125,7 +127,8 @@ class Mint(View):
                     'heading': heading_message,
                     'suffixlist': suffixlist,
                     'err': err,
-                    'notAuthorised': notAuthorised
+                    'notAuthorised': notAuthorised,
+                    'is_testing' : _is_test_url()
                     })
             else:
                 print('Data site call was successful!') 
@@ -140,6 +143,7 @@ class Mint(View):
             'doi_prefix': DOI_PREFIX,
             'suffixlist': suffixlist,
             'heading': heading_message,
+            'is_testing' : _is_test_url()
         })
         if(response.status_code == 201):
             print("DOI site was called successfully!")
@@ -156,6 +160,7 @@ class Mint(View):
             'suffixlist': suffixlist,
             'doi_prefix': DOI_PREFIX,
             'heading': heading_message,
+            'is_testing' : _is_test_url()
         })
 
 
@@ -166,7 +171,7 @@ class AddUrl(View):
     template_name = 'add_url.html'
     def get(self, request, err=None):
         addurlform = AddUrlForm(request.GET or None)
-        return render(request, self.template_name, {'form': addurlform})
+        return render(request, self.template_name, {'form': addurlform, 'is_testing' : _is_test_url()})
     def post(self, request, err=None):
         addurlform = AddUrlForm(request.POST or None)
         if addurlform.is_valid():
@@ -174,7 +179,7 @@ class AddUrl(View):
             path = 'mint/' + url['add_url']
             return redirect(path)
         else:
-          return render(request, self.template_name, {'form': addurlform})  
+          return render(request, self.template_name, {'form': addurlform, 'is_testing' : _is_test_url()})  
 class Url(View):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -198,11 +203,11 @@ class Url(View):
                 print(f'Other error occurred: {newerr}')
                 url = None
                 urlform = UrlForm(request.GET or None, initial={'url':r.text})
-                return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':newerr})
+                return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':newerr, 'is_testing' : _is_test_url()})
         r = mds_api.get('/doi/' + doi)
         url = r.text
         urlform = UrlForm(request.GET or None, initial={'url':r.text})
-        return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':err})
+        return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':err, 'is_testing' : _is_test_url()})
         
     def post(self, request, doi):
         mds_api = MdsApi(request) 
