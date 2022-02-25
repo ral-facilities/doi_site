@@ -4,8 +4,8 @@
   rel="stylesheet"
 />
 {% endblock %} {% block content %}
+<h1 class="offset-5 bold--text">{{doi}}</h1>
 <div class="doi_bootstrap">
-  <h1 class="offset-5 bold--text">{{doi}}</h1>
   {% if err %}
   <div
     class="alert alert-danger text-start d-flex align-items-center"
@@ -16,7 +16,6 @@
   </div>
   {% endif %}
   <div class="row">
-    <div class="col-md-2"></div>
     <div class="col-md-8">
         <div class="form-label fs-6 mt-3">
         Current url: {{url}}
