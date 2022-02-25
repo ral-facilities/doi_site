@@ -1,4 +1,4 @@
-Django==4
+Django==3.2
 django-auth-ldap
 python-ldap
 psycopg2-binary==2.8.6

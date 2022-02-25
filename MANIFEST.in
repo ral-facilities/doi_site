@@ -5,6 +5,7 @@ recursive-include doi_site/resources *
 recursive-include doi_site/static *
 recursive-include doi_site/templates *
 recursive-include datasets/templates *
+recursive-include mds/http *
 
 recursive-exclude test *
 exclude doi_site/local_settings.py
