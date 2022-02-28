@@ -200,7 +200,7 @@ class Url(View):
                 r.raise_for_status()
                 url = r.text
             except Exception as newerr:
-                print(f'Other error occurred: {newerr}')
+                print(f'Error from DataCite: Other error occurred: {newerr}')
                 url = None
                 urlform = UrlForm(request.GET or None, initial={'url':r.text})
                 return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':newerr, 'is_testing' : _is_test_url()})
@@ -220,7 +220,7 @@ class Url(View):
             r = mds_api.put('/doi/' + doi, data=body.encode(), headers={ "Content-Type": "text/plain;charset=UTF-8" })
             r.raise_for_status()
         except Exception as err:
-                print(f'Other error occurred: {err}')
+                print(f'Error from DataCite: Other error occurred: {err}')
                 return self.get(request, doi, err)
         return self.get(request, doi, err=None)
 
