@@ -2,6 +2,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.forms import formset_factory, MultiWidget, TextInput
 RT_CHOICES = [
+    (None, 'Select resource type..'),
     ('Audiovisual', 'Audiovisual'),
     ('Book', 'Book'),
     ('BookChapter', 'BookChapter'),
@@ -32,6 +33,7 @@ RT_CHOICES = [
     ('Other', 'Other')
     ]
 RIT_CHOICES = [
+(None, 'Select identifier type..'),
 ('ARK', 'ARK'),
 ('arXiv', 'arXiv'),
 ('bibcode', 'bibcode'),
@@ -53,6 +55,7 @@ RIT_CHOICES = [
 ('w3id', 'w3id')
 ]
 RIRT_CHOICES = [
+(None, 'Select relation type..'),
 ('IsCitedBy', 'IsCitedBy'),
 ('Cites', 'Cites'),
 ('IsSupplementTo', 'IsSupplementTo'),
@@ -89,6 +92,7 @@ RIRT_CHOICES = [
 ('Obsoletes', 'Obsoletes')
 ]
 DT_CHOICES = [
+(None, 'Select date type..'),
 ('Accepted', 'Accepted'),
 ('Available', 'Available'),
 ('Copyrighted', 'Copyrighted'),
@@ -107,7 +111,7 @@ class DoiForm(forms.Form):
     title = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Title', 'class':'form-control form-control-sm', 'id':'title'}))
     publisher = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Publisher', 'class':'form-control form-control-sm', 'id':'publisher'}))
     publication_year = forms.IntegerField(label='Pick the year:', min_value=1975, max_value=2100, widget=forms.NumberInput(attrs={'placeholder': 'Publication Year', 'class':'form-control form-control-sm', 'id':'publicationYear'}))
-    resource_type = forms.CharField(label='Pick the resource type:', widget=forms.Select(choices=RT_CHOICES, attrs={'class':'form-select form-select-sm', 'id':'resourceType'}))
+    resource_type = forms.CharField(label='Pick the resource type:', widget=forms.Select(choices=RT_CHOICES, attrs={'placeholder': 'lalala', 'class':'form-select form-select-sm', 'id':'resourceType'}))
     resource_type_text = forms.CharField(label='Resource type:', required=False, widget=forms.TextInput(attrs={'placeholder': 'Resource type', 'class':'form-control form-control-sm', 'id':'resourceType'}))
     abstract = forms.CharField(label='Abstract', required=False, widget=forms.Textarea(attrs={'placeholder': 'Abstract',"rows":3, 'class':'form-control form-control-sm', 'id':'abstract'}))
     version = forms.CharField(label='Version', required=False, widget=forms.TextInput(attrs={'placeholder': 'Version', 'class':'form-control form-control-sm', 'id':'version'}))
@@ -116,9 +120,9 @@ class SubjectForm(forms.Form):
      subject = forms.CharField(label='Subject', required=False, widget=forms.TextInput(attrs={'placeholder': 'Subject', 'class':'form-control form-control-sm', 'id':'subject'}))
 SubjectFormset = formset_factory(SubjectForm, extra=1)
 class RelatedIdentifierForm(forms.Form):
-        related_identifier = forms.CharField(label='Identifier', required=False, widget=forms.TextInput(attrs={'placeholder': 'Related identifier', 'class':'form-control form-control-sm', 'id':'relatedIdentifier'}))
-        related_identifier_type = forms.CharField(label='Pick the identifier type:', required=False, widget=forms.Select(choices=RIT_CHOICES, attrs={'class':'form-select form-select-sm', 'id':'relatedIdentifier'}))
-        related_identifier_relation_type = forms.CharField(label='Pick the relation type:', required=False, widget=forms.Select(choices=RIRT_CHOICES, attrs={'class':'form-select form-select-sm', 'id':'relatedIdentifier'}))
+        related_identifier = forms.CharField(label='Identifier', required=False, widget=forms.TextInput(attrs={'placeholder': 'Related identifier', 'class':'related-identifier form-control form-control-sm', 'id':'relatedIdentifier'}))
+        related_identifier_type = forms.CharField(label='Pick the identifier type:', required=False, widget=forms.Select(choices=RIT_CHOICES, attrs={'class':'related-identifier-type form-select form-select-sm', 'id':'relatedIdentifier'}))
+        related_identifier_relation_type = forms.CharField(label='Pick the relation type:', required=False, widget=forms.Select(choices=RIRT_CHOICES, attrs={'class':'related-identifier-relation-type form-select form-select-sm', 'id':'relatedIdentifier'}))
 RelatedIdentifierFormset = formset_factory(RelatedIdentifierForm, extra=1)
 
 class CreatorForm(forms.Form):
@@ -148,8 +152,8 @@ class DateForm(forms.Form):
                 regex='^([0-9]{4}|[\-][0-9]{4})|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2]))|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2])[\-](0?[1-9]|[12]\d|3[01]))$',
                 message='The date format is not right!',
             ),
-        ], widget=forms.TextInput(attrs={'placeholder': 'Date', 'class':'form-control form-control-sm', 'id':'date'}))
-    date_type = forms.CharField(label='Pick the date type:', required=False, widget=forms.Select(choices=DT_CHOICES, attrs={'class':'form-select form-select-sm', 'id':'date'}))
+        ], widget=forms.TextInput(attrs={'placeholder': 'Date', 'class':'date form-control form-control-sm', 'id':'date'}))
+    date_type = forms.CharField(label='Pick the date type:', required=False, widget=forms.Select(choices=DT_CHOICES, attrs={'class':'date-type form-select form-select-sm', 'id':'date'}))
     date_text = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Date Information', 'class':'form-control form-control-sm', 'id':'date'}))
 
 DateFormset = formset_factory(DateForm, extra=1)

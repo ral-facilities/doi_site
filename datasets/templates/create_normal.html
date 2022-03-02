@@ -625,6 +625,46 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
     deleteForm("funderform", $(this));
     return false;
   });
+  
+  $(document).on("input", ".date", function (e) {
+    if ($(this).val() == ''){
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', false);
+    } else {
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', true);
+    }
+    return false;
+  });
+  
+  $('.date').each(function () {
+    if ($(this).val() == ''){
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', false);
+    } else {
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', true);
+    }
+    return false;
+  });
+ 
+  $(document).on("input", ".related-identifier", function (e) {
+    if ($(this).val() == ''){
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', false);
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', false);
+    } else {
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', true);
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', true);
+    }
+    return false;
+  });
+  
+  $('.related-identifier').each(function () {
+    if ($(this).val() == ''){
+      $(this).closest('.relatedidentifierformset-row').find('.related-identifier-type').prop('required', false);
+      $(this).closest('.relatedidentifierformset-row').find('.related-identifier-relation-type').prop('required', false);
+    } else {
+      $(this).closest('.relatedidentifierformset-row').find('.related-identifier-type').prop('required', true);
+      $(this).closest('.relatedidentifierformset-row').find('.related-identifier-relation-type').prop('required', true);
+    }
+    return false;
+  });
 
   $(".subjectformset-row:first .remove-form-row").prop("hidden", true);
   $(".relatedidentifierformset-row:first .remove-form-row").prop("hidden", true);
