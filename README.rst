@@ -120,7 +120,7 @@ values for:
 - ``DATACITE_USER_NAME`` - The organisation's username for DataCite
 - ``DATACITE_PASSWORD`` - The organisation's password for DataCite
 - ``AUTH_LDAP_SERVER_URI`` - The URI of the organisation's LDAP server
-- ``AUTH_LDAP_USER_DN_TEMPLATE`` - The organisation's LDAP DN template
+- ``AUTH_LDAP_USER_SEARCH`` - The organisation's LDAP USER SEARCH
 - ``ORGANISATION_NAME`` - The name of your organisation, this will be displayed on the home page
 - ``ORGANISATION_DOI_EMAIL`` - An email address for people to contact you about the this service, this will be displayed on the home page
 - ``SECRET_KEY`` - A secret key for a particular Django installation. This is used to provide cryptographic signing, and should be set to a unique, unpredictable value.
