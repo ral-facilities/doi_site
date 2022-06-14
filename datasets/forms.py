@@ -1,6 +1,9 @@
 from django import forms
 from django.core.validators import RegexValidator
 from django.forms import formset_factory, MultiWidget, TextInput
+from doi_site.local_settings import DOI_PREFIX
+from mds.MdsApi import MdsApi
+
 RT_CHOICES = [
     (None, 'Select resource type..'),
     ('Audiovisual', 'Audiovisual'),
@@ -115,10 +118,28 @@ class DoiForm(forms.Form):
     resource_type_text = forms.CharField(label='Resource type:', required=False, widget=forms.TextInput(attrs={'placeholder': 'Resource type', 'class':'form-control form-control-sm', 'id':'resourceType'}))
     abstract = forms.CharField(label='Abstract', required=False, widget=forms.Textarea(attrs={'placeholder': 'Abstract',"rows":3, 'class':'form-control form-control-sm', 'id':'abstract'}))
     version = forms.CharField(label='Version', required=False, widget=forms.TextInput(attrs={'placeholder': 'Version', 'class':'form-control form-control-sm', 'id':'version'}))
-  
+
+    def __init__(self, *args, **kwargs):
+        self._domains = kwargs.pop('domains', None)
+        self._request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(DoiForm, self).clean()
+        identifier = self.cleaned_data.get('identifier')
+        
+        mdsApi = MdsApi(self._request)
+        r = mdsApi.get(f'/metadata/{DOI_PREFIX}/{identifier}')
+        
+        if identifier in self._domains:
+            self._errors['identifier'] = self.error_class(['Cannot use Sub-Domain by itself, please append with unique identifiying data'])
+        elif r.status_code == 200:
+            self._errors['identifier'] = self.error_class(['DOI is already registered, please use another'])
+
 class SubjectForm(forms.Form):
      subject = forms.CharField(label='Subject', required=False, widget=forms.TextInput(attrs={'placeholder': 'Subject', 'class':'form-control form-control-sm', 'id':'subject'}))
 SubjectFormset = formset_factory(SubjectForm, extra=1)
+
 class RelatedIdentifierForm(forms.Form):
         related_identifier = forms.CharField(label='Identifier', required=False, widget=forms.TextInput(attrs={'placeholder': 'Related identifier', 'class':'related-identifier form-control form-control-sm', 'id':'relatedIdentifier'}))
         related_identifier_type = forms.CharField(label='Pick the identifier type:', required=False, widget=forms.Select(choices=RIT_CHOICES, attrs={'class':'related-identifier-type form-select form-select-sm', 'id':'relatedIdentifier'}))
@@ -130,14 +151,13 @@ class CreatorForm(forms.Form):
     familyname = forms.CharField(label='Family Name', widget=forms.TextInput(attrs={'placeholder': 'Family Name', 'class':'form-control form-control-sm', 'id':'creator'}))
     orcid = forms.CharField(label='Name Identifier',  required=False, widget=forms.TextInput(attrs={'placeholder': 'Orcid Id', 'class':'form-control form-control-sm', 'id':'creator'}))
     affiliation = forms.CharField(label='Affiliation',  required=False, widget=forms.TextInput(attrs={'placeholder': 'Affiliation', 'class':'form-control form-control-sm', 'id':'creator'}))
-   
 CreatorFormset = formset_factory(CreatorForm, extra=0,  min_num=1, validate_min=True)
+
 class FunderForm(forms.Form):
     funder_name = forms.CharField(label='Funder Name', required=False, widget=forms.TextInput(attrs={'placeholder': 'Funder Name', 'class':'form-control form-control-sm search-input', 'id':'funder'}))
     funder_identifier = forms.CharField(label='Funder Identifier',  required=False, widget=forms.TextInput(attrs={'readonly': 'readonly', 'placeholder': 'Funder Identifier', 'class':'form-control form-control-sm funder_id', 'id':'funder'}))
     award_number = forms.CharField(label='Award Number',  required=False,  widget=forms.TextInput(attrs={'placeholder': 'Award Number', 'class':'form-control form-control-sm', 'id':'funder'}))
     award_title = forms.CharField(label='Award Title',  required=False, widget=forms.TextInput(attrs={'placeholder': 'Award Title', 'class':'form-control form-control-sm', 'id':'funder'}))
-   
 FunderFormset = formset_factory(FunderForm, extra=1)
 
 class UrlForm(forms.Form):
