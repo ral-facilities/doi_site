@@ -32,6 +32,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
           <span class="input-group-text" id="prefix">{{ doi_prefix }}/</span>
           {{ form.identifier }}
         </div>
+        {% if form.identifier.errors %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ form.identifier.errors }}
+        </div>
+        {% endif %}
         {% if notAuthorised %}
         <div
           class="alert alert-danger text-start d-flex align-items-center"
@@ -675,6 +680,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
   function toggleArrow(arrow) {
     arrow.classList.toggle("fa-caret-up");
   }
+  
 </script>
 
 <style>
@@ -682,5 +688,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome
     content: "*";
     color: red;
   }
+  
 </style>
 {% endblock %}

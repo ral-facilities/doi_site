@@ -32,7 +32,7 @@ class Mint(View):
             except ObjectDoesNotExist:
                 pass
         suffixlist = authorized_dois
-        doiform = DoiForm(request.GET or None) 
+        doiform = DoiForm(request.GET or None, domains=suffixlist) 
         subjectformset = SubjectFormset(request.GET or None, prefix='subjectform')
         dateformset = DateFormset(request.GET or None, prefix='dateform')
         relatedidentifierformset = RelatedIdentifierFormset(request.GET or None, prefix='relatedidentifierform')
@@ -54,7 +54,6 @@ class Mint(View):
     })
 
     def post(self, request):
-        doiform = DoiForm(request.POST or None)
         subjectformset = SubjectFormset(request.POST or None, prefix='subjectform')
         relatedidentifierformset = RelatedIdentifierFormset(request.POST or None, prefix='relatedidentifierform')
         creatorformset = CreatorFormset(request.POST or None, prefix='creatorform')
@@ -69,17 +68,18 @@ class Mint(View):
             except ObjectDoesNotExist:
                 pass
         suffixlist = authorized_dois
+        doiform = DoiForm(request.POST or None, domains=suffixlist, request=request)
         for form in creatorformset:
             form.use_required_attribute = True
         for form in funderformset:
             form.use_required_attribute = True
         template_name = 'create_normal.html'
         heading_message = 'Formset Demo'
-        print(funderformset.is_valid())
-        print(doiform.is_valid())
-        print(subjectformset.is_valid())
-        print(creatorformset.is_valid())
-        print(dateformset.is_valid())
+        # print(funderformset.is_valid())
+        # print(doiform.is_valid())
+        # print(subjectformset.is_valid())
+        # print(creatorformset.is_valid())
+        # print(dateformset.is_valid())
         if subjectformset.is_valid() and relatedidentifierformset.is_valid() and creatorformset.is_valid() and funderformset.is_valid() and dateformset.is_valid() and doiform.is_valid():
             mds_api = MdsApi(request) 
             metadata = doiform.cleaned_data
@@ -108,14 +108,14 @@ class Mint(View):
             metadata["funders"] = [x for x in funderformset.cleaned_data if x]
             metadata['identifier'] = DOI_PREFIX + '/'+ metadata['identifier']
             doi = metadata['identifier'] 
-            print(metadata)
+            # print(metadata)
             e = dict_to_xml(metadata)
-            print (e)
+            # print (e)
             try:
                 response = mds_api.put("/metadata/" + doi, e.encode(), headers={ "Content-Type": "application/xml;charset=UTF-8" })
                 response.raise_for_status()
             except Exception as err:
-                print(f'Other error occurred: {err}')
+                # print(f'Other error occurred: {err}')
                 return render(request, template_name, {
                     'form': doiform,
                     'subjectformset': subjectformset,
@@ -131,7 +131,8 @@ class Mint(View):
                     'is_testing' : _is_test_url()
                     })
             else:
-                print('Data site call was successful!') 
+                pass
+                # print('Data site call was successful!') 
         else:
             return render(request, template_name, {
             'form': doiform,
@@ -146,10 +147,10 @@ class Mint(View):
             'is_testing' : _is_test_url()
         })
         if(response.status_code == 201):
-            print("DOI site was called successfully!")
+            # print("DOI site was called successfully!")
             return redirect('minturl', doi) 
         else:
-            print("DOI site was not called successfully!")
+            # print("DOI site was not called successfully!")
             return render(request, template_name, {
             'form': doiform,
             'subjectformset': subjectformset,
@@ -200,7 +201,7 @@ class Url(View):
                 r.raise_for_status()
                 url = r.text
             except Exception as newerr:
-                print(f'Error from DataCite: Other error occurred: {newerr}')
+                # print(f'Error from DataCite: Other error occurred: {newerr}')
                 url = None
                 urlform = UrlForm(request.GET or None, initial={'url':r.text})
                 return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':newerr, 'is_testing' : _is_test_url()})
@@ -220,7 +221,7 @@ class Url(View):
             r = mds_api.put('/doi/' + doi, data=body.encode(), headers={ "Content-Type": "text/plain;charset=UTF-8" })
             r.raise_for_status()
         except Exception as err:
-                print(f'Error from DataCite: Other error occurred: {err}')
+                # print(f'Error from DataCite: Other error occurred: {err}')
                 return self.get(request, doi, err)
         return self.get(request, doi, err=None)
 
