@@ -6,6 +6,21 @@
 {% endblock %} {% block content %}
 <h1 class="offset-5 bold--text">Update DOI url</h1>
 <div class="doi_bootstrap">
+  {% if form.add_url.errors %}
+  <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+    {{ form.add_url.errors }}
+  </div>
+  {% endif %}
+  {% if newerr %}
+  <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+    {{ newerr }}
+  </div>
+  {% endif %}
+  {% if err %}
+  <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+    {{ err }}
+  </div>
+  {% endif %}
   <div class="row">
     <div class="col-md-8">
       <form class="form-horizontal mt-3" method="POST" action="">
