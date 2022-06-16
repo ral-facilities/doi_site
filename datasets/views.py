@@ -80,6 +80,7 @@ class Mint(View):
         # print(subjectformset.is_valid())
         # print(creatorformset.is_valid())
         # print(dateformset.is_valid())
+       
         if subjectformset.is_valid() and relatedidentifierformset.is_valid() and creatorformset.is_valid() and funderformset.is_valid() and dateformset.is_valid() and doiform.is_valid():
             mds_api = MdsApi(request) 
             metadata = doiform.cleaned_data
@@ -134,6 +135,7 @@ class Mint(View):
                 pass
                 # print('Data site call was successful!') 
         else:
+            # print(dateformset)
             return render(request, template_name, {
             'form': doiform,
             'subjectformset': subjectformset,
@@ -170,17 +172,43 @@ class AddUrl(View):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
     template_name = 'add_url.html'
+
     def get(self, request, err=None):
-        addurlform = AddUrlForm(request.GET or None)
+        addurlform = AddUrlForm(request.GET or None, initial={'add_url':DOI_PREFIX+'/'})
         return render(request, self.template_name, {'form': addurlform, 'is_testing' : _is_test_url()})
+
     def post(self, request, err=None):
         addurlform = AddUrlForm(request.POST or None)
         if addurlform.is_valid():
-            url = addurlform.cleaned_data
-            path = 'mint/' + url['add_url']
-            return redirect(path)
+            url_dict = addurlform.cleaned_data
+            mds_api = MdsApi(request)
+            if url_dict['add_url'].startswith(DOI_PREFIX + "/"):
+                suffix = url_dict['add_url'][len(DOI_PREFIX + "/"):]
+                if not helper.is_authorized(request, suffix):
+                    err = "You have no authorization for the current subdomain: " + suffix
+                    addurlform = AddUrlForm(request.POST or None)
+                    return render(request, self.template_name, {'form':addurlform, 'doi':url_dict['add_url'], 'err':err, 'is_testing' : _is_test_url()})
+            else:
+                err = "The doi prefix is not accepted"
+                addurlform = AddUrlForm(request.POST or None)
+                return render(request, self.template_name, {'form':addurlform, 'doi':url_dict['add_url'], 'err':err, 'is_testing' : _is_test_url()})
+            if not err: 
+                try:
+                    r = mds_api.get('/doi/' + url_dict['add_url'])
+                    r.raise_for_status()
+                    url = r.text
+                    path = 'mint/' + url_dict['add_url']
+                    return redirect(path)
+                except Exception as newerr:
+                    # print(f'Error from DataCite: Other error occurred: {newerr}')
+                    addurlform = AddUrlForm(request.POST or None)
+                    return render(request, self.template_name, {'form':addurlform, 'doi':url_dict['add_url'], 'newerr':newerr, 'is_testing' : _is_test_url()})
+            else:
+                addurlform = AddUrlForm(request.POST or None)
+                return render(request, self.template_name, {'form':addurlform, 'doi':url_dict['add_url'], 'err':err, 'is_testing' : _is_test_url()})
         else:
-          return render(request, self.template_name, {'form': addurlform, 'is_testing' : _is_test_url()})  
+          return render(request, self.template_name, {'form': addurlform, 'is_testing' : _is_test_url()}) 
+ 
 class Url(View):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -211,20 +239,23 @@ class Url(View):
         return render(request, self.template_name, {'form':urlform, 'doi':doi, 'url':url, 'err':err, 'is_testing' : _is_test_url()})
         
     def post(self, request, doi):
+        template_name = 'mint_url.html'
         mds_api = MdsApi(request) 
         url_form= UrlForm(request.POST or None)
         if url_form.is_valid():
             url = url_form.cleaned_data['url']
-
-        body = 'doi='+doi+'\n'+'url='+url
-        try: 
-            r = mds_api.put('/doi/' + doi, data=body.encode(), headers={ "Content-Type": "text/plain;charset=UTF-8" })
-            r.raise_for_status()
-        except Exception as err:
+            body = 'doi='+doi+'\n'+'url='+url
+            try: 
+                r = mds_api.put('/doi/' + doi, data=body.encode(), headers={ "Content-Type": "text/plain;charset=UTF-8" })
+                r.raise_for_status()
+                return self.get(request, doi, err=None)
+            except Exception as err:
                 # print(f'Error from DataCite: Other error occurred: {err}')
                 return self.get(request, doi, err)
-        return self.get(request, doi, err=None)
-
+        else:
+            r = mds_api.get('/doi/' + doi)
+            url = r.text
+            return render(request, template_name, {'form':url_form, 'doi':doi, 'url':url, 'is_testing' : _is_test_url()})
 
 def _is_test_url():
     if DATACITE_URL == DATACITE_TEST_URL:
