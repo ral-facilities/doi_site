@@ -33,7 +33,7 @@
         </div>
         {% endif %}
         <span> DOI Sub-Domains available: </span>
-        <ul>
+        <ul class="mb-0">
           {% for suffix in suffixlist %}
           <li>{{ suffix }}</li>
           {% empty %}
@@ -43,15 +43,16 @@
           {% endfor %}
         </ul>
 
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-1">
-            <a href="#identifierHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-down fa-2x fa-fw"></i>
-              <span class="sr-only">Identifier helper text toggle</span></a>
+            <a href="#identifierHelpBlock" data-bs-toggle="collapse">
+              <i onclick="toggleArrow(this)" class="fa fa-caret-up fa-2x fa-fw"></i>
+              <span class="sr-only">Identifier helper text toggle</span>
+            </a>
           </div>
           <div class="col-11">
-            <div id="identifierHelpBlock" class="collapse pb-2 text-dark">
-              Only add the name of the identifier as the DOI number (10.528) will
+            <div id="identifierHelpBlock" class="collapse pb-2 text-dark show">
+              Only add the name of the identifier as the DOI number (10.528) willF
               be added automatically. The Identifier is a unique string that
               identifies a resource. For software, determine whether the
               identifier is for a specific version of a piece of software, (per
@@ -66,13 +67,13 @@
           <label for="title" class="form-label fs-6 mt-3 required">Title</label>
         </div>
         <div class="pb-1">{{ form.title }}</div>
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-1">
             <a href="#titleHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Title helper text toggle</span></a></a>
+                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Title helper text toggle</span></a></a>
           </div>
           <div class="col-11">
-            <div id="titleHelpBlock" class="collapse form-text pb-2 text-dark">
+            <div id="titleHelpBlock" class="collapse pb-2 text-dark show">
               A name or title by which a resource is known. May be the title of a
               dataset or the name of a piece of software.
             </div>
@@ -102,13 +103,13 @@
           Add creator
         </button>
 
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-1">
             <a href="#creatorHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Funder helper text toggle</span></a></a>
+                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Funder helper text toggle</span></a></a>
           </div>
           <div class="col-11">
-            <div id="creatorHelpBlock" class="collapse form-text pb-2 text-dark">
+            <div id="creatorHelpBlock" class="collapse pb-2 text-dark show">
               The main researchers involved in producing the data, or the authors
               of the publication, in priority order.
             </div>
@@ -119,14 +120,14 @@
           <label for="abstract" class="form-label fs-6 mt-3">Abstract</label>
         </div>
         <div class="pb-1">{{ form.abstract }}</div>
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-1">
             <a href="#abstractHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Abstract helper text
+                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Abstract helper text
                 toggle</span></a></a>
           </div>
           <div class="col-11">
-            <div id="abstractHelpBlock" class="collapse form-text pb-2 text-dark">
+            <div id="abstractHelpBlock" class="collapse pb-2 text-dark show">
               A brief description of the resource and the context in which the
               resource was created.
             </div>
@@ -137,14 +138,14 @@
           <label for="publisher" class="form-label fs-6 mt-3 required">Publisher</label>
         </div>
         <div class="pb-1">{{ form.publisher }}</div>
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-1">
             <a href="#publisherHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Publisher helper text
+                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Publisher helper text
                 toggle</span></a></a>
           </div>
           <div class="col-11">
-            <div id="publisherHelpBlock" class="collapse form-text pb-2 text-dark">
+            <div id="publisherHelpBlock" class="collapse pb-2 text-dark show">
               The name of the entity that holds, archives, publishes prints,
               distributes, releases, issues, or produces the resource. This
               property will be used to formulate the citation, so consider the
@@ -163,14 +164,14 @@
           <label for="publicationYear" class="form-label fs-6 mt-3 required">Publication Year</label>
         </div>
         <div class="col-4 pb-1">{{ form.publication_year }}</div>
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-1">
             <a href="#publicationYearHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Publication year helper text
+                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Publication year helper text
                 toggle</span></a></a>
           </div>
           <div class="col-11">
-            <div id="publicationYearHelpBlock" class="collapse form-text pb-2 text-dark">
+            <div id="publicationYearHelpBlock" class="collapse pb-2 text-dark show">
               The year when the data was or will be made publicly available. In
               the case of resources such as software or dynamic data where there
               may be multiple releases in one year, include the Date/dateType/
@@ -192,14 +193,14 @@
           <div class="col pb-1">{{ form.resource_type }}</div>
           <div class="col pb-1">{{ form.resource_type_text }}</div>
         </div>
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-1">
             <a href="#resourceTypeHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Resource type helper text
+                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Resource type helper text
                 toggle</span></a></a>
           </div>
           <div class="col-11">
-            <div id="resourceTypeHelpBlock" class="collapse form-text pb-2 text-dark">
+            <div id="resourceTypeHelpBlock" class="collapse pb-2 text-dark show">
               The resource that is being identified can be of any kind, but it is
               typically a dataset.
             </div>
@@ -229,13 +230,13 @@
         <button type="button" id="funderformset-add" class="btn btn-success btn-sm add-form-row">
           Add funder
         </button>
-        <div class="row">
+        <div class="row mt-2">
           <div class="col-1">
             <a href="#funderHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Funder helper text toggle</span></a></a>
+                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Funder helper text toggle</span></a></a>
           </div>
           <div class="col-11">
-            <div id="funderHelpBlock" class="collapse form-text pb-2 text-dark">
+            <div id="funderHelpBlock" class="collapse pb-2 text-dark show">
               Uniquely identifies a funding
               entity, according to various
               types.
@@ -262,14 +263,14 @@
           <button type="button" id="subjectformset-add" class="btn btn-success add-form-row btn-sm">
             Add subject
           </button>
-          <div class="row">
+          <div class="row mt-2">
             <div class="col-1">
               <a href="#subjectHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                  class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Subject helper text
+                  class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Subject helper text
                   toggle</span></a></a>
             </div>
             <div class="col-11">
-              <div id="subjectHelpBlock" class="collapse form-text pb-2 text-dark">
+              <div id="subjectHelpBlock" class="collapse pb-2 text-dark show">
                 Subject, keyword, classification code, or key phrase describing the
                 resource.
               </div>
@@ -296,14 +297,14 @@
             <button type="button" id="relatedidentifierformset-add" class="btn btn-success add-form-row btn-sm">
               Add related identifier
             </button>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-1">
                 <a href="#relatedIdentifierHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                    class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Related identifier helper text
+                    class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Related identifier helper text
                     toggle</span></a></a>
               </div>
               <div class="col-11">
-                <div id="relatedIdentifierHelpBlock" class="collapse form-text pb-2 text-dark">
+                <div id="relatedIdentifierHelpBlock" class="collapse pb-2 text-dark show">
                   Identifiers of related resources.
                   These must be globally unique
                   identifiers.
@@ -315,14 +316,14 @@
               <label for="version" class="form-label fs-6 mt-3">Version</label>
             </div>
             <div class="pb-1 col-6">{{ form.version }}</div>
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-1">
                 <a href="#versionHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                    class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Version helper text
+                    class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Version helper text
                     toggle</span></a></a>
               </div>
               <div class="col-11">
-                <div id="versionHelpBlock" class="collapse form-text pb-2 text-dark">
+                <div id="versionHelpBlock" class="collapse pb-2 text-dark show">
                   The version number of the resource.
                 </div>
               </div>
@@ -357,14 +358,14 @@
 
 
 
-            <div class="row">
+            <div class="row mt-2">
               <div class="col-1">
                 <a href="#dateHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                    class="fa fa-caret-down fa-2x fa-fw"></i><span class="sr-only">Date helper text
+                    class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Date helper text
                     toggle</span></a></a>
               </div>
               <div class="col-11">
-                <div id="dateHelpBlock" class="collapse form-text pb-2 text-dark">
+                <div id="dateHelpBlock" class="collapse pb-2 text-dark show">
                   Use the following formats YYYY, YYYY-MM, YYYY-MM-DD
                 </div>
               </div>
@@ -383,6 +384,11 @@
   </div>
 </div>
 <script type="text/javascript">
+  function toggleArrow(arrow) {
+    arrow.classList.toggle("fa-caret-down");
+    arrow.classList.toggle("fa-caret-up");
+  }
+
   $(document).ready(function () {
     window.fundersRemote = new Bloodhound({
       name: 'funders',
@@ -585,9 +591,7 @@
   $(".dateformset-row:first .remove-form-row").prop("hidden", true);
   $(".funderformset-row:first .remove-form-row").prop("hidden", true);
 
-  function toggleArrow(arrow) {
-    arrow.classList.toggle("fa-caret-up");
-  }
+  
 
 </script>
 
