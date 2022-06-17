@@ -162,39 +162,38 @@ class AddUrl(View):
     template_name = 'add_url.html'
 
     def get(self, request, err=None):
-        addurlform = AddUrlForm(request.GET or None, initial={'add_url':DOI_PREFIX+'/'})
-        return render(request, self.template_name, {'form': addurlform, 'is_testing' : _is_test_url()})
+        addurlform = AddUrlForm(request.GET or None)
+        return render(request, self.template_name, {'form': addurlform, 'doi_prefix':DOI_PREFIX+'/', 'is_testing' : _is_test_url()})
 
     def post(self, request, err=None):
         addurlform = AddUrlForm(request.POST or None)
         if addurlform.is_valid():
             url_dict = addurlform.cleaned_data
             mds_api = MdsApi(request)
-            if url_dict['add_url'].startswith(DOI_PREFIX + "/"):
-                suffix = url_dict['add_url'][len(DOI_PREFIX + "/"):]
-                if not helper.is_authorized(request, suffix):
-                    err = "You have no authorization for the current subdomain: " + suffix
-                    addurlform = AddUrlForm(request.POST or None)
-                    return render(request, self.template_name, {'form':addurlform, 'doi':url_dict['add_url'], 'err':err, 'is_testing' : _is_test_url()})
-            else:
-                err = "The doi prefix is not accepted"
+            
+            suffix = url_dict['add_url']
+            print("test")
+            print(suffix)
+            if not helper.is_authorized(request, suffix):
+                err = "You have no authorization for the current subdomain: " + suffix
                 addurlform = AddUrlForm(request.POST or None)
-                return render(request, self.template_name, {'form':addurlform, 'doi':url_dict['add_url'], 'err':err, 'is_testing' : _is_test_url()})
+                return render(request, self.template_name, {'form':addurlform, 'doi_prefix':DOI_PREFIX+'/', 'doi':url_dict['add_url'], 'err':err, 'is_testing' : _is_test_url()})
+            
             if not err: 
                 try:
-                    r = mds_api.get('/doi/' + url_dict['add_url'])
+                    r = mds_api.get('/doi/'+ DOI_PREFIX + '/' + url_dict['add_url'])
                     r.raise_for_status()
                     url = r.text
-                    path = 'mint/' + url_dict['add_url']
+                    path = 'mint/'+ DOI_PREFIX + '/' + url_dict['add_url']
                     return redirect(path)
                 except Exception as newerr:
                     addurlform = AddUrlForm(request.POST or None)
-                    return render(request, self.template_name, {'form':addurlform, 'doi':url_dict['add_url'], 'newerr':newerr, 'is_testing' : _is_test_url()})
+                    return render(request, self.template_name, {'form':addurlform,'doi_prefix':DOI_PREFIX+'/', 'doi':url_dict['add_url'], 'newerr':newerr, 'is_testing' : _is_test_url()})
             else:
                 addurlform = AddUrlForm(request.POST or None)
-                return render(request, self.template_name, {'form':addurlform, 'doi':url_dict['add_url'], 'err':err, 'is_testing' : _is_test_url()})
+                return render(request, self.template_name, {'form':addurlform,'doi_prefix':DOI_PREFIX+'/', 'doi':url_dict['add_url'], 'err':err, 'is_testing' : _is_test_url()})
         else:
-          return render(request, self.template_name, {'form': addurlform, 'is_testing' : _is_test_url()}) 
+          return render(request, self.template_name, {'form': addurlform,'doi_prefix':DOI_PREFIX+'/', 'is_testing' : _is_test_url()}) 
  
 class Url(View):
     @method_decorator(login_required)

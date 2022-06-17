@@ -110,12 +110,12 @@ DT_CHOICES = [
 ]
 
 class DoiForm(forms.Form):
-    identifier = forms.CharField(label='Identifier', max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Identifier', 'class':'form-control form-control-sm', 'id':'identifier'}))
+    identifier = forms.CharField(label='Identifier', max_length=100, widget=forms.TextInput(attrs={'placeholder': 'DOI', 'class':'form-control form-control-sm', 'id':'identifier'}))
     title = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Title', 'class':'form-control form-control-sm', 'id':'title'}))
     publisher = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Publisher', 'class':'form-control form-control-sm', 'id':'publisher'}))
-    publication_year = forms.IntegerField(label='Pick the year:', min_value=1975, max_value=2100, widget=forms.NumberInput(attrs={'placeholder': 'Publication Year', 'class':'form-control form-control-sm', 'id':'publicationYear'}))
+    publication_year = forms.IntegerField(label='Pick the year:', min_value=1975, max_value=2100, widget=forms.TextInput(attrs={'placeholder': 'Publication Year', 'class':'form-control form-control-sm', 'id':'publicationYear'}))
     resource_type = forms.CharField(label='Pick the resource type:', widget=forms.Select(choices=RT_CHOICES, attrs={'placeholder': 'lalala', 'class':'form-select form-select-sm', 'id':'resourceType'}))
-    resource_type_text = forms.CharField(label='Resource type:', required=False, widget=forms.TextInput(attrs={'placeholder': 'Resource type', 'class':'form-control form-control-sm', 'id':'resourceType'}))
+    resource_type_text = forms.CharField(label='Resource type:', required=False, widget=forms.TextInput(attrs={'placeholder': 'Resource type other', 'class':'form-control form-control-sm', 'id':'resourceType'}))
     abstract = forms.CharField(label='Abstract', required=False, widget=forms.Textarea(attrs={'placeholder': 'Abstract',"rows":3, 'class':'form-control form-control-sm', 'id':'abstract'}))
     version = forms.CharField(label='Version', required=False, widget=forms.TextInput(attrs={'placeholder': 'Version', 'class':'form-control form-control-sm', 'id':'version'}))
 
@@ -172,7 +172,7 @@ class DateForm(forms.Form):
                 regex='^([0-9]{4}|[\-][0-9]{4})|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2]))|(([0-9]{4}|[\-][0-9]{4})[\-](0?[1-9]|1[0-2])[\-](0?[1-9]|[12]\d|3[01]))$',
                 message='The date format is not right!',
             ),
-        ], widget=forms.TextInput(attrs={'placeholder': 'Date (YYYY-MM-DD)', 'class':'date form-control form-control-sm', 'id':'date'}))
+        ], widget=forms.TextInput(attrs={'placeholder': 'Date', 'class':'date form-control form-control-sm', 'id':'date'}))
     date_type = forms.CharField(label='Pick the date type:', required=False, widget=forms.Select(choices=DT_CHOICES, attrs={'class':'date-type form-select form-select-sm', 'id':'date'}))
     date_text = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Date Information', 'class':'form-control form-control-sm', 'id':'date'}))
 
