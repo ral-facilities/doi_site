@@ -13,6 +13,7 @@ from mds.MdsApi import MdsApi
 from django.core.exceptions import ObjectDoesNotExist
 from doi_site.settings import DATACITE_TEST_URL, DATACITE_URL, DOI_PREFIX
 import mds.http.helper as helper
+from django.utils.safestring import mark_safe
 
 
 class Mint(View):
@@ -32,7 +33,8 @@ class Mint(View):
             except ObjectDoesNotExist:
                 pass
         suffixlist = authorized_dois
-        doiform = DoiForm(request.GET or None, domains=suffixlist) 
+        doiform = DoiForm(request.GET or None, domains=suffixlist)
+        urlform = UrlForm(request.GET or None, prefix='urlform')
         subjectformset = SubjectFormset(request.GET or None, prefix='subjectform')
         dateformset = DateFormset(request.GET or None, prefix='dateform')
         relatedidentifierformset = RelatedIdentifierFormset(request.GET or None, prefix='relatedidentifierform')
@@ -42,6 +44,7 @@ class Mint(View):
             form.use_required_attribute = True
         return render(request, template_name, {
         'form': doiform,
+        'urlform': urlform,
         'subjectformset': subjectformset,
         'relatedidentifierformset': relatedidentifierformset,
         'creatorformset': creatorformset,
@@ -54,11 +57,6 @@ class Mint(View):
     })
 
     def post(self, request):
-        subjectformset = SubjectFormset(request.POST or None, prefix='subjectform')
-        relatedidentifierformset = RelatedIdentifierFormset(request.POST or None, prefix='relatedidentifierform')
-        creatorformset = CreatorFormset(request.POST or None, prefix='creatorform')
-        dateformset = DateFormset(request.POST or None, prefix='dateform')
-        funderformset = FunderFormset(request.POST or None, prefix='funderform')
         authorized_dois = []
         notAuthorised = False
         groups = request.user.groups.iterator()
@@ -69,16 +67,25 @@ class Mint(View):
                 pass
         suffixlist = authorized_dois
         doiform = DoiForm(request.POST or None, domains=suffixlist, request=request)
+        urlform = UrlForm(request.POST or None, prefix='urlform')
+        subjectformset = SubjectFormset(request.POST or None, prefix='subjectform')
+        relatedidentifierformset = RelatedIdentifierFormset(request.POST or None, prefix='relatedidentifierform')
+        creatorformset = CreatorFormset(request.POST or None, prefix='creatorform')
+        dateformset = DateFormset(request.POST or None, prefix='dateform')
+        funderformset = FunderFormset(request.POST or None, prefix='funderform')
+        
         for form in creatorformset:
             form.use_required_attribute = True
         for form in funderformset:
             form.use_required_attribute = True
         template_name = 'create_normal.html'
         heading_message = 'Formset Demo'
-       
-        if subjectformset.is_valid() and relatedidentifierformset.is_valid() and creatorformset.is_valid() and funderformset.is_valid() and dateformset.is_valid() and doiform.is_valid():
+        new_url = None
+        if subjectformset.is_valid() and relatedidentifierformset.is_valid() and creatorformset.is_valid() and funderformset.is_valid() and dateformset.is_valid() and doiform.is_valid() and urlform.is_valid():
             mds_api = MdsApi(request) 
             metadata = doiform.cleaned_data
+            url_form_dict = urlform.cleaned_data
+            new_url = url_form_dict['url']
             canUseSuffix = helper.is_authorized(request, metadata['identifier'])
             if canUseSuffix:
                 pass
@@ -128,6 +135,7 @@ class Mint(View):
         else:
             return render(request, template_name, {
             'form': doiform,
+            'urlform': urlform,
             'subjectformset': subjectformset,
             'relatedidentifierformset': relatedidentifierformset,
             'creatorformset': creatorformset,
@@ -139,7 +147,99 @@ class Mint(View):
             'is_testing' : _is_test_url()
         })
         if(response.status_code == 201):
-            return redirect('minturl', doi) 
+            print(type(new_url))
+            if new_url != "":
+                body = 'doi='+doi+'\n'+'url='+new_url
+                try: 
+                    r = mds_api.put('/doi/' + doi, data=body.encode(), headers={ "Content-Type": "text/plain;charset=UTF-8" })
+                    r.raise_for_status()
+                    success_message = "Success - You have minted "+doi
+                    template_name = 'create_normal.html'
+                    heading_message = 'Formset Demo'
+                    authorized_dois = []
+                    groups = request.user.groups.iterator()
+                    for group in groups:
+                        try:
+                            authorized_dois.append(group.groupprofile.doi_suffix)
+                        except ObjectDoesNotExist:
+                            pass
+                    suffixlist = authorized_dois
+                    doiform = DoiForm(request.GET or None, domains=suffixlist)
+                    urlform = UrlForm(request.GET or None, prefix='urlform')
+                    subjectformset = SubjectFormset(request.GET or None, prefix='subjectform')
+                    dateformset = DateFormset(request.GET or None, prefix='dateform')
+                    relatedidentifierformset = RelatedIdentifierFormset(request.GET or None, prefix='relatedidentifierform')
+                    creatorformset = CreatorFormset(request.GET or None, prefix='creatorform')
+                    funderformset = FunderFormset(request.GET or None, prefix='funderform')
+                    for form in creatorformset:
+                        form.use_required_attribute = True
+                    return render(request, template_name, {
+                    'form': doiform,
+                    'urlform': urlform,
+                    'subjectformset': subjectformset,
+                    'relatedidentifierformset': relatedidentifierformset,
+                    'creatorformset': creatorformset,
+                    'dateformset': dateformset,
+                    'funderformset' : funderformset,
+                    'doi_prefix': DOI_PREFIX,
+                    'heading': heading_message,
+                    'suffixlist': suffixlist,
+                    'succ': success_message,
+                    'is_testing' : _is_test_url()
+                    })
+                except Exception as err:
+                    return render(request, template_name, {
+                    'form': doiform,
+                    'urlform': urlform,
+                    'subjectformset': subjectformset,
+                    'relatedidentifierformset': relatedidentifierformset,
+                    'creatorformset': creatorformset,
+                    'dateformset': dateformset,
+                    'funderformset' : funderformset,
+                    'doi_prefix': DOI_PREFIX,
+                    'heading': heading_message,
+                    'suffixlist': suffixlist,
+                    'err': err,
+                    'is_testing' : _is_test_url()
+                    })
+            else:
+                before_safe = ('<p class="m-0">Success - You have created the metadata for ' + doi + '. If you need to add the URL for this doi, '
+                                    'please do so <a href="mint/' + doi + '">here</a></p> ')
+                success_message = mark_safe(before_safe)
+
+                template_name = 'create_normal.html'
+                heading_message = 'Formset Demo'
+                authorized_dois = []
+                groups = request.user.groups.iterator()
+                for group in groups:
+                    try:
+                        authorized_dois.append(group.groupprofile.doi_suffix)
+                    except ObjectDoesNotExist:
+                        pass
+                suffixlist = authorized_dois
+                doiform = DoiForm(request.GET or None, domains=suffixlist)
+                urlform = UrlForm(request.GET or None, prefix='urlform')
+                subjectformset = SubjectFormset(request.GET or None, prefix='subjectform')
+                dateformset = DateFormset(request.GET or None, prefix='dateform')
+                relatedidentifierformset = RelatedIdentifierFormset(request.GET or None, prefix='relatedidentifierform')
+                creatorformset = CreatorFormset(request.GET or None, prefix='creatorform')
+                funderformset = FunderFormset(request.GET or None, prefix='funderform')
+                for form in creatorformset:
+                    form.use_required_attribute = True
+                return render(request, template_name, {
+                'form': doiform,
+                'urlform': urlform,
+                'subjectformset': subjectformset,
+                'relatedidentifierformset': relatedidentifierformset,
+                'creatorformset': creatorformset,
+                'dateformset': dateformset,
+                'funderformset' : funderformset,
+                'doi_prefix': DOI_PREFIX,
+                'heading': heading_message,
+                'suffixlist': suffixlist,
+                'succ': success_message,
+                'is_testing' : _is_test_url()
+                }) 
         else:
             return render(request, template_name, {
             'form': doiform,

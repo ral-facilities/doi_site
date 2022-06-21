@@ -1,10 +1,21 @@
 {% extends "doi_site/organisation_wrapper.html" %} {% block content %}
 <h1 class="bold--text">Mint a DOI</h1>
-{% if notAuthorised %}
-<div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
-  You are only authorised to use the sub-domains listed below:
+<div class="doi_bootstrap">
+  <div class="row">
+    <div class="col-md-8">
+      {% if notAuthorised %}
+      <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+        You are only authorised to use the sub-domains listed below:
+      </div>
+      {% endif %}
+      {% if succ %}
+      <div class="alert alert-success text-start d-flex align-items-center" role="alert" style="height: 15px">
+      {{ succ }}
+      </div>
+      {% endif %}
+    </div>
+  </div>
 </div>
-{% endif %}
 <div class="doi_bootstrap">
   <div class="row">
     <div class="col-md-8">
@@ -53,6 +64,33 @@
             </div>
           </div>
         </div>
+        <!-- URL field start -->
+        <div class="pb-1 mt-3">
+          <label for="identifier" class="form-label fs-6 fw-bold">URL</label>
+        </div>
+        <div class="pb-1">
+          {{ urlform }}
+        </div>
+        {% if urlform.url.errors %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ urlform.url.errors }}
+        </div>
+        {% endif %}
+        {% if err %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ err }}
+        </div>
+        {% endif %}
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="urlHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The location of the landing page with more information about the resource. 
+              Leave this field blank if you want to create a metadata only record. 
+              To update the URL on an existing DOI please visit <a href="{% url 'addurl' %}">here</a>
+            </div>
+          </div>
+        </div>
+        <!-- URL field end-->
         <div class="pb-1 mt-3">
           <label for="title" class="form-label fs-6 mt-3 required fw-bold">Title</label>
         </div>
@@ -284,7 +322,6 @@
             </button>
           </div>
         </div>
-        <div>{{err}}</div>
       </form>
     </div>
   </div>

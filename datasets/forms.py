@@ -133,8 +133,8 @@ class DoiForm(forms.Form):
         
         if identifier in self._domains:
             self._errors['identifier'] = self.error_class(['Cannot use Sub-Domain by itself, please append with unique identifiying data'])
-        elif r.status_code == 200:
-            self._errors['identifier'] = self.error_class(['DOI is already registered, please use another'])
+        # elif r.status_code == 200:
+        #     self._errors['identifier'] = self.error_class(['DOI is already registered, please use another'])
 
 class SubjectForm(forms.Form):
      subject = forms.CharField(label='Subject', required=False, widget=forms.TextInput(attrs={'placeholder': 'Subject', 'class':'form-control form-control-sm', 'id':'subject'}))
@@ -161,7 +161,7 @@ class FunderForm(forms.Form):
 FunderFormset = formset_factory(FunderForm, extra=1)
 
 class UrlForm(forms.Form):
-    url = forms.URLField(label='Url', widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'id':'url'}))
+    url = forms.URLField(label='', required=False, widget=forms.TextInput(attrs={'placeholder':'URL', 'class':'form-control form-control-sm', 'id':'url'}))
 
 class AddUrlForm(forms.Form):
     add_url = forms.CharField(label='Add Url', widget=forms.TextInput(attrs={'placeholder': 'Enter DOI', 'class':'form-control form-control-sm', 'id':'addUrl'}))
