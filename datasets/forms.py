@@ -1,8 +1,8 @@
 from django import forms
 from django.core.validators import RegexValidator
-from django.forms import formset_factory, MultiWidget, TextInput
+from django.forms import formset_factory
 from doi_site.local_settings import DOI_PREFIX
-from mds.MdsApi import MdsApi
+from mds.mds_api import MdsApi
 
 RT_CHOICES = [
     (None, 'Select resource type..'),

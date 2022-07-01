@@ -1,15 +1,11 @@
-from urllib.error import HTTPError
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import View
 from .forms import SubjectFormset, RelatedIdentifierFormset, CreatorFormset, FunderFormset, DateFormset, DoiForm, AddUrlForm, UrlForm
 from django.shortcuts import render, redirect
-import xml.etree.ElementTree as ET
 from .dict_to_xml import dict_to_xml
-import mds.http.post as postdoi
-import mds.http.get as getdoi
-from mds.MdsApi import MdsApi
+from mds.mds_api import MdsApi
 from django.core.exceptions import ObjectDoesNotExist
 from doi_site.settings import DATACITE_TEST_URL, DATACITE_URL, DOI_PREFIX
 import mds.http.helper as helper
