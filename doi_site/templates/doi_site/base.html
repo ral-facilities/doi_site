@@ -5,8 +5,16 @@
 
 <head>
     <title>DOI Minting Service</title>
-    <link rel="stylesheet" type="text/css"
-        href="{% static 'doi_site/css/doi.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'doi_site/css/doi.css' %}"/>
+    <link rel="styleSheet" type="text/css" href="{% static 'doi_site/css/typeahead.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'doi_site/css/bootstrap.css' %}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <!-- <link href='https://search.crossref.org/typeahead.css' media='screen' rel='stylesheet' type='text/css'> -->
+    <script src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js' type='text/javascript'></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src='https://twitter.github.io/typeahead.js/releases/0.10.5/typeahead.bundle.js' type='text/javascript'></script>
+    <script src="https://twitter.github.io/hogan.js/builds/3.0.1/hogan-3.0.1.js" type='text/javascript'></script>
+        
     {% block head %}
     {% endblock %}
 </head>
@@ -31,7 +39,7 @@
                 <li><a href="{% url 'domains' %}">DOI Sub-Domains</a></li>
                 <li><a href="{% url 'doi_list' %}">DOIs</a></li>
                 <li><a href="{% url 'mint' %}">Mint a DOI</a></li>
-                <li><a href="{% url 'addurl' %}">Update DOI Url</a></li>
+                <li><a href="{% url 'addurl' %}">Update DOI URL</a></li>
                 <li><a href="{% url 'notes' %}">Notes for Users</a></li>
                 <li><a href="https://support.datacite.org/docs/mds-api-guide"
                     target="_blank">API Docs</a> (external page)</li>

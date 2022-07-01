@@ -1,22 +1,50 @@
-{% extends "doi_site/organisation_wrapper.html" %} {% block head %}
-<link href="/static/doi_site/css/bootstrap.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-<link href='https://search.crossref.org/typeahead.css' media='screen' rel='stylesheet' type='text/css'>
-<script src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js' type='text/javascript'></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<script src='https://twitter.github.io/typeahead.js/releases/0.10.5/typeahead.bundle.js'
-  type='text/javascript'></script>
-<script src="https://twitter.github.io/hogan.js/builds/3.0.1/hogan-3.0.1.js" type='text/javascript'></script>
-{% endblock %} {% block content %}
+{% extends "doi_site/organisation_wrapper.html" %} {% block content %}
 <h1 class="bold--text">Mint a DOI</h1>
 <div class="doi_bootstrap">
   <div class="row">
     <div class="col-md-8">
+      {% if notAuthorised %}
+      <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+        You are only authorised to use the sub-domains listed below:
+      </div>
+      {% endif %}
+      {% if succ %}
+      <div class="alert alert-success text-start d-flex align-items-center" role="alert" style="height: 15px">
+      {{ succ }}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<div class="doi_bootstrap">
+  <div class="row">
+    <div class="col-md-8">
+      <table class="w-100 my-3" id="sub_domains">
+        <tr>
+            <th class="text-center">DOI Sub-Domains available:</th>
+        </tr>
+        {% for suffix in suffixlist %}
+        <tr>
+            <td class="ps-2">{{ doi_prefix }}/{{ suffix }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td class="ps-2" style="color:red;">You are not authorised to mint DOI's</td>
+      </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+{% if suffixlist %}
+<div class="doi_bootstrap">
+  <div class="row">
+    
+    <div class="col-md-8">
       <form class="form-horizontal" method="POST" action="">
         {% csrf_token %}
         <div class="pb-1 mt-3">
-          <label for="identifier" class="form-label fs-6 required">Identifier</label>
+          <label for="identifier" class="form-label fs-6 required fw-bold">DOI</label>
         </div>
         <div class="input-group input-group-sm pb-1">
           <span class="input-group-text" id="prefix">{{ doi_prefix }}/</span>
@@ -27,62 +55,57 @@
           {{ form.identifier.errors }}
         </div>
         {% endif %}
-        {% if notAuthorised %}
-        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
-          You are only authorised to use the sub-domains listed below:
-        </div>
-        {% endif %}
-        <span> DOI Sub-Domains available: </span>
-        <ul class="mb-0">
-          {% for suffix in suffixlist %}
-          <li>{{ suffix }}</li>
-          {% empty %}
-          <li style="color: red">
-            No DOI sub-domains available, please create one.
-          </li>
-          {% endfor %}
-        </ul>
-
         <div class="row mt-2">
-          <div class="col-1">
-            <a href="#identifierHelpBlock" data-bs-toggle="collapse">
-              <i onclick="toggleArrow(this)" class="fa fa-caret-up fa-2x fa-fw"></i>
-              <span class="sr-only">Identifier helper text toggle</span>
-            </a>
-          </div>
-          <div class="col-11">
-            <div id="identifierHelpBlock" class="collapse pb-2 text-dark show">
-              Only add the name of the identifier as the DOI number (10.528) willF
-              be added automatically. The Identifier is a unique string that
-              identifies a resource. For software, determine whether the
-              identifier is for a specific version of a piece of software, (per
-              the Force11 Software Citation Principles11), or for all versions. DOI
-              (Digital Object Identifier) registered by a DataCite member. Format
-              should be “10.1234/foo”
+          <div class="col-12">
+            <div id="identifierHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The globally unique string that identifies the resource and can't be changed. 
+              The repository id “10.5286/” will be added automatically. 
+              The entered string MUST start with one of the listed subdomains
             </div>
           </div>
         </div>
-
+        <!-- URL field start -->
+        <div class="pb-1 mt-3">
+          <label for="identifier" class="form-label fs-6 fw-bold">URL</label>
+        </div>
         <div class="pb-1">
-          <label for="title" class="form-label fs-6 mt-3 required">Title</label>
+          {{ urlform }}
+        </div>
+        {% if urlform.url.errors %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ urlform.url.errors }}
+        </div>
+        {% endif %}
+        {% if err %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ err }}
+        </div>
+        {% endif %}
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="urlHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The location of the landing page with more information about the resource. 
+              Leave this field blank if you want to create a metadata only record. 
+              To update the URL on an existing DOI please visit <a href="{% url 'addurl' %}">here</a>
+            </div>
+          </div>
+        </div>
+        <!-- URL field end-->
+        <div class="pb-1 mt-3">
+          <label for="title" class="form-label fs-6 mt-3 required fw-bold">Title</label>
         </div>
         <div class="pb-1">{{ form.title }}</div>
         <div class="row mt-2">
-          <div class="col-1">
-            <a href="#titleHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Title helper text toggle</span></a></a>
-          </div>
-          <div class="col-11">
-            <div id="titleHelpBlock" class="collapse pb-2 text-dark show">
+          <div class="col-12">
+            <div id="titleHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
               A name or title by which a resource is known. May be the title of a
               dataset or the name of a piece of software.
             </div>
           </div>
         </div>
-
         {{ creatorformset.management_form }}
-        <div class="pb-1">
-          <label for="creator" class="form-label fs-6 mt-3 required">Creator</label>
+        <div class="pb-1 mt-3">
+          <label for="creator" class="form-label fs-6 mt-3 required fw-bold">Creator</label>
         </div>
         {% for form in creatorformset %}
         <div class="row form-row spacer creatorformset-row">
@@ -99,118 +122,74 @@
           </div>
         </div>
         {% endfor %}
-        <button type="button" id="creatorformset-add" class="btn btn-success btn-sm add-form-row">
+        <button type="button" id="creatorformset-add" class="btn btn-primary btn-sm add-form-row">
           Add creator
         </button>
-
         <div class="row mt-2">
-          <div class="col-1">
-            <a href="#creatorHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Funder helper text toggle</span></a></a>
-          </div>
-          <div class="col-11">
-            <div id="creatorHelpBlock" class="collapse pb-2 text-dark show">
-              The main researchers involved in producing the data, or the authors
-              of the publication, in priority order.
+          <div class="col-12">
+            <div id="creatorHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The main researchers involved in producing the data, or the authors of the publication, in priority order. 
+              If provided, the affiliation SHOULD be taken from the Research Organization Registry <a href="https://ror.org/">https://ror.org.</a>
             </div>
           </div>
         </div>
-
-        <div class="pb-1">
-          <label for="abstract" class="form-label fs-6 mt-3">Abstract</label>
+        <div class="pb-1 mt-3">
+          <label for="abstract" class="form-label fs-6 mt-3 fw-bold">Abstract</label>
         </div>
         <div class="pb-1">{{ form.abstract }}</div>
         <div class="row mt-2">
-          <div class="col-1">
-            <a href="#abstractHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Abstract helper text
-                toggle</span></a></a>
-          </div>
-          <div class="col-11">
-            <div id="abstractHelpBlock" class="collapse pb-2 text-dark show">
+          <div class="col-12">
+            <div id="abstractHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
               A brief description of the resource and the context in which the
               resource was created.
             </div>
           </div>
         </div>
-
-        <div class="pb-1">
-          <label for="publisher" class="form-label fs-6 mt-3 required">Publisher</label>
+        <div class="pb-1 mt-3">
+          <label for="publisher" class="form-label fs-6 mt-3 required fw-bold">Publisher</label>
         </div>
         <div class="pb-1">{{ form.publisher }}</div>
         <div class="row mt-2">
-          <div class="col-1">
-            <a href="#publisherHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Publisher helper text
-                toggle</span></a></a>
-          </div>
           <div class="col-11">
-            <div id="publisherHelpBlock" class="collapse pb-2 text-dark show">
-              The name of the entity that holds, archives, publishes prints,
-              distributes, releases, issues, or produces the resource. This
-              property will be used to formulate the citation, so consider the
-              prominence of the role. For software, use Publisher for the code
-              repository. If there is an entity other than a code repository, that
-              "holds, archives, publishes, prints, distributes, releases, issues,
-              or produces" the code, use the property Contributor/contributorType/
-              hostingInstitution for the code repository.Examples: World Data
-              Center for Climate (WDCC); GeoForschungsZentrum Potsdam (GFZ);
-              Geological Institute, University of Tokyo, GitHub
+            <div id="publisherHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The name of the entity that holds, archives, publishes prints, distributes, releases, issues, or produces the resource. 
+              This property will be used to formulate the citation, so consider the prominence of the role.
             </div>
           </div>
         </div>
-
-        <div class="pb-1">
-          <label for="publicationYear" class="form-label fs-6 mt-3 required">Publication Year</label>
+        <div class="pb-1 mt-3">
+          <label for="publicationYear" class="form-label fs-6 mt-3 required fw-bold">Publication Year</label>
         </div>
         <div class="col-4 pb-1">{{ form.publication_year }}</div>
+        {% if form.publication_year.errors %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ form.publication_year.errors }}
+        </div>
+        {% endif %}
         <div class="row mt-2">
-          <div class="col-1">
-            <a href="#publicationYearHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Publication year helper text
-                toggle</span></a></a>
-          </div>
-          <div class="col-11">
-            <div id="publicationYearHelpBlock" class="collapse pb-2 text-dark show">
-              The year when the data was or will be made publicly available. In
-              the case of resources such as software or dynamic data where there
-              may be multiple releases in one year, include the Date/dateType/
-              dateInformation property and sub-properties to provide more
-              information about the publication or release date details.YYYY ***
-              If an embargo period has been in effect, use the date when the
-              embargo period ends. In the case of datasets, "publish" is
-              understood to mean making the data available on a specific date to
-              the community of researchers. If there is no standard publication
-              year value, use the date that would be preferred from a citation
-              perspective.
+          <div class="col-12">
+            <div id="publicationYearHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The year when the data was or will be made publicly available.
             </div>
           </div>
         </div>
-        <div class="pb-1">
-          <label for="resourceType" class="form-label fs-6 mt-3 required">Resource Type</label>
+        <div class="pb-1 mt-3">
+          <label for="resourceType" class="form-label fs-6 mt-3 required fw-bold">Resource Type</label>
         </div>
         <div class="row">
           <div class="col pb-1">{{ form.resource_type }}</div>
           <div class="col pb-1">{{ form.resource_type_text }}</div>
         </div>
         <div class="row mt-2">
-          <div class="col-1">
-            <a href="#resourceTypeHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Resource type helper text
-                toggle</span></a></a>
-          </div>
-          <div class="col-11">
-            <div id="resourceTypeHelpBlock" class="collapse pb-2 text-dark show">
-              The resource that is being identified can be of any kind, but it is
-              typically a dataset.
+          <div class="col-12">
+            <div id="resourceTypeHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              If none of the provided values matches, use “Other” and specify the resource type in the free text field, the preferred format is a single term.
             </div>
           </div>
         </div>
-
-
         {{ funderformset.management_form }}
-        <div class="pb-1">
-          <label for="funder" class="form-label fs-6 mt-3">Funder</label>
+        <div class="pb-1 mt-3">
+          <label for="funder" class="form-label fs-6 mt-3 fw-bold">Funder</label>
         </div>
         {% for form in funderformset %}
         <div class="row form-row spacer funderformset-row">
@@ -227,162 +206,127 @@
           </div>
         </div>
         {% endfor %}
-        <button type="button" id="funderformset-add" class="btn btn-success btn-sm add-form-row">
+        <button type="button" id="funderformset-add" class="btn btn-primary btn-sm add-form-row">
           Add funder
         </button>
         <div class="row mt-2">
-          <div class="col-1">
-            <a href="#funderHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Funder helper text toggle</span></a></a>
-          </div>
-          <div class="col-11">
-            <div id="funderHelpBlock" class="collapse pb-2 text-dark show">
+          <div class="col-12">
+            <div id="funderHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
               Uniquely identifies a funding
               entity, according to various
               types.
             </div>
           </div>
         </div>
-
-
         {{ subjectformset.management_form }}
-        <div>
-          <div class="mt-3">
-            <label for="subject" class="form-label fs-6">Subject</label>
+        <div class="pb-1 mt-3">
+          <label for="subject" class="form-label fs-6 mt-3 fw-bold">Subject</label>
+        </div>
+        {% for form in subjectformset %}
+        <div class="row form-row subjectformset-row mb-2">
+          <div class="col-6">{{form.subject}}</div>
+          <div class="col">
+            <button type="button" class="btn btn-danger remove-form-row btn-sm">
+              🗙
+            </button>
           </div>
-          {% for form in subjectformset %}
-          <div class="row form-row subjectformset-row mb-2">
-            <div class="col-6">{{form.subject}}</div>
-            <div class="col">
+        </div>
+        {% endfor %}
+        <button type="button" id="subjectformset-add" class="btn btn-primary add-form-row btn-sm">
+          Add subject
+        </button>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="subjectHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              Subject, keyword, classification code, or key phrase describing the
+              resource.
+            </div>
+          </div>
+        </div>
+        {{ relatedidentifierformset.management_form }}
+        <div class="mt-3">
+          <label for="relatedIdentifier" class="form-label fs-6 mt-3 fw-bold">Related Identifier</label>
+        </div>
+        {% for form in relatedidentifierformset %}
+        <div class="row form-row relatedidentifierformset-row mb-2">
+          <div class="col-3">{{form.related_identifier}}</div>
+          <div class="col-3">{{form.related_identifier_type}}</div>
+          <div class="col-3">{{form.related_identifier_relation_type}}</div>
+          <div class="col">
+            <button type="button" class="btn btn-danger remove-form-row btn-sm">
+              🗙
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+        <button type="button" id="relatedidentifierformset-add" class="btn btn-primary add-form-row btn-sm">
+          Add related identifier
+        </button>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="relatedIdentifierHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              Identifiers of related resources.
+              These must be globally unique
+              identifiers.
+            </div>
+          </div>
+        </div>
+        <div class="pb-1 mt-3">
+          <label for="version" class="form-label fs-6 mt-3 fw-bold">Version</label>
+        </div>
+        <div class="pb-1 col-6">{{ form.version }}</div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="versionHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The version number of the resource.
+            </div>
+          </div>
+        </div>
+        {{ dateformset.management_form }}
+        <div class="pb-1 mt-3">
+          <label for="date" class="form-label fs-6 mt-3 fw-bold">Date</label>
+        </div>
+        {% for form in dateformset %}
+        <div class="row form-row spacer dateformset-row">
+          <div class="row mb-2">
+            <div class="col">{{form.date}}</div>
+            <div class="col">{{form.date_type}}</div>
+            <div class="col">{{form.date_text}}</div>
+            <div class="col-1">
               <button type="button" class="btn btn-danger remove-form-row btn-sm">
                 🗙
               </button>
             </div>
           </div>
-          {% endfor %}
-          <button type="button" id="subjectformset-add" class="btn btn-success add-form-row btn-sm">
-            Add subject
-          </button>
-          <div class="row mt-2">
-            <div class="col-1">
-              <a href="#subjectHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                  class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Subject helper text
-                  toggle</span></a></a>
-            </div>
-            <div class="col-11">
-              <div id="subjectHelpBlock" class="collapse pb-2 text-dark show">
-                Subject, keyword, classification code, or key phrase describing the
-                resource.
-              </div>
+        </div>
+        {% if form.date.errors %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ form.date.errors }}
+        </div>
+        {% endif %}
+        {% endfor %}
+        <button type="button" id="dateformset-add" class="btn btn-primary btn-sm add-form-row">
+          Add date
+        </button>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="dateHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              Use the following formats YYYY, YYYY-MM, YYYY-MM-DD
             </div>
           </div>
-
-          {{ relatedidentifierformset.management_form }}
-          <div>
-            <div class="mt-3">
-              <label for="relatedIdentifier" class="form-label fs-6">Related Identifier</label>
-            </div>
-            {% for form in relatedidentifierformset %}
-            <div class="row form-row relatedidentifierformset-row mb-2">
-              <div class="col-3">{{form.related_identifier}}</div>
-              <div class="col-3">{{form.related_identifier_type}}</div>
-              <div class="col-3">{{form.related_identifier_relation_type}}</div>
-              <div class="col">
-                <button type="button" class="btn btn-danger remove-form-row btn-sm">
-                  🗙
-                </button>
-              </div>
-            </div>
-            {% endfor %}
-            <button type="button" id="relatedidentifierformset-add" class="btn btn-success add-form-row btn-sm">
-              Add related identifier
+        </div>
+        <div class="row offset-5 spacer">
+          <div class="col-4 mt-4 d-grid gap-2">
+            <button type="submit" class="btn btn-block btn-success">
+              Create
             </button>
-            <div class="row mt-2">
-              <div class="col-1">
-                <a href="#relatedIdentifierHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                    class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Related identifier helper text
-                    toggle</span></a></a>
-              </div>
-              <div class="col-11">
-                <div id="relatedIdentifierHelpBlock" class="collapse pb-2 text-dark show">
-                  Identifiers of related resources.
-                  These must be globally unique
-                  identifiers.
-                </div>
-              </div>
-            </div>
-
-            <div class="pb-1">
-              <label for="version" class="form-label fs-6 mt-3">Version</label>
-            </div>
-            <div class="pb-1 col-6">{{ form.version }}</div>
-            <div class="row mt-2">
-              <div class="col-1">
-                <a href="#versionHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                    class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Version helper text
-                    toggle</span></a></a>
-              </div>
-              <div class="col-11">
-                <div id="versionHelpBlock" class="collapse pb-2 text-dark show">
-                  The version number of the resource.
-                </div>
-              </div>
-            </div>
-
-            {{ dateformset.management_form }}
-            <div class="pb-1">
-              <label for="date" class="form-label fs-6 mt-3">Date</label>
-            </div>
-            {% for form in dateformset %}
-            <div class="row form-row spacer dateformset-row">
-              <div class="row mb-2">
-                <div class="col">{{form.date}}</div>
-                <div class="col">{{form.date_type}}</div>
-                <div class="col">{{form.date_text}}</div>
-                <div class="col-1">
-                  <button type="button" class="btn btn-danger remove-form-row btn-sm">
-                    🗙
-                  </button>
-                </div>
-              </div>
-            </div>
-            {% if form.date.errors %}
-            <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
-              {{ form.date.errors }}
-            </div>
-            {% endif %}
-            {% endfor %}
-            <button type="button" id="dateformset-add" class="btn btn-success btn-sm add-form-row">
-              Add date
-            </button>
-
-
-
-            <div class="row mt-2">
-              <div class="col-1">
-                <a href="#dateHelpBlock" data-bs-toggle="collapse"><i onclick="toggleArrow(this)"
-                    class="fa fa-caret-up fa-2x fa-fw"></i><span class="sr-only">Date helper text
-                    toggle</span></a></a>
-              </div>
-              <div class="col-11">
-                <div id="dateHelpBlock" class="collapse pb-2 text-dark show">
-                  Use the following formats YYYY, YYYY-MM, YYYY-MM-DD
-                </div>
-              </div>
-            </div>
-
-            <div class="row offset-5 spacer">
-              <div class="col-4 mt-4 d-grid gap-2">
-                <button type="submit" class="btn btn-block btn-primary">
-                  Create
-                </button>
-              </div>
-              <div>{{err}}</div>
-            </div>
+          </div>
+        </div>
       </form>
     </div>
   </div>
 </div>
+{% endif %}
 <script type="text/javascript">
   function toggleArrow(arrow) {
     arrow.classList.toggle("fa-caret-down");
@@ -411,7 +355,7 @@
       source: fundersRemote.ttAdapter(),
       templates: {
         suggestion: function (data) {
-          return '<p><strong>' + data.name + '</strong> - ' + data.location + '</p>';
+          return '<p style="margin-bottom:0px;"><strong>' + data.name + '</strong> - ' + data.location + '</p>';
         }
       },
       limit: 16

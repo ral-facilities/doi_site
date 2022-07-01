@@ -1,10 +1,5 @@
-{% extends "doi_site/organisation_wrapper.html" %} {% block head %}
-<link
-  href="/static/doi_site/css/bootstrap.css"
-  rel="stylesheet"
-/>
-{% endblock %} {% block content %}
-<h1 class="offset-5 bold--text">Update DOI url</h1>
+{% extends "doi_site/organisation_wrapper.html" %} {% block content %}
+<h1 class="offset-5 bold--text">Update DOI URL</h1>
 <div class="doi_bootstrap">
   {% if form.add_url.errors %}
   <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
@@ -30,13 +25,17 @@
               <label for="url" class="col-form-label fs-6">DOI:</label>
               </div>
               <div class="col">
-              {{form.add_url}}
-          </div>
+                <div class="input-group input-group-sm pb-1">
+                  <span class="input-group-text" id="prefix">{{ doi_prefix }}</span>
+                  {{form.add_url}}
+                </div>
+              
+              </div>
           </div>
           <div class="row offset-5 spacer">
               <div class="col-4 mt-4 d-grid gap-2">
-              <button type="submit" class="btn btn-block btn-sm btn-primary" action="redirect">
-                  Assign
+              <button type="submit" class="btn btn-block btn-sm btn-success" action="redirect">
+                  Update
               </button>
               </div>
           </div>
