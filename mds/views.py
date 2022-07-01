@@ -114,7 +114,6 @@ class DoiView(View):
         return post_doi(request, method="PUT")
 
 
-
 class MediaView(View):
     """
     Handle head, get and post requests for media.
