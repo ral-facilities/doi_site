@@ -2,6 +2,7 @@ dist
 doi_site.egg-info
 db.sqlite3
 doi_site/local_settings.py
+doi.db
 */*.pyc
 */*/*.pyc
 */*/*/*.pyc

@@ -1,0 +1,548 @@
+{% extends "doi_site/organisation_wrapper.html" %} {% block content %}
+<h1 class="bold--text">Mint a DOI</h1>
+<div class="doi_bootstrap">
+  <div class="row">
+    <div class="col-md-8">
+      {% if notAuthorised %}
+      <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+        You are only authorised to use the sub-domains listed below:
+      </div>
+      {% endif %}
+      {% if succ %}
+      <div class="alert alert-success text-start d-flex align-items-center" role="alert" style="height: 15px">
+      {{ succ }}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<div class="doi_bootstrap">
+  <div class="row">
+    <div class="col-md-8">
+      <table class="w-100 my-3" id="sub_domains">
+        <tr>
+            <th class="text-center">DOI Sub-Domains available:</th>
+        </tr>
+        {% for suffix in suffixlist %}
+        <tr>
+            <td class="ps-2">{{ doi_prefix }}/{{ suffix }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td class="ps-2" style="color:red;">You are not authorised to mint DOI's</td>
+      </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+{% if suffixlist %}
+<div class="doi_bootstrap">
+  <div class="row">
+    
+    <div class="col-md-8">
+      <form class="form-horizontal" method="POST" action="">
+        {% csrf_token %}
+        <div class="pb-1 mt-3">
+          <label for="identifier" class="form-label fs-6 required fw-bold">DOI</label>
+        </div>
+        <div class="input-group input-group-sm pb-1">
+          <span class="input-group-text" id="prefix">{{ doi_prefix }}/</span>
+          {{ form.identifier }}
+        </div>
+        {% if form.identifier.errors %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ form.identifier.errors }}
+        </div>
+        {% endif %}
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="identifierHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The globally unique string that identifies the resource and can't be changed. 
+              The repository id “10.5286/” will be added automatically. 
+              The entered string MUST start with one of the listed subdomains
+            </div>
+          </div>
+        </div>
+        <!-- URL field start -->
+        <div class="pb-1 mt-3">
+          <label for="identifier" class="form-label fs-6 fw-bold">URL</label>
+        </div>
+        <div class="pb-1">
+          {{ urlform }}
+        </div>
+        {% if urlform.url.errors %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ urlform.url.errors }}
+        </div>
+        {% endif %}
+        {% if err %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ err }}
+        </div>
+        {% endif %}
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="urlHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The location of the landing page with more information about the resource. 
+              Leave this field blank if you want to create a metadata only record. 
+              To update the URL on an existing DOI please visit <a href="{% url 'addurl' %}">here</a>
+            </div>
+          </div>
+        </div>
+        <!-- URL field end-->
+        <div class="pb-1 mt-3">
+          <label for="title" class="form-label fs-6 mt-3 required fw-bold">Title</label>
+        </div>
+        <div class="pb-1">{{ form.title }}</div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="titleHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              A name or title by which a resource is known. May be the title of a
+              dataset or the name of a piece of software.
+            </div>
+          </div>
+        </div>
+        {{ creatorformset.management_form }}
+        <div class="pb-1 mt-3">
+          <label for="creator" class="form-label fs-6 mt-3 required fw-bold">Creator</label>
+        </div>
+        {% for form in creatorformset %}
+        <div class="row form-row spacer creatorformset-row">
+          <div class="row mb-2">
+            <div class="col">{{form.givenname}}</div>
+            <div class="col">{{form.familyname}}</div>
+            <div class="col">{{form.orcid}}</div>
+            <div class="col">{{form.affiliation}}</div>
+            <div class="col-1">
+              <button type="button" class="btn btn-danger remove-form-row btn-sm">
+                🗙
+              </button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        <button type="button" id="creatorformset-add" class="btn btn-primary btn-sm add-form-row">
+          Add creator
+        </button>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="creatorHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The main researchers involved in producing the data, or the authors of the publication, in priority order. 
+              If provided, the affiliation SHOULD be taken from the Research Organization Registry <a href="https://ror.org/">https://ror.org.</a>
+            </div>
+          </div>
+        </div>
+        <div class="pb-1 mt-3">
+          <label for="abstract" class="form-label fs-6 mt-3 fw-bold">Abstract</label>
+        </div>
+        <div class="pb-1">{{ form.abstract }}</div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="abstractHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              A brief description of the resource and the context in which the
+              resource was created.
+            </div>
+          </div>
+        </div>
+        <div class="pb-1 mt-3">
+          <label for="publisher" class="form-label fs-6 mt-3 required fw-bold">Publisher</label>
+        </div>
+        <div class="pb-1">{{ form.publisher }}</div>
+        <div class="row mt-2">
+          <div class="col-11">
+            <div id="publisherHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The name of the entity that holds, archives, publishes prints, distributes, releases, issues, or produces the resource. 
+              This property will be used to formulate the citation, so consider the prominence of the role.
+            </div>
+          </div>
+        </div>
+        <div class="pb-1 mt-3">
+          <label for="publicationYear" class="form-label fs-6 mt-3 required fw-bold">Publication Year</label>
+        </div>
+        <div class="col-4 pb-1">{{ form.publication_year }}</div>
+        {% if form.publication_year.errors %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ form.publication_year.errors }}
+        </div>
+        {% endif %}
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="publicationYearHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The year when the data was or will be made publicly available.
+            </div>
+          </div>
+        </div>
+        <div class="pb-1 mt-3">
+          <label for="resourceType" class="form-label fs-6 mt-3 required fw-bold">Resource Type</label>
+        </div>
+        <div class="row">
+          <div class="col pb-1">{{ form.resource_type }}</div>
+          <div class="col pb-1">{{ form.resource_type_text }}</div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="resourceTypeHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              If none of the provided values matches, use “Other” and specify the resource type in the free text field, the preferred format is a single term.
+            </div>
+          </div>
+        </div>
+        {{ funderformset.management_form }}
+        <div class="pb-1 mt-3">
+          <label for="funder" class="form-label fs-6 mt-3 fw-bold">Funder</label>
+        </div>
+        {% for form in funderformset %}
+        <div class="row form-row spacer funderformset-row">
+          <div class="row mb-2">
+            <div class="col">{{form.funder_name}}</div>
+            <div class="col">{{form.funder_identifier}}</div>
+            <div class="col">{{form.award_number}}</div>
+            <div class="col">{{form.award_title}}</div>
+            <div class="col-1">
+              <button type="button" class="btn btn-danger remove-form-row btn-sm">
+                🗙
+              </button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        <button type="button" id="funderformset-add" class="btn btn-primary btn-sm add-form-row">
+          Add funder
+        </button>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="funderHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              Uniquely identifies a funding
+              entity, according to various
+              types.
+            </div>
+          </div>
+        </div>
+        {{ subjectformset.management_form }}
+        <div class="pb-1 mt-3">
+          <label for="subject" class="form-label fs-6 mt-3 fw-bold">Subject</label>
+        </div>
+        {% for form in subjectformset %}
+        <div class="row form-row subjectformset-row mb-2">
+          <div class="col-6">{{form.subject}}</div>
+          <div class="col">
+            <button type="button" class="btn btn-danger remove-form-row btn-sm">
+              🗙
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+        <button type="button" id="subjectformset-add" class="btn btn-primary add-form-row btn-sm">
+          Add subject
+        </button>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="subjectHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              Subject, keyword, classification code, or key phrase describing the
+              resource.
+            </div>
+          </div>
+        </div>
+        {{ relatedidentifierformset.management_form }}
+        <div class="mt-3">
+          <label for="relatedIdentifier" class="form-label fs-6 mt-3 fw-bold">Related Identifier</label>
+        </div>
+        {% for form in relatedidentifierformset %}
+        <div class="row form-row relatedidentifierformset-row mb-2">
+          <div class="col-3">{{form.related_identifier}}</div>
+          <div class="col-3">{{form.related_identifier_type}}</div>
+          <div class="col-3">{{form.related_identifier_relation_type}}</div>
+          <div class="col">
+            <button type="button" class="btn btn-danger remove-form-row btn-sm">
+              🗙
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+        <button type="button" id="relatedidentifierformset-add" class="btn btn-primary add-form-row btn-sm">
+          Add related identifier
+        </button>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="relatedIdentifierHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              Identifiers of related resources.
+              These must be globally unique
+              identifiers.
+            </div>
+          </div>
+        </div>
+        <div class="pb-1 mt-3">
+          <label for="version" class="form-label fs-6 mt-3 fw-bold">Version</label>
+        </div>
+        <div class="pb-1 col-6">{{ form.version }}</div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="versionHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              The version number of the resource.
+            </div>
+          </div>
+        </div>
+        {{ dateformset.management_form }}
+        <div class="pb-1 mt-3">
+          <label for="date" class="form-label fs-6 mt-3 fw-bold">Date</label>
+        </div>
+        {% for form in dateformset %}
+        <div class="row form-row spacer dateformset-row">
+          <div class="row mb-2">
+            <div class="col">{{form.date}}</div>
+            <div class="col">{{form.date_type}}</div>
+            <div class="col">{{form.date_text}}</div>
+            <div class="col-1">
+              <button type="button" class="btn btn-danger remove-form-row btn-sm">
+                🗙
+              </button>
+            </div>
+          </div>
+        </div>
+        {% if form.date.errors %}
+        <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+          {{ form.date.errors }}
+        </div>
+        {% endif %}
+        {% endfor %}
+        <button type="button" id="dateformset-add" class="btn btn-primary btn-sm add-form-row">
+          Add date
+        </button>
+        <div class="row mt-2">
+          <div class="col-12">
+            <div id="dateHelpBlock" class="pb-2 text-dark" style="font-size: 10px;">
+              Use the following formats YYYY, YYYY-MM, YYYY-MM-DD
+            </div>
+          </div>
+        </div>
+        <div class="row offset-5 spacer">
+          <div class="col-4 mt-4 d-grid gap-2">
+            <button type="submit" class="btn btn-block btn-success">
+              Create
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+<script type="text/javascript">
+  function toggleArrow(arrow) {
+    arrow.classList.toggle("fa-caret-down");
+    arrow.classList.toggle("fa-caret-up");
+  }
+
+  $(document).ready(function () {
+    window.fundersRemote = new Bloodhound({
+      name: 'funders',
+      datumTokenizer: function (d) { return d.tokens; },
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      remote: {
+        url: 'https://api.crossref.org/funders?query=%QUERY',
+        filter: function (dataResponse) { return dataResponse.message.items; }
+      },
+      limit: 16,
+      dupDetector: function (r, l) { return false; }
+    });
+
+    fundersRemote.initialize();
+
+    var suggestionLayout = Hogan.compile('<p>{{name}} <small>{{location}}</small></p>');
+
+    $('.search-input').typeahead(null, {
+      name: 'funders',
+      source: fundersRemote.ttAdapter(),
+      templates: {
+        suggestion: function (data) {
+          return '<p style="margin-bottom:0px;"><strong>' + data.name + '</strong> - ' + data.location + '</p>';
+        }
+      },
+      limit: 16
+    });
+
+    $('.search-input').bind('typeahead:autocompleted typeahead:selected', function (e, datum) {
+      $(this).typeahead('val', datum.name);
+      $(this).closest('.funderformset-row').find('.funder_id').val(datum.id);
+    });
+  });
+
+  function updateElementIndex(el, prefix, ndx) {
+    var id_regex = new RegExp("(" + prefix + "-\\d+)");
+    var replacement = prefix + "-" + ndx;
+    if ($(el).attr("for"))
+      $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+  }
+  function cloneMore(selector, prefix) {
+    var newElement = $(selector).clone(true);
+    var total = $("#id_" + prefix + "-TOTAL_FORMS").val();
+    newElement
+      // .find(":input:not([type=button]):not([type=submit]):not([type=reset])")
+      .find(":input[name]")
+      .each(function () {
+        console.log($(this));
+        var name = $(this)
+          .attr("name")
+          .replace("-" + (total - 1) + "-", "-" + total + "-");
+        var id = "id_" + name;
+        $(this).attr({ name: name, id: id }).val("").removeAttr("checked");
+      });
+    newElement.find("label").each(function () {
+      var forValue = $(this).attr("for");
+      if (forValue) {
+        forValue = forValue.replace("-" + (total - 1) + "-", "-" + total + "-");
+        $(this).attr({ for: forValue });
+      }
+    });
+    total++;
+    $("#id_" + prefix + "-TOTAL_FORMS").val(total);
+    $(newElement).find(".btn.remove-form-row").prop("hidden", false);
+    $(selector).after(newElement);
+    return false;
+  }
+  function deleteForm(prefix, btn) {
+    var total = parseInt($("#id_" + prefix + "-TOTAL_FORMS").val());
+    if (total > 1) {
+      btn.closest(".form-row").remove();
+      var forms = $(".form-row");
+      $("#id_" + prefix + "-TOTAL_FORMS").val(forms.length);
+      for (var i = 0, formCount = forms.length; i < formCount; i++) {
+        $(forms.get(i))
+          .find(":input")
+          .each(function () {
+            updateElementIndex(this, prefix, i);
+          });
+      }
+    }
+    return false;
+  }
+
+  $(document).on("click", "#subjectformset-add", function (e) {
+    e.preventDefault();
+    cloneMore(".subjectformset-row:last", "subjectform");
+    return false;
+  });
+  $(document).on("click", ".subjectformset-row .remove-form-row", function (e) {
+    e.preventDefault();
+    deleteForm("subjectform", $(this));
+    return false;
+  });
+
+  $(document).on("click", "#relatedidentifierformset-add", function (e) {
+    e.preventDefault();
+    cloneMore(".relatedidentifierformset-row:last", "relatedidentifierform");
+    return false;
+  });
+  $(document).on("click", ".relatedidentifierformset-row .remove-form-row", function (e) {
+    e.preventDefault();
+    deleteForm("relatedidentifierform", $(this));
+    return false;
+  });
+
+  $(document).on("click", "#creatorformset-add", function (e) {
+    e.preventDefault();
+    cloneMore(".creatorformset-row:last", "creatorform");
+    return false;
+  });
+  $(document).on("click", ".creatorformset-row .remove-form-row", function (e) {
+    e.preventDefault();
+    deleteForm("creatorform", $(this));
+    return false;
+  });
+
+  $(document).on("click", "#dateformset-add", function (e) {
+    e.preventDefault();
+    cloneMore(".dateformset-row:last", "dateform");
+    return false;
+  });
+  $(document).on("click", ".dateformset-row .remove-form-row", function (e) {
+    e.preventDefault();
+    deleteForm("dateform", $(this));
+    return false;
+  });
+
+  $(document).on("click", "#funderformset-add", function (e) {
+    e.preventDefault();
+    $('.search-input').typeahead("destroy");
+    cloneMore(".funderformset-row:last", "funderform");
+    $(".search-input").typeahead(null, {
+      name: 'funders',
+      source: fundersRemote.ttAdapter(),
+      templates: {
+        suggestion: function (data) {
+          return '<p><strong>' + data.name + '</strong> - ' + data.location + '</p>';
+        }
+      },
+      limit: 16
+    });
+    $('.funderformset-row:last').find(".search-input").bind('typeahead:autocompleted typeahead:selected', function (e, datum) {
+      $(this).typeahead('val', datum.name);
+      $(this).closest('.funderformset-row').find('.funder_id').val(datum.id);
+    });
+    return false;
+  });
+  $(document).on("click", ".funderformset-row .remove-form-row", function (e) {
+    e.preventDefault();
+    deleteForm("funderform", $(this));
+    return false;
+  });
+
+  $(document).on("input", ".date", function (e) {
+    if ($(this).val() == '') {
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', false);
+    } else {
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', true);
+    }
+    return false;
+  });
+
+  $('.date').each(function () {
+    if ($(this).val() == '') {
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', false);
+    } else {
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', true);
+    }
+    return false;
+  });
+
+  $(document).on("input", ".related-identifier", function (e) {
+    if ($(this).val() == '') {
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', false);
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', false);
+    } else {
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', true);
+      $(this).closest('.dateformset-row').find('.date-type').prop('required', true);
+    }
+    return false;
+  });
+
+  $('.related-identifier').each(function () {
+    if ($(this).val() == '') {
+      $(this).closest('.relatedidentifierformset-row').find('.related-identifier-type').prop('required', false);
+      $(this).closest('.relatedidentifierformset-row').find('.related-identifier-relation-type').prop('required', false);
+    } else {
+      $(this).closest('.relatedidentifierformset-row').find('.related-identifier-type').prop('required', true);
+      $(this).closest('.relatedidentifierformset-row').find('.related-identifier-relation-type').prop('required', true);
+    }
+    return false;
+  });
+
+  $(".subjectformset-row:first .remove-form-row").prop("hidden", true);
+  $(".relatedidentifierformset-row:first .remove-form-row").prop("hidden", true);
+  $(".creatorformset-row:first .remove-form-row").prop("hidden", true);
+  $(".dateformset-row:first .remove-form-row").prop("hidden", true);
+  $(".funderformset-row:first .remove-form-row").prop("hidden", true);
+
+  
+
+</script>
+
+<style>
+  label.required::after {
+    content: "*";
+    color: red;
+  }
+</style>
+{% endblock %}

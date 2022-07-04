@@ -10,7 +10,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name="doi_site",
-    version="1.1.0",
+    version="2.0.0",
     packages=["doi_site", "mds", "datasets"],
     include_package_data=True,
     license="BSD License",
@@ -32,9 +32,10 @@ setup(
     ],
     # Adds dependencies
     install_requires=[
-        "Django==2",
+        "Django==3.2",
         "django-auth-ldap",
         "python-ldap",
-        "psycopg2-binary",
+        #"psycopg2-binary",
+        "requests"
     ],
 )

@@ -1,0 +1,43 @@
+{% extends "doi_site/organisation_wrapper.html" %}
+
+{% block content %}
+<h1 class="offset-5 bold--text">Update URL for: {{doi}}</h1>
+<div class="doi_bootstrap">
+  {% if err %}
+  <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+    {{ err }}
+  </div>
+  {% endif %}
+  {% if form.url.errors %}
+  <div class="alert alert-danger text-start d-flex align-items-center mt-3" role="alert" style="height: 15px">
+    {{ form.url.errors }}
+  </div>
+  {% endif %}
+  <div class="row">
+    <div class="col-md-8">
+      <div class="form-label fs-6 mt-3">
+        Current URL: {{url}}
+      </div>
+
+      <form class="form-horizontal mt-3" method="POST" action="">
+        {% csrf_token %}
+        <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <label for="url" class="col-form-label fs-6">URL:</label>
+          </div>
+          <div class="col">
+            {{form.url}}
+          </div>
+        </div>
+        <div class="row offset-5 spacer">
+          <div class="col-4 mt-4 d-grid gap-2">
+            <button type="submit" class="btn btn-block btn-sm btn-success">
+              Change
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

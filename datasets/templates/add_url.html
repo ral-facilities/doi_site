@@ -1,0 +1,46 @@
+{% extends "doi_site/organisation_wrapper.html" %} {% block content %}
+<h1 class="offset-5 bold--text">Update DOI URL</h1>
+<div class="doi_bootstrap">
+  {% if form.add_url.errors %}
+  <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+    {{ form.add_url.errors }}
+  </div>
+  {% endif %}
+  {% if newerr %}
+  <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+    {{ newerr }}
+  </div>
+  {% endif %}
+  {% if err %}
+  <div class="alert alert-danger text-start d-flex align-items-center" role="alert" style="height: 15px">
+    {{ err }}
+  </div>
+  {% endif %}
+  <div class="row">
+    <div class="col-md-8">
+      <form class="form-horizontal mt-3" method="POST" action="">
+          {% csrf_token %}
+          <div class="row g-3 align-items-center">
+          <div class="col-auto">
+              <label for="url" class="col-form-label fs-6">DOI:</label>
+              </div>
+              <div class="col">
+                <div class="input-group input-group-sm pb-1">
+                  <span class="input-group-text" id="prefix">{{ doi_prefix }}</span>
+                  {{form.add_url}}
+                </div>
+              
+              </div>
+          </div>
+          <div class="row offset-5 spacer">
+              <div class="col-4 mt-4 d-grid gap-2">
+              <button type="submit" class="btn btn-block btn-sm btn-success" action="redirect">
+                  Update
+              </button>
+              </div>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+  {% endblock %}
