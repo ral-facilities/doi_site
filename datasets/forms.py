@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import RegexValidator
 from django.forms import formset_factory
-from doi_site.local_settings import DOI_PREFIX
+from doi_site.settings import DOI_PREFIX
 from mds.mds_api import MdsApi
 
 RT_CHOICES = [
