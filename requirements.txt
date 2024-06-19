@@ -1,10 +1,16 @@
 asgiref
 certifi
+charset-normalizer
 Django
 django-auth-ldap
+idna
 psycopg2-binary
+pyasn1
+pyasn1-modules
 python-ldap
+pytz
 requests
+sqlparse
 typing_extensions
 urllib3
 waitress
