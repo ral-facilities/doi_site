@@ -8,6 +8,8 @@ README = open(os.path.join(os.path.dirname(__file__), "README.rst")).read()
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
+reqs = [line.strip() for line in open("requirements.txt")]
+
 setup(
     name="doi_site",
     version="2.0.0",
@@ -31,11 +33,5 @@ setup(
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     ],
     # Adds dependencies
-    install_requires=[
-        "Django==3.2",
-        "django-auth-ldap",
-        "python-ldap",
-        #"psycopg2-binary",
-        "requests"
-    ],
+    install_requires=reqs,
 )

@@ -1,5 +1,9 @@
-Django==3.2
+asgiref
+certifi
+Django
 django-auth-ldap
+psycopg2-binary
 python-ldap
-psycopg2-binary==2.8.6
 requests
+urllib3
+waitress
